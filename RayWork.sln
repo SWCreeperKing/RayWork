@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayWork", "RayWork\RayWork.csproj", "{0A4D351E-C0EE-471A-B22F-65B5DC11414F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayWork.ECS", "RayWork.ECS\RayWork.ECS.csproj", "{E19C770F-3D04-4206-A38E-05860AEC9B9A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A4D351E-C0EE-471A-B22F-65B5DC11414F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A4D351E-C0EE-471A-B22F-65B5DC11414F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A4D351E-C0EE-471A-B22F-65B5DC11414F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A4D351E-C0EE-471A-B22F-65B5DC11414F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E19C770F-3D04-4206-A38E-05860AEC9B9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E19C770F-3D04-4206-A38E-05860AEC9B9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E19C770F-3D04-4206-A38E-05860AEC9B9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E19C770F-3D04-4206-A38E-05860AEC9B9A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
