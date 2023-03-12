@@ -23,12 +23,11 @@ public class ListRegister<RegisterType>
 
         for (var i = 0; i < _registerRemoveQueue.Count; i++)
         {
-            if (!_register.Contains(_registerRemoveQueue[i])) continue;
             _register.Remove(_registerRemoveQueue[i]);
         }
     }
     
-    public void AddToRegister(RegisterType objectToRegister)
+    public void AddToRegister(RegisterType objectToRegister) 
     {
         _registerAddQueue.Add(objectToRegister);
     }
@@ -36,5 +35,20 @@ public class ListRegister<RegisterType>
     public void RemoveFromRegister(RegisterType objectToRemove)
     {
         _registerRemoveQueue.Add(objectToRemove);
+    }
+
+    public bool RegisterContainsType<TypeToCheck>() where TypeToCheck : RegisterType
+    {
+        return _register.OfType<TypeToCheck>().Any();
+    }
+
+    public TypeToGet GetTypeFromRegister<TypeToGet>() where TypeToGet : RegisterType
+    {
+        return _register.OfType<TypeToGet>().First();
+    }
+
+    public TypeToGet[] GetTypesFromRegister<TypeToGet>() where TypeToGet : RegisterType
+    {
+        return _register.OfType<TypeToGet>().ToArray();
     }
 }

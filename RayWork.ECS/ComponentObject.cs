@@ -2,42 +2,30 @@
 
 public class ComponentObject
 {
-    private readonly ListRegister<UpdateComponent> _updateRegister = new();
-    private readonly ListRegister<RenderComponent> _renderRegister = new();
-
-    public void Update(float dt)
-    {
-        _updateRegister.ExecuteRegister(component => component.Update(dt));
-    }
-
-    public void Render()
-    {
-        _renderRegister.ExecuteRegister(component => component.Render());
-    }
+    private readonly ListRegister<Component> _componentRegister = new();
 
     public void AddComponent(Component componentToAdd)
     {
-        if (componentToAdd is UpdateComponent updateComponent)
-        {
-            _updateRegister.AddToRegister(updateComponent);
-        }
+        _componentRegister.AddToRegister(componentToAdd);
+    }
 
-        if (componentToAdd is RenderComponent renderComponent)
-        {
-            _renderRegister.AddToRegister(renderComponent);
-        }
+    public void RemoveComponent(Component componentToRemove)
+    {
+        _componentRegister.RemoveFromRegister(componentToRemove);
+    }
+
+    public bool ContainsComponent<ComponentType>() where ComponentType : Component
+    {
+        return _componentRegister.RegisterContainsType<ComponentType>();
+    }
+
+    public ComponentType GetComponent<ComponentType>() where ComponentType : Component
+    {
+        return _componentRegister.GetTypeFromRegister<ComponentType>();
     }
     
-    public void RemoveComponent(Component componentToAdd)
+    public ComponentType[] GetComponents<ComponentType>() where ComponentType : Component
     {
-        if (componentToAdd is UpdateComponent updateComponent)
-        {
-            _updateRegister.RemoveFromRegister(updateComponent);
-        }
-
-        if (componentToAdd is RenderComponent renderComponent)
-        {
-            _renderRegister.RemoveFromRegister(renderComponent);
-        }
+        return _componentRegister.GetTypesFromRegister<ComponentType>();
     }
 }

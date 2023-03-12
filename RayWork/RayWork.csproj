@@ -10,4 +10,8 @@
       <PackageReference Include="Raylib-CsLo" Version="4.2.0.9" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\RayWork.ECS\RayWork.ECS.csproj" />
+    </ItemGroup>
+
 </Project>
