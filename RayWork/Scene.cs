@@ -2,10 +2,8 @@ using RayWork.ECS;
 
 namespace RayWork;
 
-public abstract class GameObject : ComponentObject
+public abstract class Scene
 {
-    public object Parent { get; private set; } = null;
-    
     private readonly ListRegister<GameObject> _childRegister = new();
 
     public void Update(float deltaTime)
@@ -20,6 +18,10 @@ public abstract class GameObject : ComponentObject
         _childRegister.ExecuteRegister(child => child.Render());
     }
     
+    public virtual void Initialize()
+    {
+    }
+
     public virtual void UpdateLoop(float deltaTime)
     {
     }
@@ -30,13 +32,11 @@ public abstract class GameObject : ComponentObject
 
     public void AddChild(GameObject gameObject)
     {
-        gameObject.Parent = this;
         _childRegister.AddToRegister(gameObject);
     }
 
     public void RemoveChild(GameObject gameObject)
     {
-        gameObject.Parent = null;
         _childRegister.RemoveFromRegister(gameObject);
     }
 }
