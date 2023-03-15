@@ -4,9 +4,18 @@ using RayWork.ECS;
 
 namespace RayWork.CoreComponents;
 
-public class Size : DebugComponent
+public class SizeComponent : DebugComponent
 {
     public Vector2 size;
+    
+    public SizeComponent(float width = 0, float height = 0) : this(new Vector2(width, height))
+    {
+    }
+
+    public SizeComponent(Vector2 size)
+    {
+        this.size = size;
+    }
     
     public void Debug()
     {

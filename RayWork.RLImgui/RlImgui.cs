@@ -175,7 +175,7 @@ public static class RlImgui
                 : _mouseCursorMap[imguiCursor]);
         }
     }
-    
+
     private static void FrameEvents()
     {
         var io = ImGui.GetIO();
@@ -339,7 +339,7 @@ public static class RlImgui
 
     public static Color ToColor(this Vector4 color)
     {
-        return new((short) color.X, (short) color.Y, (short) color.Z, (short) color.W);
+        return new((byte) (color.X * 255), (byte) (color.Y * 255), (byte) (color.Z * 255), (byte) (color.W * 255));
     }
 
     public static Vector2 MeasureText(this string text) => ImGui.CalcTextSize(text);
