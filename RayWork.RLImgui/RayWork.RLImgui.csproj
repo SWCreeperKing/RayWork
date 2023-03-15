@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\RayWork.ECS\RayWork.ECS.csproj" />
-      <ProjectReference Include="..\RayWork.RLImgui\RayWork.RLImgui.csproj" />
+      <PackageReference Include="ImGui.NET" Version="1.89.4" />
+      <PackageReference Include="Raylib-CsLo" Version="4.2.0.9" />
     </ItemGroup>
 
 </Project>

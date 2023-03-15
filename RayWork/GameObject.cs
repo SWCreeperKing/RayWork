@@ -10,6 +10,8 @@ public abstract class GameObject : ComponentObject
 
     public void Update(float deltaTime)
     {
+        UpdateRegister();
+        _childRegister.UpdateRegister();
         UpdateLoop(deltaTime);
         _childRegister.ExecuteRegister(child => child.Update(deltaTime));
     }
@@ -28,6 +30,10 @@ public abstract class GameObject : ComponentObject
     {
     }
 
+    public virtual void DebugLoop()
+    {
+    }
+    
     public void AddChild(GameObject gameObject)
     {
         gameObject.Parent = this;

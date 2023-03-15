@@ -8,6 +8,7 @@ public abstract class Scene
 
     public void Update(float deltaTime)
     {
+        _childRegister.UpdateRegister();
         UpdateLoop(deltaTime);
         _childRegister.ExecuteRegister(child => child.Update(deltaTime));
     }
@@ -38,5 +39,15 @@ public abstract class Scene
     public void RemoveChild(GameObject gameObject)
     {
         _childRegister.RemoveFromRegister(gameObject);
+    }
+
+    public GameObject[] GetChildren()
+    {
+        return _childRegister.GetRegisterTypes();
+    }
+
+    public bool HasChildren()
+    {
+        return !_childRegister.IsRegisterEmpty();
     }
 }

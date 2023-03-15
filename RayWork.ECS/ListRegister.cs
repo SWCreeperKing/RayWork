@@ -8,17 +8,20 @@ public class ListRegister<RegisterType>
 
     public void ExecuteRegister(Action<RegisterType> registerAction)
     {
+        for (var i = 0; i < _register.Count; i++)
+        {
+            registerAction(_register[i]);
+        }
+    }
+
+    public void UpdateRegister()
+    {
         if (_registerAddQueue.Any())
         {
             _register.AddRange(_registerAddQueue);
             _registerAddQueue.Clear();
         }
-
-        for (var i = 0; i < _register.Count; i++)
-        {
-            registerAction(_register[i]);
-        }
-
+        
         if (!_registerRemoveQueue.Any()) return;
 
         for (var i = 0; i < _registerRemoveQueue.Count; i++)
@@ -50,5 +53,15 @@ public class ListRegister<RegisterType>
     public TypeToGet[] GetTypesFromRegister<TypeToGet>() where TypeToGet : RegisterType
     {
         return _register.OfType<TypeToGet>().ToArray();
+    }
+
+    public RegisterType[] GetRegisterTypes()
+    {
+        return _register.ToArray();
+    }
+
+    public bool IsRegisterEmpty()
+    {
+        return _register.Any();
     }
 }

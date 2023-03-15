@@ -4,6 +4,11 @@ public class ComponentObject
 {
     private readonly ListRegister<Component> _componentRegister = new();
 
+    public void UpdateRegister()
+    {
+        _componentRegister.UpdateRegister();
+    }
+    
     public void AddComponent(Component componentToAdd)
     {
         _componentRegister.AddToRegister(componentToAdd);
@@ -28,4 +33,9 @@ public class ComponentObject
     {
         return _componentRegister.GetTypesFromRegister<ComponentType>();
     }
+
+    public Component[] GetAllComponents()
+    {
+        return _componentRegister.GetRegisterTypes();
+    } 
 }

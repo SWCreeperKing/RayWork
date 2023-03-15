@@ -1,22 +1,41 @@
-﻿using Raylib_CsLo;
-using RayWrapper.Base.GameBox;
+﻿using System.Numerics;
+using Raylib_CsLo;
+using RayWork.RLImgui;
 
 namespace RayWork;
 
 public class RayApplication
 {
-    private long _lastUpdate;
+    public static Color BackgroundColor { get; set; } = new Color(177, 177, 177, 255);
 
-    public RayApplication(int windowWidth, int windowHeight, string title = "Untitled")
+    public static Vector2 WindowSize
     {
-        Raylib.InitWindow(windowWidth, windowHeight, title);
+        get => _windowSize;
+    }
+
+    private static long _lastUpdate;
+    private static Vector2 _windowSize;
+
+    public RayApplication(Scene mainScene, int windowWidth, int windowHeight, string title = "Untitled")
+    {
+        _windowSize = new Vector2(windowWidth, windowHeight);
+
         Logger.Initialize();
+        Debugger.Initialize();
+        Raylib.InitWindow(windowWidth, windowHeight, title);
+        SceneManager.AddScene("main", mainScene);
+        RlImgui.Setup(() => _windowSize);
+
+        Start();
     }
 
     private void Start()
     {
+        _lastUpdate = GetTimeMs();
+
         try
         {
+            SceneManager.Scene.Initialize();
             RunRayLoop();
         }
         catch (Exception e)
@@ -39,17 +58,29 @@ public class RayApplication
 
     private void Update()
     {
+        var currentTimeMs = GetTimeMs();
+        float deltaTime = currentTimeMs - _lastUpdate;
+        SceneManager.Scene.Update(deltaTime);
+        _lastUpdate = currentTimeMs;
     }
 
     private void Render()
     {
         Raylib.BeginDrawing();
+        RlImgui.Begin();
+        Raylib.ClearBackground(BackgroundColor);
 
+        SceneManager.Scene.Render();
+        Debugger.Render();
+
+        RlImgui.End();
         Raylib.EndDrawing();
     }
 
     private void Dispose()
     {
-        
+        RlImgui.Shutdown();
     }
+
+    public static long GetTimeMs() => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 }

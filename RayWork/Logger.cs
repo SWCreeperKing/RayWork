@@ -1,10 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using Raylib_CsLo;
 using static Raylib_CsLo.TraceLogLevel;
-using static RayWrapper.Base.GameBox.Logger.Level;
-using static RayWrapper.Base.GameBox.Logger.LoggingLogger.Native;
+using static RayWork.Logger.Level;
+using static RayWork.Logger.LoggingLogger.Native;
 
-namespace RayWrapper.Base.GameBox;
+namespace RayWork;
 
 public static class Logger
 {
