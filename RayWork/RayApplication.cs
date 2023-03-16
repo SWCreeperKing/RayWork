@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Raylib_CsLo;
+using RayWork.EventArguments;
 using RayWork.RLImgui;
 
 namespace RayWork;
@@ -13,11 +14,14 @@ public class RayApplication
         get => _windowSize;
     }
 
+    public static event EventHandler<WindowSizeChangedEventArgs> OnWindowSizeChanged;
+
     private static long _lastUpdate;
     private static Vector2 _windowSize;
 
-    public RayApplication(Scene mainScene, int windowWidth, int windowHeight, string title = "Untitled")
+    public RayApplication(Scene mainScene, int windowWidth, int windowHeight, string title = "Untitled", ConfigFlags configFlags = 0)
     {
+        Raylib.SetConfigFlags(configFlags);
         _windowSize = new Vector2(windowWidth, windowHeight);
 
         Logger.Initialize();
@@ -58,9 +62,21 @@ public class RayApplication
 
     private void Update()
     {
+        var currentWindowSize = new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
         var currentTimeMs = GetTimeMs();
         float deltaTime = currentTimeMs - _lastUpdate;
+
+        if (currentWindowSize != _windowSize)
+        {
+            var windowSizeChangeArgs = new WindowSizeChangedEventArgs(_windowSize = currentWindowSize);
+            if (OnWindowSizeChanged is not null)
+            {
+                OnWindowSizeChanged(null, windowSizeChangeArgs);
+            }
+        }
+
         SceneManager.Scene.Update(deltaTime);
+
         _lastUpdate = currentTimeMs;
     }
 

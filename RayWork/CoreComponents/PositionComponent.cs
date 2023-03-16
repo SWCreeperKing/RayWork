@@ -1,13 +1,10 @@
 using System.Numerics;
 using ImGuiNET;
-using RayWork.ECS;
 
 namespace RayWork.CoreComponents;
 
-public class PositionComponent : DebugComponent
+public class PositionComponent : TransformComponent
 {
-    public Vector2 position;
-
     public PositionComponent(float x = 0, float y = 0) : this(new Vector2(x, y))
     {
     }
@@ -17,7 +14,7 @@ public class PositionComponent : DebugComponent
         this.position = position;
     }
 
-    public void Debug()
+    public override void Debug()
     {
         ImGui.DragFloat("X", ref position.X);
         ImGui.DragFloat("Y", ref position.Y);
