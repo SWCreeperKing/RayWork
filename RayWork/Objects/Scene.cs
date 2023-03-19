@@ -33,11 +33,13 @@ public abstract class Scene
 
     public void AddChild(GameObject gameObject)
     {
+        gameObject.Parent = this;
         _childRegister.AddToRegister(gameObject);
     }
 
     public void RemoveChild(GameObject gameObject)
     {
+        gameObject.Parent = null;
         _childRegister.RemoveFromRegister(gameObject);
     }
 

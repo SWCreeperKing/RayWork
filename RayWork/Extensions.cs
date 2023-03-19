@@ -34,7 +34,6 @@ public static class Extensions
         return new Rectangle(position.X, position.Y, size.X, size.Y);
     }
 
-
     /// <summary>
     /// makes a <see cref="Color"/> slightly lighter
     /// </summary>
