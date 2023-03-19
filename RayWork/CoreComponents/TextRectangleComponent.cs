@@ -1,20 +1,22 @@
 using System.Numerics;
 using ImGuiNET;
 using Raylib_CsLo;
+using RayWork.Objects;
 
 namespace RayWork.CoreComponents;
 
 public class TextRectangleComponent : FontComponent
 {
-    public string text;
     public bool wordWrap = true;
-
-    public TextRectangleComponent(string text)
+    public CompatibleColor color;
+    
+    public TextRectangleComponent(string text, Color? color = null)
     {
         this.text = text;
+        this.color = color ?? Raylib.BLACK;
     }
 
-    public void DrawText(Color color, Rectangle rectangle)
+    public void DrawText(Rectangle rectangle)
     {
         Font.DrawTextRec(text, rectangle, color, fontSize, spacing, wordWrap);
     }
@@ -25,5 +27,8 @@ public class TextRectangleComponent : FontComponent
         ImGui.Checkbox("Word Wrap", ref wordWrap);
         ImGui.InputFloat("Font Size", ref fontSize);
         ImGui.InputFloat("Spacing", ref spacing);
+        color.ImGuiColorEdit("Color");
     }
+
+    public static implicit operator TextRectangleComponent(string text) => new(text);
 }

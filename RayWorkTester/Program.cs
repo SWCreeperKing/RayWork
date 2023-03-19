@@ -18,8 +18,8 @@ namespace RayWorkTester
             AddChild(new TestObject());
             AddChild(new AnchorTestObject());
             // AddChild(new Text("Testing string", new Vector2(100, 10)));
-            AddChild(new TextBlock(LoremIpsum, new Rectangle(200, 300, 300, 60), Raylib.BLACK));
-            AddChild(new Panel(new Rectangle(500, 500, 50, 50)));
+            AddChild(new TextBlock(LoremIpsum, new Rectangle(200, 300, 300, 60)));
+            AddChild(new Label("Test", new Rectangle(500, 500, 50, 50)));
 
             Input.OnKeyPressed += (_, keyArgs) =>
             {

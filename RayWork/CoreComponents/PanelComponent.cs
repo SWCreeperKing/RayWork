@@ -2,33 +2,15 @@ using System.Numerics;
 using ImGuiNET;
 using Raylib_CsLo;
 using RayWork.ECS;
-using RayWork.RLImgui;
+using RayWork.Objects;
 
 namespace RayWork.CoreComponents;
 
 public class PanelComponent : DebugComponent
 {
-    public Color PanelColor
-    {
-        get => _panelColor;
-        set
-        {
-            _panelColor = value;
-            _panelColorV4 = _panelColor.ToV4();
-        }
-    }
-
-    public Color OutlineColor
-    {
-        get => _outlineColor;
-        set
-        {
-            _outlineColor = value;
-            _outlineColorV4 = _outlineColor.ToV4();
-        }
-    }
-
     public RectangleComponent rectangleComponent;
+    public CompatibleColor panelColor;
+    public CompatibleColor outlineColor;
     public float outlineThickness = 2;
     public float roundness = .2f;
     public int segments = 10;
@@ -44,8 +26,8 @@ public class PanelComponent : DebugComponent
     public PanelComponent(RectangleComponent rectangleComponent)
     {
         this.rectangleComponent = rectangleComponent;
-        _panelColorV4 = _panelColor.ToV4();
-        _outlineColorV4 = _outlineColor.ToV4();
+        panelColor = new Color(80, 100, 160, 255);
+        outlineColor = Raylib.BLACK;
     }
 
     public PanelComponent(TransformComponent transformComponent, SizeComponent sizeComponent) : this(
@@ -62,24 +44,24 @@ public class PanelComponent : DebugComponent
     {
         if (roundedOutline)
         {
-            Raylib.DrawRectangleRounded(rectangleComponent.Rectangle, roundness, segments, PanelColor);
+            Raylib.DrawRectangleRounded(rectangleComponent.Rectangle, roundness, segments, panelColor);
             if (!drawOutline) return;
             Raylib.DrawRectangleRoundedLines(rectangleComponent.Rectangle, roundness, segments, outlineThickness,
-                OutlineColor);
+                outlineColor);
         }
         else
         {
-            Raylib.DrawRectangleRec(rectangleComponent.Rectangle, PanelColor);
+            Raylib.DrawRectangleRec(rectangleComponent.Rectangle, panelColor);
             if (!drawOutline) return;
-            Raylib.DrawRectangleLinesEx(rectangleComponent.Rectangle, outlineThickness, OutlineColor);
+            Raylib.DrawRectangleLinesEx(rectangleComponent.Rectangle, outlineThickness, outlineColor);
         }
     }
 
     public void Debug()
     {
         rectangleComponent.Debug();
-        if (ImGui.ColorEdit4("Panel Color", ref _panelColorV4)) PanelColor = _panelColorV4.ToColor();
-        if (ImGui.ColorEdit4("Outline Color", ref _outlineColorV4)) OutlineColor = _outlineColorV4.ToColor();
+        panelColor.ImGuiColorEdit("Panel Color");
+        outlineColor.ImGuiColorEdit("Outline Color");
         ImGui.DragFloat("Outline Thickness", ref outlineThickness, .5f, 0);
         ImGui.DragFloat("Roundness", ref roundness, .01f, 0, 1);
         ImGui.DragInt("Segments", ref segments, 1, 0);

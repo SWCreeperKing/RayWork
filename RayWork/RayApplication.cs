@@ -7,7 +7,7 @@ namespace RayWork;
 
 public class RayApplication
 {
-    public static Color BackgroundColor { get; set; } = new Color(177, 177, 177, 255);
+    public static Color BackgroundColor { get; set; } = new(177, 177, 177, 255);
     public static float DeltaTime { get; private set; }
 
     public static Vector2 WindowSize => _windowSize;

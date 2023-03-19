@@ -19,6 +19,6 @@ public class TestObject : GameObject
 
     public override void RenderLoop()
     {
-        Raylib.DrawRectangleV(_pos.Position, _size.Size, _color.Color);
+        Raylib.DrawRectangleV(_pos.Position, _size.Size, _color.color);
     }
 }

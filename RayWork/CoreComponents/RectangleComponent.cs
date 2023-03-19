@@ -40,13 +40,12 @@ public class RectangleComponent : DebugComponent
         RecalcRectangle();
     }
 
-    public RectangleComponent(Vector2 position, Vector2 size) : this(new PositionComponent(position),
-        new StaticSizeComponent(size))
+    public RectangleComponent(Vector2 position, Vector2 size) : this((PositionComponent) position,
+        (StaticSizeComponent) size)
     {
     }
 
-    public RectangleComponent(Rectangle rectangle) : this(new PositionComponent(rectangle.Position()),
-        new StaticSizeComponent(rectangle.Size()))
+    public RectangleComponent(Rectangle rectangle) : this(rectangle.Position(), rectangle.Size())
     {
     }
 
@@ -76,4 +75,6 @@ public class RectangleComponent : DebugComponent
         _size.Size = size;
         RecalcRectangle();
     }
+
+    public static implicit operator RectangleComponent(Rectangle rectangle) => new(rectangle);
 }

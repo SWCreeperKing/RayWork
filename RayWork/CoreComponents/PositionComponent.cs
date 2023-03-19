@@ -19,9 +19,9 @@ public class PositionComponent : TransformComponent
     public override void Debug()
     {
         var pos = Position;
-        if (ImGui.DragFloat("X", ref pos.X) || ImGui.DragFloat("Y", ref pos.Y))
-        {
-            Position = pos;
-        }
+        if (ImGui.DragFloat("X", ref pos.X)) Position = pos;
+        if (ImGui.DragFloat("Y", ref pos.Y)) Position = pos;
     }
+
+    public static implicit operator PositionComponent(Vector2 position) => new(position);
 }

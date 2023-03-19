@@ -4,7 +4,7 @@ namespace RayWork;
 
 public abstract class GameObject : ComponentObject
 {
-    public object Parent { get; private set; } = null;
+    public object Parent { get; private set; }
     
     private readonly ListRegister<GameObject> _childRegister = new();
 
