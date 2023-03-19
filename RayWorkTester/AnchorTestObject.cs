@@ -18,7 +18,7 @@ public class AnchorTestObject : GameObject
         AddComponent(_pos = new ScreenAnchorComponent(windowSize =>
             new Vector2(windowSize.X / 2 - _size.Size.X / 2, windowSize.Y - _size.Size.Y - 20)));
         AddComponent(_color = new ColorComponent(Raylib.RED));
-        AddChild(new Text("Testing string", new Vector2(100, 10)));
+        AddChild(new Text("Testing string", new Vector2(100, 50)));
     }
 
     public override void RenderLoop()

@@ -18,9 +18,10 @@ public class RayApplication
     private static Vector2 _windowSize;
 
     public RayApplication(Scene mainScene, int windowWidth, int windowHeight, string title = "Untitled",
-        ConfigFlags configFlags = 0)
+        int fps = 60, ConfigFlags configFlags = 0)
     {
         Raylib.SetConfigFlags(configFlags);
+        Raylib.SetTargetFPS(fps);
         _windowSize = new Vector2(windowWidth, windowHeight);
 
         Logger.Initialize();
@@ -63,7 +64,7 @@ public class RayApplication
     {
         var currentWindowSize = new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
         var currentTimeMs = GetTimeMs();
-        DeltaTime = currentTimeMs - _lastUpdate;
+        DeltaTime = (currentTimeMs - _lastUpdate)/1000f;
 
         if (currentWindowSize != _windowSize)
         {
@@ -74,6 +75,7 @@ public class RayApplication
             }
         }
 
+        Input.UpdateKeys(DeltaTime);
         SceneManager.Scene.Update();
 
         _lastUpdate = currentTimeMs;
