@@ -17,12 +17,6 @@ public class PanelComponent : DebugComponent
     public bool roundedOutline;
     public bool drawOutline = true;
 
-    private Color _panelColor = new(80, 100, 160, 255);
-    private Vector4 _panelColorV4;
-
-    private Color _outlineColor = Raylib.BLACK;
-    private Vector4 _outlineColorV4;
-
     public PanelComponent(RectangleComponent rectangleComponent)
     {
         this.rectangleComponent = rectangleComponent;

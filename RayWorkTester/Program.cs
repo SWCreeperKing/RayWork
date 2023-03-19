@@ -1,4 +1,5 @@
-﻿using Raylib_CsLo;
+﻿using System.Numerics;
+using Raylib_CsLo;
 using RayWork;
 using RayWork.Objects;
 
@@ -15,11 +16,14 @@ namespace RayWorkTester
 
         public override void Initialize()
         {
+            SceneManager.AddScene("simon", new SimonSays());
+            Button button = new("Test", new Vector2(500));
+            button.OnButtonPressed += (_, _) => SceneManager.SwitchScene("simon");
+
             AddChild(new TestObject());
             AddChild(new AnchorTestObject());
-            // AddChild(new Text("Testing string", new Vector2(100, 10)));
             AddChild(new TextBlock(LoremIpsum, new Rectangle(200, 300, 300, 60)));
-            AddChild(new Label("Test", new Rectangle(500, 500, 50, 50)));
+            AddChild(button);
 
             Input.OnKeyPressed += (_, keyArgs) =>
             {
@@ -29,7 +33,7 @@ namespace RayWorkTester
 
             Input.OnKeyRepeat += (_, keyArgs) =>
             {
-                if (keyArgs.key is KeyboardKey.KEY_A ) text += "a";
+                if (keyArgs.key is KeyboardKey.KEY_A) text += "a";
                 if (keyArgs.key is KeyboardKey.KEY_BACKSPACE && text.Any()) text = text[..^1];
             };
         }

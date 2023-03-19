@@ -6,8 +6,24 @@ namespace RayWork.Objects;
 
 public class Label : GameObject
 {
+    public float Padding
+    {
+        get => _padding.X;
+        set
+        {
+            _padding = new Vector2(value);
+            _sizePadding = _padding * 2;
+        }
+    }
+
+    public Rectangle rectangle => panelComponent.rectangleComponent.Rectangle;
+
     public PanelComponent panelComponent;
     public TextComponent textComponent;
+    public bool textPadding;
+
+    private Vector2 _padding;
+    private Vector2 _sizePadding;
 
     public Label(TextComponent textComponent, TransformComponent transformComponent, SizeComponent sizeComponent)
     {
@@ -22,23 +38,28 @@ public class Label : GameObject
 
     public Label(TextComponent textComponent, TransformComponent transformComponent)
     {
+        Padding = 2;
+        textPadding = true;
+        AddComponent(this.textComponent = textComponent);
         AddComponent(panelComponent = new PanelComponent(
             new RectangleComponent(transformComponent, new DynamicSizeComponent(
-                () => this.textComponent.Size()))));
-        AddComponent(this.textComponent = textComponent);
+                () => this.textComponent.Size() + _sizePadding))));
     }
 
     public Label(string text, Vector2 position) : this(text, (PositionComponent) position)
     {
     }
-    
+
     public Label(string text, Rectangle rectangle) : this(text, rectangle.Position(), rectangle.Size())
     {
     }
 
     public override void RenderLoop()
     {
+        var textPosition = panelComponent.rectangleComponent.Position;
+        if (textPadding) textPosition += _padding;
+        
         panelComponent.DrawPanel();
-        textComponent.DrawText(panelComponent.rectangleComponent.Position, Vector2.Zero);
+        textComponent.DrawText(textPosition, Vector2.Zero);
     }
 }

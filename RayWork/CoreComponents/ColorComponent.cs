@@ -7,6 +7,7 @@ namespace RayWork.CoreComponents;
 public class ColorComponent : DebugComponent
 {
     public CompatibleColor color;
+    public string label = "Color";
 
     public ColorComponent(Color color)
     {
@@ -19,7 +20,7 @@ public class ColorComponent : DebugComponent
 
     public void Debug()
     {
-        color.ImGuiColorEdit("Color");
+        color.ImGuiColorEdit(label);
     }
 
     public static implicit operator ColorComponent(Color color) => new(color);
