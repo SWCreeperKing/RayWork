@@ -6,11 +6,11 @@ public abstract class Scene
 {
     private readonly ListRegister<GameObject> _childRegister = new();
 
-    public void Update(float deltaTime)
+    public void Update()
     {
         _childRegister.UpdateRegister();
-        UpdateLoop(deltaTime);
-        _childRegister.ExecuteRegister(child => child.Update(deltaTime));
+        UpdateLoop();
+        _childRegister.ExecuteRegister(child => child.Update());
     }
 
     public void Render()
@@ -23,7 +23,7 @@ public abstract class Scene
     {
     }
 
-    public virtual void UpdateLoop(float deltaTime)
+    public virtual void UpdateLoop()
     {
     }
 

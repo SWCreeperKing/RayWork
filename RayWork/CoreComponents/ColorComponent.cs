@@ -8,27 +8,30 @@ namespace RayWork.CoreComponents;
 
 public class ColorComponent : DebugComponent
 {
-    public Color color;
+    public Color Color
+    {
+        get => _color;
+        set
+        {
+            _color = value;
+            _colorV4 = _color.ToV4();
+        }
+    }
 
     private Vector4 _colorV4;
+    private Color _color;
 
+    public ColorComponent(Color color)
+    {
+        Color = color;
+    }
+    
     public ColorComponent(short r = 0, short g = 0, short b = 0, short a = 255) : this(new Color(r, g, b, a))
     {
     }
 
-    public ColorComponent(Color color)
-    {
-        this.color = color;
-        _colorV4 = color.ToV4();
-    }
-
     public void Debug()
     {
-        if (ImGui.ColorEdit4("Color", ref _colorV4)) SetColor(_colorV4);
-    }
-
-    public void SetColor(Vector4 color)
-    {
-        this.color = color.ToColor();
+        if (ImGui.ColorEdit4("Color", ref _colorV4)) _color = _colorV4.ToColor();
     }
 }

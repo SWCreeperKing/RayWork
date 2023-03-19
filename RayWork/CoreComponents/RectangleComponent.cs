@@ -11,49 +11,69 @@ public class RectangleComponent : DebugComponent
 
     public Vector2 Position
     {
-        get => _position;
+        get => _position.Position;
         set
         {
-            _position = value;
+            _position.Position = value;
             RecalcRectangle();
         }
     }
 
     public Vector2 Size
     {
-        get => _size;
+        get => _size.Size;
         set
         {
-            _size = value;
+            _size.Size = value;
             RecalcRectangle();
         }
     }
 
-    private Vector2 _position;
-    private Vector2 _size;
+    private TransformComponent _position;
+    private SizeComponent _size;
     private Rectangle _rectangle;
 
-    public RectangleComponent(Vector2 position, Vector2 size)
+    public RectangleComponent(TransformComponent position, SizeComponent size)
     {
         _position = position;
         _size = size;
         RecalcRectangle();
     }
 
-    public RectangleComponent(Rectangle rectangle) : this(rectangle.Position(), rectangle.Position())
+    public RectangleComponent(Vector2 position, Vector2 size) : this(new PositionComponent(position),
+        new StaticSizeComponent(size))
+    {
+    }
+
+    public RectangleComponent(Rectangle rectangle) : this(new PositionComponent(rectangle.Position()),
+        new StaticSizeComponent(rectangle.Size()))
     {
     }
 
     public void RecalcRectangle()
     {
-        _rectangle = _position.Rect(_size);
+        _rectangle = _position.Position.Rect(_size.Size);
     }
 
     public void Debug()
     {
-        if (ImGui.DragFloat("X", ref _position.X)) RecalcRectangle();
-        if (ImGui.DragFloat("Y", ref _position.Y)) RecalcRectangle();
-        if (ImGui.DragFloat("W", ref _size.X)) RecalcRectangle();
-        if (ImGui.DragFloat("H", ref _size.Y)) RecalcRectangle();
+        var pos = _position.Position;
+        var size = _size.Size;
+        if (ImGui.DragFloat("X", ref pos.X)) UpdatePosition(pos);
+        if (ImGui.DragFloat("Y", ref pos.Y)) UpdatePosition(pos);
+        if (ImGui.DragFloat("W", ref size.X)) UpdateSize(size);
+        if (ImGui.DragFloat("H", ref size.Y)) UpdateSize(size);
+    }
+
+    public void UpdatePosition(Vector2 position)
+    {
+        _position.Position = position;
+        RecalcRectangle();
+    }
+
+    public void UpdateSize(Vector2 size)
+    {
+        _size.Size = size;
+        RecalcRectangle();
     }
 }

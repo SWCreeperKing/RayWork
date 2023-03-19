@@ -10,19 +10,25 @@ public class TextBlock : GameObject
     public TextRectangleComponent textRectangleComponent;
     public ColorComponent colorComponent;
 
-    public TextBlock(string text, Rectangle rectangle, Color color)
+    public TextBlock(string text, TransformComponent position, SizeComponent size, Color? color = null)
     {
-        AddComponent(rectangleComponent = new RectangleComponent(rectangle));
+        AddComponent(rectangleComponent = new RectangleComponent(position, size));
         AddComponent(textRectangleComponent = new TextRectangleComponent(text));
-        AddComponent(colorComponent = new ColorComponent(color));
+        AddComponent(colorComponent = new ColorComponent(color ?? Raylib.BLACK));
     }
 
-    public TextBlock(string text, Vector2 position, Vector2 size, Color color) : this(text, position.Rect(size), color)
+    public TextBlock(string text, Vector2 position, Vector2 size, Color? color = null) : this(text,
+        new PositionComponent(position), new StaticSizeComponent(size), color)
+    {
+    }
+
+    public TextBlock(string text, Rectangle rectangle, Color? color = null) : this(text, rectangle.Position(),
+        rectangle.Size(), color)
     {
     }
 
     public override void RenderLoop()
     {
-        textRectangleComponent.DrawText(colorComponent.color, rectangleComponent.Rectangle);
+        textRectangleComponent.DrawText(colorComponent.Color, rectangleComponent.Rectangle);
     }
 }

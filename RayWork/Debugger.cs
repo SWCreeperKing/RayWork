@@ -34,11 +34,20 @@ public static class Debugger
 
     private static void RenderGameObject(GameObject gameObject)
     {
-        var components = gameObject.GetAllComponents().OfType<DebugComponent>();
-        if (!components.Any()) return;
+        var components = gameObject.GetDebugComponents();
         if (!ImGui.TreeNode(gameObject.GetType().Name)) return;
 
-        foreach (var component in components) RenderComponent(component);
+        if (components.Any() && ImGui.CollapsingHeader("Components"))
+        {
+            foreach (var component in components) RenderComponent(component);
+        }
+
+        var objectChildren = gameObject.GetChildren();
+        if (objectChildren.Any() && ImGui.CollapsingHeader("Children"))
+        {
+            foreach (var child in gameObject.GetChildren()) RenderGameObject(child);
+        }
+
         ImGui.TreePop();
     }
 

@@ -8,18 +8,17 @@ namespace RayWork;
 public class RayApplication
 {
     public static Color BackgroundColor { get; set; } = new Color(177, 177, 177, 255);
+    public static float DeltaTime { get; private set; }
 
-    public static Vector2 WindowSize
-    {
-        get => _windowSize;
-    }
+    public static Vector2 WindowSize => _windowSize;
 
     public static event EventHandler<WindowSizeChangedEventArgs> OnWindowSizeChanged;
 
     private static long _lastUpdate;
     private static Vector2 _windowSize;
 
-    public RayApplication(Scene mainScene, int windowWidth, int windowHeight, string title = "Untitled", ConfigFlags configFlags = 0)
+    public RayApplication(Scene mainScene, int windowWidth, int windowHeight, string title = "Untitled",
+        ConfigFlags configFlags = 0)
     {
         Raylib.SetConfigFlags(configFlags);
         _windowSize = new Vector2(windowWidth, windowHeight);
@@ -64,7 +63,7 @@ public class RayApplication
     {
         var currentWindowSize = new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
         var currentTimeMs = GetTimeMs();
-        float deltaTime = currentTimeMs - _lastUpdate;
+        DeltaTime = currentTimeMs - _lastUpdate;
 
         if (currentWindowSize != _windowSize)
         {
@@ -75,7 +74,7 @@ public class RayApplication
             }
         }
 
-        SceneManager.Scene.Update(deltaTime);
+        SceneManager.Scene.Update();
 
         _lastUpdate = currentTimeMs;
     }

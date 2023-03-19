@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using Raylib_CsLo;
+﻿using Raylib_CsLo;
 using RayWork;
 using RayWork.Objects;
 
@@ -16,11 +15,12 @@ namespace RayWorkTester
         {
             AddChild(new TestObject());
             AddChild(new AnchorTestObject());
-            AddChild(new Text("Testing string", new Vector2(100, 10)));
+            // AddChild(new Text("Testing string", new Vector2(100, 10)));
             AddChild(new TextBlock(LoremIpsum, new Rectangle(200, 300, 300, 60), Raylib.BLACK));
+            AddChild(new Panel(new Rectangle(500, 500, 50, 50)));
         }
 
-        public override void UpdateLoop(float deltaTime)
+        public override void UpdateLoop()
         {
             if (Raylib.IsKeyPressed(KeyboardKey.KEY_F3)) Debugger.IsDebugging = !Debugger.IsDebugging;
         }

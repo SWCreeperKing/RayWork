@@ -31,7 +31,7 @@ public static class Extensions
     /// <param name="text">text to draw</param>
     /// <param name="rect">the bounds to draw text around</param>
     /// <param name="fontColor"><see cref="Color"/> of the text</param>
-    /// <param name="fontSize">size of the text</param>
+    /// <param name="fontSize">sizeEquation of the text</param>
     /// <param name="spacing">spacing of the characters</param>
     /// <param name="wordWrap">to wrap words instead of just characters</param>
     public static void DrawTextRec(this Font font, string text, Rectangle rect, Color fontColor,

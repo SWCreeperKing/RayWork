@@ -8,12 +8,12 @@ public abstract class GameObject : ComponentObject
     
     private readonly ListRegister<GameObject> _childRegister = new();
 
-    public void Update(float deltaTime)
+    public void Update()
     {
         UpdateRegister();
         _childRegister.UpdateRegister();
-        UpdateLoop(deltaTime);
-        _childRegister.ExecuteRegister(child => child.Update(deltaTime));
+        UpdateLoop();
+        _childRegister.ExecuteRegister(child => child.Update());
     }
 
     public void Render()
@@ -22,7 +22,7 @@ public abstract class GameObject : ComponentObject
         _childRegister.ExecuteRegister(child => child.Render());
     }
     
-    public virtual void UpdateLoop(float deltaTime)
+    public virtual void UpdateLoop()
     {
     }
 
@@ -44,5 +44,10 @@ public abstract class GameObject : ComponentObject
     {
         gameObject.Parent = null;
         _childRegister.RemoveFromRegister(gameObject);
+    }
+
+    public GameObject[] GetChildren()
+    {
+        return _childRegister.GetRegisterTypes();
     }
 }

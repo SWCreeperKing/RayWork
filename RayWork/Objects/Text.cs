@@ -6,19 +6,23 @@ namespace RayWork.Objects;
 
 public class Text : GameObject
 {
-    public PositionComponent positionComponent;
+    public TransformComponent transformComponent;
     public ColorComponent colorComponent;
     public TextComponent textComponent;
-    
-    public Text(string text, Vector2 position)
+
+    public Text(string text, TransformComponent transformComponent, Color? color = null)
     {
-        AddComponent(positionComponent = new PositionComponent(position));
-        AddComponent(colorComponent = new ColorComponent(Raylib.BLACK));
+        AddComponent(this.transformComponent = transformComponent);
+        AddComponent(colorComponent = new ColorComponent(color ?? Raylib.BLACK));
         AddComponent(textComponent = new TextComponent(text));
+    }
+
+    public Text(string text, Vector2 position, Color? color = null) : this(text, new PositionComponent(position), color)
+    {
     }
 
     public override void RenderLoop()
     {
-        textComponent.DrawText(positionComponent.position, Vector2.Zero, colorComponent.color);
+        textComponent.DrawText(transformComponent.Position, Vector2.Zero, colorComponent.Color);
     }
 }

@@ -5,7 +5,7 @@ namespace RayWork.CoreComponents;
 
 public abstract class TransformComponent : DebugComponent
 {
-    public Vector2 position;
+    public abstract Vector2 Position { get; set; }
 
     public virtual void Debug()
     {

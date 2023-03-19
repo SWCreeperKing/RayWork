@@ -6,11 +6,16 @@ public class ListRegister<RegisterType>
     private readonly List<RegisterType> _registerAddQueue = new();
     private readonly List<RegisterType> _registerRemoveQueue = new();
 
+    private RegisterType[] _cachedRegister = Array.Empty<RegisterType>();
+
+    public event EventHandler OnRegisterCacheUpdated;
+
     public void ExecuteRegister(Action<RegisterType> registerAction)
     {
-        for (var i = 0; i < _register.Count; i++)
+        if (_cachedRegister is null || _cachedRegister.Length < 0) return;
+        for (var i = 0; i < _cachedRegister.Length; i++)
         {
-            registerAction(_register[i]);
+            registerAction(_cachedRegister[i]);
         }
     }
 
@@ -20,17 +25,19 @@ public class ListRegister<RegisterType>
         {
             _register.AddRange(_registerAddQueue);
             _registerAddQueue.Clear();
+            UpdateRegisterCache();
         }
-        
+
         if (!_registerRemoveQueue.Any()) return;
 
         for (var i = 0; i < _registerRemoveQueue.Count; i++)
         {
             _register.Remove(_registerRemoveQueue[i]);
+            UpdateRegisterCache();
         }
     }
-    
-    public void AddToRegister(RegisterType objectToRegister) 
+
+    public void AddToRegister(RegisterType objectToRegister)
     {
         _registerAddQueue.Add(objectToRegister);
     }
@@ -57,11 +64,18 @@ public class ListRegister<RegisterType>
 
     public RegisterType[] GetRegisterTypes()
     {
-        return _register.ToArray();
+        return _cachedRegister;
     }
 
     public bool IsRegisterEmpty()
     {
         return _register.Any();
+    }
+
+    public void UpdateRegisterCache()
+    {
+        _cachedRegister = _register.ToArray();
+
+        if (OnRegisterCacheUpdated is not null) OnRegisterCacheUpdated(null, null);
     }
 }

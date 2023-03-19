@@ -3,6 +3,15 @@
 public class ComponentObject
 {
     private readonly ListRegister<Component> _componentRegister = new();
+    private DebugComponent[] _debugComponents;
+
+    public ComponentObject()
+    {
+        _componentRegister.OnRegisterCacheUpdated += (_, _) =>
+        {
+            _debugComponents = GetAllComponents().OfType<DebugComponent>().ToArray();
+        };
+    }
 
     public void UpdateRegister()
     {
@@ -34,6 +43,11 @@ public class ComponentObject
         return _componentRegister.GetTypesFromRegister<ComponentType>();
     }
 
+    public DebugComponent[] GetDebugComponents()
+    {
+        return _debugComponents;
+    }
+    
     public Component[] GetAllComponents()
     {
         return _componentRegister.GetRegisterTypes();

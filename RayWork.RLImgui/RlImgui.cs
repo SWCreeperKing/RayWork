@@ -461,6 +461,16 @@ public static class RlImgui
         }
     }
 
+    public static bool ImguiComobox(this Enum options, string label, ref int currentItem, params string[] items)
+    {
+        return ImGui.Combo(label, ref currentItem, items, items.Length);
+    }
+
+    public static bool ImguiComobox(this Enum options, string label, ref int currentItem)
+    {
+        return options.ImguiComobox(label, ref currentItem, options.GetType().GetEnumNames());
+    }
+
     private static int CalcSizeInUtf8(Span<char> s, int start, int length)
     {
         unsafe

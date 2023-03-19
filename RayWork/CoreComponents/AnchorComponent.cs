@@ -5,27 +5,26 @@ namespace RayWork.CoreComponents;
 
 public class AnchorComponent : TransformComponent
 {
-    public Func<Vector2, Vector2> anchorEquation;
-
-    private Vector2 _windowSize;
-
-    public AnchorComponent(Func<Vector2, Vector2> anchorEquation)
+    public override Vector2 Position
     {
-        _windowSize = RayApplication.WindowSize;
-        this.anchorEquation = anchorEquation;
-        position = this.anchorEquation(_windowSize);
+        get => _position = anchorEquation();
+        set { }
+    }
 
-        RayApplication.OnWindowSizeChanged += (_, windowChangeArgs) =>
-        {
-            position = this.anchorEquation(_windowSize = windowChangeArgs.newWindowSize);
-        };
+    public Func<Vector2> anchorEquation;
+
+    private Vector2 _position;
+
+    public AnchorComponent(Func<Vector2> anchorEquation)
+    {
+        this.anchorEquation = anchorEquation;
     }
 
     public override void Debug()
     {
-        ImGui.Text($"Position: {position}");
-        ImGui.Text($"WindowSize: {_windowSize}");
+        ImGui.Text($"Position: {_position}");
+
         if (!ImGui.Button("Recalculate")) return;
-        position = anchorEquation(_windowSize);
+        _position = anchorEquation();
     }
 }
