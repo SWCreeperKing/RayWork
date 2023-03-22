@@ -10,6 +10,7 @@
     <ItemGroup>
       <ProjectReference Include="..\RayWork.ECS\RayWork.ECS.csproj" />
       <ProjectReference Include="..\RayWork.RLImgui\RayWork.RLImgui.csproj" />
+      <ProjectReference Include="..\RayWork.SaveSystem\RayWork.SaveSystem.csproj" />
     </ItemGroup>
 
 </Project>

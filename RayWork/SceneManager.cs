@@ -3,10 +3,11 @@ namespace RayWork;
 public static class SceneManager
 {
     private static readonly Dictionary<string, Scene> _scenes = new();
+    private static readonly List<string> _initializedScenes = new();
     private static string _activeSceneId = "main";
 
     public static event EventHandler OnSceneListChanged;
-    
+
     public static Scene Scene
     {
         get
@@ -36,9 +37,26 @@ public static class SceneManager
 
         removedScene = _scenes[id];
         _scenes.Remove(id);
+        if (_initializedScenes.Contains(id)) _initializedScenes.Remove(id);
         SceneListChanged();
     }
 
+    public static void DisposeScenes()
+    {
+        try
+        {
+            foreach (var id in _initializedScenes)
+            {
+                _scenes[id].DisposeLoop();
+            }
+        }
+        catch (Exception e)
+        {
+            Logger.Log(Logger.Level.Info, "An Error was caught during Dispose: ");
+            Logger.Log(e);
+        }
+    }
+    
     public static void SwitchScene(string id)
     {
         if (!_scenes.ContainsKey(id))
@@ -47,7 +65,12 @@ public static class SceneManager
         }
 
         _activeSceneId = id;
-        Scene.Initialize();
+        if (!_initializedScenes.Contains(id))
+        {
+            Scene.Initialize();
+            _initializedScenes.Add(id);
+        }
+        else Scene.ReInitialize();
     }
 
     public static (string, Scene)[] GetAllScenes()

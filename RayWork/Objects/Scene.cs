@@ -23,6 +23,10 @@ public abstract class Scene
     {
     }
 
+    public virtual void ReInitialize()
+    {
+    }
+    
     public virtual void UpdateLoop()
     {
     }
@@ -31,6 +35,10 @@ public abstract class Scene
     {
     }
 
+    public virtual void DisposeLoop()
+    {
+    }
+    
     public void AddChild(GameObject gameObject)
     {
         gameObject.Parent = this;

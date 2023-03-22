@@ -17,24 +17,31 @@ public class RayApplication
     private static long _lastUpdate;
     private static Vector2 _windowSize;
 
-    public RayApplication(Scene mainScene, int windowWidth, int windowHeight, string title = "Untitled",
+    public RayApplication(Scene mainScene, Vector2 windowSize, string title = "Untitled",
         int fps = 60, ConfigFlags configFlags = 0)
     {
         Raylib.SetConfigFlags(configFlags);
         Raylib.SetTargetFPS(fps);
-        _windowSize = new Vector2(windowWidth, windowHeight);
+        _windowSize = windowSize;
 
         Logger.Initialize();
         Debugger.Initialize();
-        Raylib.InitWindow(windowWidth, windowHeight, title);
+        Raylib.InitWindow((int) windowSize.X, (int) windowSize.Y, title);
         SceneManager.AddScene("main", mainScene);
         RlImgui.Setup(() => _windowSize);
 
         Start();
     }
 
+    public RayApplication(Scene mainScene, int windowWidth, int windowHeight, string title = "Untitled", int fps = 60,
+        ConfigFlags configFlags = 0) : this(mainScene, new Vector2(windowWidth, windowHeight), title, fps, configFlags)
+    {
+    }
+
     private void Start()
     {
+        AppDomain.CurrentDomain.ProcessExit += Dispose;
+
         _lastUpdate = GetTimeMs();
 
         try
@@ -64,7 +71,7 @@ public class RayApplication
     {
         var currentWindowSize = new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
         var currentTimeMs = GetTimeMs();
-        DeltaTime = (currentTimeMs - _lastUpdate)/1000f;
+        DeltaTime = (currentTimeMs - _lastUpdate) / 1000f;
 
         if (currentWindowSize != _windowSize)
         {
@@ -94,9 +101,11 @@ public class RayApplication
         Raylib.EndDrawing();
     }
 
-    private void Dispose()
+    private void Dispose(object? sender, EventArgs eventArgs)
     {
         RlImgui.Shutdown();
+        SceneManager.DisposeScenes();
+        Logger.CheckWrite();
     }
 
     public static long GetTimeMs() => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();

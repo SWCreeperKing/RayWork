@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayWork.RLImgui", "RayWork.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayWorkTester", "RayWorkTester\RayWorkTester.csproj", "{3BF81E8C-8F89-425A-B05E-8D44A17C5B21}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayWork.SaveSystem", "RayWork.SaveSystem\RayWork.SaveSystem.csproj", "{A03BDA9C-49E7-40CD-9092-EAB55C798887}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{3BF81E8C-8F89-425A-B05E-8D44A17C5B21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BF81E8C-8F89-425A-B05E-8D44A17C5B21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BF81E8C-8F89-425A-B05E-8D44A17C5B21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A03BDA9C-49E7-40CD-9092-EAB55C798887}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A03BDA9C-49E7-40CD-9092-EAB55C798887}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A03BDA9C-49E7-40CD-9092-EAB55C798887}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A03BDA9C-49E7-40CD-9092-EAB55C798887}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

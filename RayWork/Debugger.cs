@@ -29,31 +29,33 @@ public static class Debugger
     private static void RenderScene(string id, Scene scene)
     {
         if (!ImGui.CollapsingHeader(id)) return;
-        foreach (var child in scene.GetChildren()) RenderGameObject(child);
+        var objects = scene.GetChildren();
+        for (var i = 0; i < objects.Length; i++) RenderGameObject(objects[i], i);
     }
 
-    private static void RenderGameObject(GameObject gameObject)
+    private static void RenderGameObject(GameObject gameObject, int i)
     {
         var components = gameObject.GetDebugComponents();
-        if (!ImGui.TreeNode(gameObject.GetType().Name)) return;
+        if (!ImGui.TreeNode($"({i + 1}) {gameObject.GetType().Name}")) return;
 
         if (components.Any() && ImGui.CollapsingHeader("Components"))
         {
-            foreach (var component in components) RenderComponent(component);
+            for (var j = 0; j < components.Length; j++) RenderComponent(components[j], j);
         }
 
         var objectChildren = gameObject.GetChildren();
         if (objectChildren.Any() && ImGui.CollapsingHeader("Children"))
         {
-            foreach (var child in gameObject.GetChildren()) RenderGameObject(child);
+            var objects = gameObject.GetChildren();
+            for (var j = 0; j < objects.Length; j++) RenderGameObject(objects[j], j);
         }
 
         ImGui.TreePop();
     }
 
-    private static void RenderComponent(DebugComponent component)
+    private static void RenderComponent(DebugComponent component, int i)
     {
-        if (!ImGui.TreeNode(component.GetType().Name)) return;
+        if (!ImGui.TreeNode($"({i + 1}) {component.GetType().Name}")) return;
         component.Debug();
         ImGui.TreePop();
     }

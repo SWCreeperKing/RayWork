@@ -47,7 +47,8 @@ public static class Logger
                 _ => throw new ArgumentOutOfRangeException(nameof(args.LogMessageLevel), args.LogMessageLevel, null)
             };
 
-            Console.WriteLine($"[{args.TimeOfMessage}]: [{args.LogMessage}]");
+            if (args.LogMessageLevel is Error) Console.WriteLine($"[{args.TimeOfMessage}]\n\t{args.LogMessage}");
+            else Console.WriteLine($"[{args.TimeOfMessage}]: [{args.LogMessage}]");
             Console.ForegroundColor = ConsoleColor.White;
         };
     }
@@ -68,12 +69,7 @@ public static class Logger
 
     public static void Log(string text) => Log(Debug, text);
     public static void Log(object text) => Log(Debug, text.ToString());
-
-    public static void Log(Exception e, string furtherInfo = "")
-    {
-        if (!furtherInfo.Any()) Log(Warning, $"Error Info: {furtherInfo}");
-        Log(Error, $"{e.Message}\n{e.StackTrace}");
-    }
+    public static void Log(Exception e) => Log(Error, $"{e.Message}\n{e.StackTrace}");
 
     public static T LogReturn<T>(T t)
     {
@@ -84,12 +80,18 @@ public static class Logger
     public static void Log(Level level, string text)
     {
         if (!showDebugLogs && level is Debug) return;
-        if (level == Error) _hasError = true;
 
         var time = $"{DateTime.Now:G}";
-        _log.Add($"[{level}] [{time}] [\"{text}\"]");
 
-        if (LogRecieved is not null) LogRecieved(null, new(level, time, text));
+        if (level is Error)
+        {
+            _hasError = true;
+            _log.Add($"[{level}] [{time}]\n\t{text.Trim()}");
+        }
+        else _log.Add($"[{level}] [{time}] [{text.Trim()}]");
+
+
+        if (LogRecieved is not null) LogRecieved(null, new(level, time, text.Trim()));
     }
 
     public static void Log(Level level, object text) => Log(level, text.ToString());

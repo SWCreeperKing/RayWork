@@ -2,6 +2,7 @@ using System.Numerics;
 using Raylib_CsLo;
 using RayWork;
 using RayWork.Objects;
+using RayWork.SaveSystem;
 
 namespace RayWorkTester;
 
@@ -14,13 +15,17 @@ public class SimonSays : Scene
 
     public bool readIn;
     public float readWaitSeconds = 1;
-    public int highScore;
+    public HighScore highScore = new();
 
     private int _readIndex = 0;
     private int _readInput = 0;
 
     public override void Initialize()
     {
+        SaveSystem.InitializeSaveSystem("SW_CreeperKing", "SimonSays");
+        SaveSystem.AddSaveItem("highscore", highScore);
+        SaveSystem.LoadItems();
+        
         buttons = new SimonButton[]
         {
             new(new Vector2(300), new Vector2(75), Raylib.BLUE.MakeDarker()),
@@ -69,7 +74,7 @@ public class SimonSays : Scene
 
     public override void RenderLoop()
     {
-        Raylib.DrawText($"Score: {order.Count}\nHigh Score: {highScore}", 15, 15, 24, Raylib.BLUE);
+        Raylib.DrawText($"Score: {order.Count}\nHigh Score: {highScore.highScore}", 15, 15, 24, Raylib.BLUE);
     }
 
     public void ResetButtons()
@@ -114,8 +119,15 @@ public class SimonSays : Scene
 
     public void OnFail()
     {
-        highScore = Math.Max(order.Count, highScore);
+        highScore.highScore = Math.Max(order.Count, highScore.highScore);
+        SaveSystem.SaveItems();
+        SaveSystem.OpenDirectory();
         order.Clear();
         AddToOrder();
     }
+}
+
+public class HighScore
+{
+    public int highScore;
 }

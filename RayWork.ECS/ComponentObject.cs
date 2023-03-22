@@ -3,7 +3,7 @@
 public class ComponentObject
 {
     private readonly ListRegister<Component> _componentRegister = new();
-    private DebugComponent[] _debugComponents;
+    private DebugComponent[] _debugComponents = Array.Empty<DebugComponent>();
 
     public ComponentObject()
     {
