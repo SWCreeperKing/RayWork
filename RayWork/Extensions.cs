@@ -7,6 +7,7 @@ namespace RayWork;
 
 public static class Extensions
 {
+    public static int maskingLayer;
     private static readonly Dictionary<string, byte[]> StringCache = new();
 
     public static Vector2 Position(this Rectangle rectangle)
@@ -32,6 +33,26 @@ public static class Extensions
     public static Rectangle Rect(this Vector2 position, Vector2 size)
     {
         return new Rectangle(position.X, position.Y, size.X, size.Y);
+    }
+
+    public static Texture GetTexture(this Image image)
+    {
+        return LoadTextureFromImage(image);
+    }
+
+    /// <summary>
+    /// mask a draw action within the bounds of 2 <see cref="Vector2"/>s
+    /// </summary>
+    /// <param name="pos">top left of mask</param>
+    /// <param name="size">size of mask</param>
+    /// <param name="draw">draw action to mask</param>
+    public static void MaskDraw(this Vector2 pos, Vector2 size, Action draw)
+    {
+        maskingLayer++;
+        BeginScissorMode((int) pos.X, (int) pos.Y, (int) size.X, (int) size.Y);
+        draw();
+        if (maskingLayer == 1) EndScissorMode();
+        maskingLayer--;
     }
 
     /// <summary>

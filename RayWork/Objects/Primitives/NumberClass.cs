@@ -8,6 +8,7 @@ public record NumberClass
     public static readonly NumberClass One = new(1);
     public static readonly NumberClass Two = new(2);
     public static readonly NumberClass E = new(Math.E);
+    public static readonly NumberClass MaxValue = new(9.999999999999999, double.MaxValue);
 
     public double Mantissa;
     public double Exponent;
@@ -127,6 +128,16 @@ public record NumberClass
     #region Casting Overloading
 
     public static implicit operator NumberClass(double number)
+    {
+        return new NumberClass(number);
+    }
+    
+    public static implicit operator NumberClass((double mantissa, double exponent) number)
+    {
+        return new NumberClass(number.mantissa, number.exponent);
+    }
+    
+    public static implicit operator NumberClass(string number)
     {
         return new NumberClass(number);
     }

@@ -1,3 +1,4 @@
+using Raylib_CsLo;
 using RayWork.ECS;
 
 namespace RayWork;
@@ -32,6 +33,11 @@ public abstract class GameObject : ComponentObject
 
     public virtual void DebugLoop()
     {
+    }
+
+    public virtual MouseCursor OccupiedMouseCursor()
+    {
+        return MouseCursor.MOUSE_CURSOR_DEFAULT;
     }
     
     public void AddChild(GameObject gameObject)

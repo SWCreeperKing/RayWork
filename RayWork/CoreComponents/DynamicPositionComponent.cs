@@ -3,21 +3,21 @@ using ImGuiNET;
 
 namespace RayWork.CoreComponents;
 
-public class AnchorComponent : TransformComponent
+public class DynamicPositionComponent : TransformComponent
 {
     public override Vector2 Position
     {
-        get => _position = anchorEquation();
+        get => _position = positionEquation();
         set { }
     }
 
-    public Func<Vector2> anchorEquation;
+    public Func<Vector2> positionEquation;
 
     private Vector2 _position;
 
-    public AnchorComponent(Func<Vector2> anchorEquation)
+    public DynamicPositionComponent(Func<Vector2> positionEquation)
     {
-        this.anchorEquation = anchorEquation;
+        this.positionEquation = positionEquation;
     }
 
     public override void Debug()
@@ -25,6 +25,6 @@ public class AnchorComponent : TransformComponent
         ImGui.Text($"Position: {_position}");
 
         if (!ImGui.Button("Recalculate")) return;
-        _position = anchorEquation();
+        _position = positionEquation();
     }
 }

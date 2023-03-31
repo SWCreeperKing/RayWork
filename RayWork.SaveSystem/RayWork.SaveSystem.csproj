@@ -4,10 +4,31 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+
+        <Authors>SW_CreeperKing</Authors>
+        <RepositoryType>git</RepositoryType>
+        <PackageProjectUrl>https://github.com/SWCreeperKing/RayWork</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/SWCreeperKing/RayWork</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <License>https://github.com/SWCreeperKing/RayWork/LICENSE</License>
+        <PackageTags>framework raylib-cslo raylib raywork</PackageTags>
+
+        <PackageId>RayWork.SaveSystem</PackageId>
+        <Description>An independent save system made for RayWork (but can be used for any other project)</Description>
+        <PackageVersion>0.1</PackageVersion>
+        <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <AppxSymbolPackageEnabled>true</AppxSymbolPackageEnabled>
+        <AppxSymbolPackageOutput>snupkg</AppxSymbolPackageOutput>
+        <DebugSymbols>true</DebugSymbols>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <LangVersion>11</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
     </ItemGroup>
 
 </Project>

@@ -59,4 +59,9 @@ public static class Debugger
         component.Debug();
         ImGui.TreePop();
     }
+
+    public static void ToggleDebugger()
+    {
+        IsDebugging = !IsDebugging;
+    }
 }

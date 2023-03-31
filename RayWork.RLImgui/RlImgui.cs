@@ -488,5 +488,5 @@ public static class RlImgui
 
     private static unsafe byte* Allocate(int byteCount) => (byte*) Marshal.AllocHGlobal(byteCount);
 
-    private static unsafe void Free(byte* ptr) => Marshal.FreeHGlobal((IntPtr) ptr);
+    private static unsafe void Free(byte* ptr) => Marshal.FreeHGlobal((nint) ptr);
 }

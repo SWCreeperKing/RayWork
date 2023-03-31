@@ -21,8 +21,8 @@ public class TextBlock : GameObject
     {
     }
 
-    public TextBlock(string text, Rectangle rectangle, Color? color = null) : this(text, rectangle.Position(),
-        rectangle.Size(), color)
+    public TextBlock(string text, Rectangle rectangle, Color? color = null) : this(text, rectangle.Position,
+        rectangle.Size, color)
     {
     }
 

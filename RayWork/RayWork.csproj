@@ -5,6 +5,27 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+        <Authors>SW_CreeperKing</Authors>
+        <RepositoryType>git</RepositoryType>
+        <PackageProjectUrl>https://github.com/SWCreeperKing/RayWork</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/SWCreeperKing/RayWork</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <License>https://github.com/SWCreeperKing/RayWork/LICENSE</License>
+        <PackageTags>framework raylib-cslo raylib raywork</PackageTags>
+        
+        <PackageId>RayWork</PackageId>
+        <Description>A Framework for Raylib-cslo</Description>
+        <PackageVersion>0.1.1</PackageVersion>
+        <PackageReleaseNotes>Dispose BEFORE receiving error</PackageReleaseNotes>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <AppxSymbolPackageEnabled>true</AppxSymbolPackageEnabled>
+        <AppxSymbolPackageOutput>snupkg</AppxSymbolPackageOutput>
+        <DebugSymbols>true</DebugSymbols>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <LangVersion>11</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>

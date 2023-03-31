@@ -25,7 +25,7 @@ public class SimonSays : Scene
         SaveSystem.InitializeSaveSystem("SW_CreeperKing", "SimonSays");
         SaveSystem.AddSaveItem("highscore", highScore);
         SaveSystem.LoadItems();
-        
+
         buttons = new SimonButton[]
         {
             new(new Vector2(300), new Vector2(75), Raylib.BLUE.MakeDarker()),
@@ -44,7 +44,7 @@ public class SimonSays : Scene
 
         Button resetButton = new("Restart", new Vector2(500));
         resetButton.OnButtonPressed += (_, _) => Reset();
-        
+
         AddChild(resetButton);
         
         AddToOrder();
@@ -120,10 +120,14 @@ public class SimonSays : Scene
     public void OnFail()
     {
         highScore.highScore = Math.Max(order.Count, highScore.highScore);
-        SaveSystem.SaveItems();
         SaveSystem.OpenDirectory();
         order.Clear();
         AddToOrder();
+    }
+
+    public override void DisposeLoop()
+    {
+        SaveSystem.SaveItems();
     }
 }
 

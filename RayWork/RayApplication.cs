@@ -40,21 +40,21 @@ public class RayApplication
 
     private void Start()
     {
-        AppDomain.CurrentDomain.ProcessExit += Dispose;
-
         _lastUpdate = GetTimeMs();
 
         try
         {
             SceneManager.Scene.Initialize();
             RunRayLoop();
+            Dispose();
         }
         catch (Exception e)
         {
             Logger.Log(e);
+            Dispose();
             Console.WriteLine(
-                "\n\nPROGRAM HAS CRASHED\nPROGRAM IS PAUSED TO ENCOURAGE ERROR REPORT\nPress any key to continue");
-            Console.ReadKey(true);
+                "\n\nPROGRAM HAS CRASHED\nPROGRAM IS PAUSED TO ENCOURAGE ERROR REPORT\nPress enter key to continue . . .");
+            Console.ReadLine();
         }
     }
 
@@ -82,7 +82,7 @@ public class RayApplication
             }
         }
 
-        Input.UpdateKeys(DeltaTime);
+        Input.UpdateInput(DeltaTime);
         SceneManager.Scene.Update();
 
         _lastUpdate = currentTimeMs;
@@ -101,7 +101,7 @@ public class RayApplication
         Raylib.EndDrawing();
     }
 
-    private void Dispose(object? sender, EventArgs eventArgs)
+    private void Dispose()
     {
         RlImgui.Shutdown();
         SceneManager.DisposeScenes();

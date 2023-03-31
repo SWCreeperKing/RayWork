@@ -76,8 +76,7 @@ public static class SaveSystem
     {
         Process.Start("explorer.exe", $@"{SaveDirectory}".Replace("/", "\\"));
     }
-
-
+    
     /// <summary>
     /// this is basically = but it doesn't not reset the original reference
     /// </summary>

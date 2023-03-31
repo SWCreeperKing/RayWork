@@ -1,6 +1,6 @@
 using System.Numerics;
-using Raylib_CsLo;
 using RayWork.CoreComponents;
+using RayRectangle = Raylib_CsLo.Rectangle;
 
 namespace RayWork.Objects;
 
@@ -50,7 +50,10 @@ public class Label : GameObject
     {
     }
 
-    public Label(string text, Rectangle rectangle) : this(text, rectangle.Position(), rectangle.Size())
+    public Label(string text, Rectangle rectangle) : this(text, rectangle.Position, rectangle.Size)
+    {
+    }
+    public Label(string text, RayRectangle rectangle) : this(text, rectangle.Position(), rectangle.Size())
     {
     }
 

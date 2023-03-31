@@ -2,6 +2,8 @@ using System.Numerics;
 using ImGuiNET;
 using Raylib_CsLo;
 using RayWork.Objects;
+using Rectangle = RayWork.Objects.Rectangle;
+using RayRectangle = Raylib_CsLo.Rectangle;
 
 namespace RayWork.CoreComponents;
 
@@ -9,7 +11,7 @@ public class TextRectangleComponent : FontComponent
 {
     public bool wordWrap = true;
     public CompatibleColor color;
-    
+
     public TextRectangleComponent(string text, Color? color = null)
     {
         this.text = text;
@@ -17,6 +19,11 @@ public class TextRectangleComponent : FontComponent
     }
 
     public void DrawText(Rectangle rectangle)
+    {
+        Font.DrawTextRec(text, rectangle, color, fontSize, spacing, wordWrap);
+    }
+
+    public void DrawText(RayRectangle rectangle)
     {
         Font.DrawTextRec(text, rectangle, color, fontSize, spacing, wordWrap);
     }
