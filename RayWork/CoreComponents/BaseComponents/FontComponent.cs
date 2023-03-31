@@ -4,32 +4,31 @@ using RayWork.ECS;
 
 namespace RayWork.CoreComponents;
 
-public abstract class FontComponent : DebugComponent
+public abstract class FontComponent : IDebugComponent
 {
     public static Font DefaultFont = Raylib.GetFontDefault();
 
-    public Font Font => font ?? DefaultFont;
+    public Font Font => _Font ?? DefaultFont;
+    private Font? _Font;
 
-    public Font? font;
+    public string Text;
+    public float FontSize = 24;
+    public float Spacing = 1.5f;
 
-    public string text;
-    public float fontSize = 24;
-    public float spacing = 1.5f;
-
-    private (string, float, float, Vector2) cache = ("", 0, 0, Vector2.Zero);
+    private (string, float, float, Vector2) Cache = ("", 0, 0, Vector2.Zero);
 
     public Vector2 Size()
     {
-        if (cache.Item1 != text || cache.Item2 != fontSize || cache.Item3 != spacing)
-        {
-            var measure = Raylib.MeasureTextEx(Font, text, fontSize, spacing);
-            cache = (text, fontSize, spacing, measure);
-        }
+        if (Cache.Item1 == Text && Cache.Item2 == FontSize && Cache.Item3 == Spacing) return Cache.Item4;
+        var measure = Raylib.MeasureTextEx(Font, Text, FontSize, Spacing);
+        Cache = (Text, FontSize, Spacing, measure);
 
-        return cache.Item4;
+        return Cache.Item4;
     }
 
     public virtual void Debug()
     {
     }
+
+    public void SetFont(Font font) => _Font = font;
 }

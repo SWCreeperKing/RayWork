@@ -6,53 +6,53 @@ namespace RayWork.Objects;
 
 public class Rectangle
 {
-    private RayRectangle _rectangleData = new(0, 0, 0, 0);
-    private Vector2 _rectanglePosition = Vector2.Zero;
-    private Vector2 _rectangleSize = Vector2.Zero;
+    private RayRectangle RectangleData = new(0, 0, 0, 0);
+    private Vector2 RectanglePosition = Vector2.Zero;
+    private Vector2 RectangleSize = Vector2.Zero;
 
     public float X
     {
-        get => _rectangleData.x;
+        get => RectangleData.x;
         set
         {
-            _rectangleData.x = value;
-            _rectanglePosition.X = value;
+            RectangleData.x = value;
+            RectanglePosition.X = value;
         }
     }
 
     public float Y
     {
-        get => _rectangleData.y;
+        get => RectangleData.y;
         set
         {
-            _rectangleData.y = value;
-            _rectanglePosition.Y = value;
+            RectangleData.y = value;
+            RectanglePosition.Y = value;
         }
     }
 
     public float Width
     {
-        get => _rectangleData.width;
+        get => RectangleData.width;
         set
         {
-            _rectangleData.width = value;
-            _rectangleSize.X = value;
+            RectangleData.width = value;
+            RectangleSize.X = value;
         }
     }
 
     public float Height
     {
-        get => _rectangleData.height;
+        get => RectangleData.height;
         set
         {
-            _rectangleData.height = value;
-            _rectangleSize.Y = value;
+            RectangleData.height = value;
+            RectangleSize.Y = value;
         }
     }
 
     public Vector2 Position
     {
-        get => _rectanglePosition;
+        get => RectanglePosition;
         set
         {
             X = value.X;
@@ -62,7 +62,7 @@ public class Rectangle
 
     public Vector2 Size
     {
-        get => _rectangleSize;
+        get => RectangleSize;
         set
         {
             Width = value.X;
@@ -72,7 +72,7 @@ public class Rectangle
 
     public RayRectangle RayLibRectangle
     {
-        get => _rectangleData;
+        get => RectangleData;
         set
         {
             X = value.x;

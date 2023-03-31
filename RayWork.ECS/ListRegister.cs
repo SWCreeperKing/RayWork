@@ -1,81 +1,64 @@
 ﻿namespace RayWork.ECS;
 
-public class ListRegister<RegisterType>
+public class ListRegister<TRegisterType>
 {
-    private readonly List<RegisterType> _register = new();
-    private readonly List<RegisterType> _registerAddQueue = new();
-    private readonly List<RegisterType> _registerRemoveQueue = new();
+    private readonly List<TRegisterType> Register = new();
+    private readonly List<TRegisterType> RegisterAddQueue = new();
+    private readonly List<TRegisterType> RegisterRemoveQueue = new();
 
-    private RegisterType[] _cachedRegister = Array.Empty<RegisterType>();
+    private TRegisterType[] CachedRegister = Array.Empty<TRegisterType>();
 
     public event EventHandler OnRegisterCacheUpdated;
 
-    public void ExecuteRegister(Action<RegisterType> registerAction)
+    public void ExecuteRegister(Action<TRegisterType> registerAction)
     {
-        if (_cachedRegister is null || _cachedRegister.Length < 0) return;
-        for (var i = 0; i < _cachedRegister.Length; i++)
+        if (CachedRegister is null || CachedRegister.Length < 0) return;
+        for (var i = 0; i < CachedRegister.Length; i++)
         {
-            registerAction(_cachedRegister[i]);
+            registerAction(CachedRegister[i]);
         }
     }
 
     public void UpdateRegister()
     {
-        if (_registerAddQueue.Any())
+        if (RegisterAddQueue.Any())
         {
-            _register.AddRange(_registerAddQueue);
-            _registerAddQueue.Clear();
+            Register.AddRange(RegisterAddQueue);
+            RegisterAddQueue.Clear();
             UpdateRegisterCache();
         }
 
-        if (!_registerRemoveQueue.Any()) return;
+        if (!RegisterRemoveQueue.Any()) return;
 
-        for (var i = 0; i < _registerRemoveQueue.Count; i++)
+        for (var i = 0; i < RegisterRemoveQueue.Count; i++)
         {
-            _register.Remove(_registerRemoveQueue[i]);
+            Register.Remove(RegisterRemoveQueue[i]);
             UpdateRegisterCache();
         }
     }
 
-    public void AddToRegister(RegisterType objectToRegister)
-    {
-        _registerAddQueue.Add(objectToRegister);
-    }
+    public void AddToRegister(TRegisterType objectToRegister) => RegisterAddQueue.Add(objectToRegister);
+    public void RemoveFromRegister(TRegisterType objectToRemove) => RegisterRemoveQueue.Add(objectToRemove);
 
-    public void RemoveFromRegister(RegisterType objectToRemove)
-    {
-        _registerRemoveQueue.Add(objectToRemove);
-    }
+    public bool RegisterContainsType<TYpeToCheck>() where TYpeToCheck : TRegisterType
+        => Register.OfType<TYpeToCheck>().Any();
 
-    public bool RegisterContainsType<TypeToCheck>() where TypeToCheck : RegisterType
-    {
-        return _register.OfType<TypeToCheck>().Any();
-    }
+    public TYpeToGet GetTypeFromRegister<TYpeToGet>() where TYpeToGet : TRegisterType
+        => Register.OfType<TYpeToGet>().First();
 
-    public TypeToGet GetTypeFromRegister<TypeToGet>() where TypeToGet : RegisterType
-    {
-        return _register.OfType<TypeToGet>().First();
-    }
+    public TYpeToGet[] GetTypesFromRegister<TYpeToGet>() where TYpeToGet : TRegisterType
+        => Register.OfType<TYpeToGet>().ToArray();
 
-    public TypeToGet[] GetTypesFromRegister<TypeToGet>() where TypeToGet : RegisterType
-    {
-        return _register.OfType<TypeToGet>().ToArray();
-    }
-
-    public RegisterType[] GetRegisterTypes()
-    {
-        return _cachedRegister;
-    }
-
-    public bool IsRegisterEmpty()
-    {
-        return _register.Any();
-    }
+    public TRegisterType[] GetRegisterTypes() => CachedRegister;
+    public bool IsRegisterEmpty() => Register.Any();
 
     public void UpdateRegisterCache()
     {
-        _cachedRegister = _register.ToArray();
+        CachedRegister = Register.ToArray();
 
-        if (OnRegisterCacheUpdated is not null) OnRegisterCacheUpdated(null, null);
+        if (OnRegisterCacheUpdated is not null)
+        {
+            OnRegisterCacheUpdated(null, null);
+        }
     }
 }

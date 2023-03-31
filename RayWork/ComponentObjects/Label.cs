@@ -8,27 +8,27 @@ public class Label : GameObject
 {
     public float Padding
     {
-        get => _padding.X;
+        get => _Padding.X;
         set
         {
-            _padding = new Vector2(value);
-            _sizePadding = _padding * 2;
+            _Padding = new(value);
+            SizePadding = _Padding * 2;
         }
     }
+    private Vector2 _Padding;
 
-    public Rectangle rectangle => panelComponent.rectangleComponent.Rectangle;
+    public Rectangle Rectangle => PanelComponent.RectangleComponent.Rectangle;
 
-    public PanelComponent panelComponent;
-    public TextComponent textComponent;
-    public bool textPadding;
+    public PanelComponent PanelComponent;
+    public TextComponent TextComponent;
+    public bool TextPadding;
 
-    private Vector2 _padding;
-    private Vector2 _sizePadding;
+    private Vector2 SizePadding;
 
     public Label(TextComponent textComponent, TransformComponent transformComponent, SizeComponent sizeComponent)
     {
-        AddComponent(panelComponent = new PanelComponent(new RectangleComponent(transformComponent, sizeComponent)));
-        AddComponent(this.textComponent = textComponent);
+        AddComponent(PanelComponent = new(new(transformComponent, sizeComponent)));
+        AddComponent(TextComponent = textComponent);
     }
 
     public Label(string text, Vector2 position, Vector2 size) : this(text, (PositionComponent) position,
@@ -39,11 +39,11 @@ public class Label : GameObject
     public Label(TextComponent textComponent, TransformComponent transformComponent)
     {
         Padding = 2;
-        textPadding = true;
-        AddComponent(this.textComponent = textComponent);
-        AddComponent(panelComponent = new PanelComponent(
-            new RectangleComponent(transformComponent, new DynamicSizeComponent(
-                () => this.textComponent.Size() + _sizePadding))));
+        TextPadding = true;
+        AddComponent(TextComponent = textComponent);
+        AddComponent(PanelComponent = new(
+            new(transformComponent, new DynamicSizeComponent(
+                () => TextComponent.Size() + SizePadding))));
     }
 
     public Label(string text, Vector2 position) : this(text, (PositionComponent) position)
@@ -59,10 +59,10 @@ public class Label : GameObject
 
     public override void RenderLoop()
     {
-        var textPosition = panelComponent.rectangleComponent.Position;
-        if (textPadding) textPosition += _padding;
+        var textPosition = PanelComponent.RectangleComponent.Position;
+        if (TextPadding) textPosition += _Padding;
         
-        panelComponent.DrawPanel();
-        textComponent.DrawText(textPosition, Vector2.Zero);
+        PanelComponent.DrawPanel();
+        TextComponent.DrawText(textPosition, Vector2.Zero);
     }
 }

@@ -6,23 +6,23 @@ namespace RayWork;
 public abstract class GameObject : ComponentObject
 {
     public object Parent { get; set; }
-    
-    private readonly ListRegister<GameObject> _childRegister = new();
+
+    private readonly ListRegister<GameObject> ChildRegister = new();
 
     public void Update()
     {
         UpdateRegister();
-        _childRegister.UpdateRegister();
+        ChildRegister.UpdateRegister();
         UpdateLoop();
-        _childRegister.ExecuteRegister(child => child.Update());
+        ChildRegister.ExecuteRegister(child => child.Update());
     }
 
     public void Render()
     {
         RenderLoop();
-        _childRegister.ExecuteRegister(child => child.Render());
+        ChildRegister.ExecuteRegister(child => child.Render());
     }
-    
+
     public virtual void UpdateLoop()
     {
     }
@@ -35,25 +35,19 @@ public abstract class GameObject : ComponentObject
     {
     }
 
-    public virtual MouseCursor OccupiedMouseCursor()
-    {
-        return MouseCursor.MOUSE_CURSOR_DEFAULT;
-    }
-    
+    public virtual MouseCursor OccupiedMouseCursor() => MouseCursor.MOUSE_CURSOR_DEFAULT;
+
     public void AddChild(GameObject gameObject)
     {
         gameObject.Parent = this;
-        _childRegister.AddToRegister(gameObject);
+        ChildRegister.AddToRegister(gameObject);
     }
 
     public void RemoveChild(GameObject gameObject)
     {
         gameObject.Parent = null;
-        _childRegister.RemoveFromRegister(gameObject);
+        ChildRegister.RemoveFromRegister(gameObject);
     }
 
-    public GameObject[] GetChildren()
-    {
-        return _childRegister.GetRegisterTypes();
-    }
+    public GameObject[] GetChildren() => ChildRegister.GetRegisterTypes();
 }

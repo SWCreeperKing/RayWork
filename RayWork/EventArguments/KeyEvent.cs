@@ -4,10 +4,7 @@ namespace RayWork.EventArguments;
 
 public class KeyEvent : EventArgs
 {
-    public readonly KeyboardKey key;
+    public readonly KeyboardKey Key;
 
-    public KeyEvent(KeyboardKey key)
-    {
-        this.key = key;
-    }
+    public KeyEvent(KeyboardKey key) => Key = key;
 }

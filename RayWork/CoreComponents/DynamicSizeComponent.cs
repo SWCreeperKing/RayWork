@@ -7,24 +7,21 @@ public class DynamicSizeComponent : SizeComponent
 {
     public override Vector2 Size
     {
-        get => _size = sizeEquation();
+        get => _Size = SizeEquation();
         set { }
     }
 
-    public Func<Vector2> sizeEquation;
+    private Vector2 _Size;
 
-    private Vector2 _size;
+    public Func<Vector2> SizeEquation;
 
-    public DynamicSizeComponent(Func<Vector2> sizeEquation)
-    {
-        this.sizeEquation = sizeEquation;
-    }
+    public DynamicSizeComponent(Func<Vector2> sizeEquation) => SizeEquation = sizeEquation;
 
     public override void Debug()
     {
-        ImGui.Text($"Size: {_size}");
+        ImGui.Text($"Size: {_Size}");
 
         if (!ImGui.Button("Recalculate")) return;
-        _size = sizeEquation();
+        _Size = SizeEquation();
     }
 }

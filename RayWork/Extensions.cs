@@ -7,38 +7,21 @@ namespace RayWork;
 
 public static class Extensions
 {
-    public static int maskingLayer;
+    public const float DefaultLightFactor = 1.5f;
+    public const float DefaultDarkFactor = 1.7f;
+
+    public static int MaskingLayer;
     private static readonly Dictionary<string, byte[]> StringCache = new();
 
-    public static Vector2 Position(this Rectangle rectangle)
-    {
-        return new Vector2(rectangle.X, rectangle.Y);
-    }
-
-    public static Vector2 Size(this Rectangle rectangle)
-    {
-        return new Vector2(rectangle.width, rectangle.height);
-    }
+    public static Vector2 Position(this Rectangle rectangle) => new(rectangle.X, rectangle.Y);
+    public static Vector2 Size(this Rectangle rectangle) => new(rectangle.width, rectangle.height);
 
     public static bool IsVector2In(this Rectangle rectangle, Vector2 vector2)
-    {
-        return CheckCollisionPointRec(vector2, rectangle);
-    }
+        => CheckCollisionPointRec(vector2, rectangle);
 
-    public static bool IsMouseIn(this Rectangle rectangle)
-    {
-        return rectangle.IsVector2In(GetMousePosition());
-    }
-
-    public static Rectangle Rect(this Vector2 position, Vector2 size)
-    {
-        return new Rectangle(position.X, position.Y, size.X, size.Y);
-    }
-
-    public static Texture GetTexture(this Image image)
-    {
-        return LoadTextureFromImage(image);
-    }
+    public static bool IsMouseIn(this Rectangle rectangle) => rectangle.IsVector2In(GetMousePosition());
+    public static Rectangle Rect(this Vector2 position, Vector2 size) => new(position.X, position.Y, size.X, size.Y);
+    public static Texture GetTexture(this Image image) => LoadTextureFromImage(image);
 
     /// <summary>
     /// mask a draw action within the bounds of 2 <see cref="Vector2"/>s
@@ -48,11 +31,16 @@ public static class Extensions
     /// <param name="draw">draw action to mask</param>
     public static void MaskDraw(this Vector2 pos, Vector2 size, Action draw)
     {
-        maskingLayer++;
+        MaskingLayer++;
         BeginScissorMode((int) pos.X, (int) pos.Y, (int) size.X, (int) size.Y);
         draw();
-        if (maskingLayer == 1) EndScissorMode();
-        maskingLayer--;
+
+        if (MaskingLayer == 1)
+        {
+            EndScissorMode();
+        }
+
+        MaskingLayer--;
     }
 
     /// <summary>
@@ -60,11 +48,10 @@ public static class Extensions
     /// </summary>
     /// <param name="color"><see cref="Color"/> to make lighter</param>
     /// <returns>the lighter version of <paramref name="color"/></returns>
-    public static Color MakeLighter(this Color color)
+    public static Color MakeLighter(this Color color, float lightFactor = DefaultLightFactor)
     {
-        return new Color((int) Math.Min(color.r * 1.5, 255), (int) Math.Min(color.g * 1.5, 255),
-            (int) Math.Min(color.b * 1.5, 255),
-            color.a);
+        return new((int) Math.Min(color.r * lightFactor, 255), (int) Math.Min(color.g * lightFactor, 255),
+            (int) Math.Min(color.b * lightFactor, 255), color.a);
     }
 
     /// <summary>
@@ -72,10 +59,8 @@ public static class Extensions
     /// </summary>
     /// <param name="color"><see cref="Color"/> to make darker</param>
     /// <returns>the darker version of <paramref name="color"/></returns>
-    public static Color MakeDarker(this Color color)
-    {
-        return new Color((int) (color.r / 1.7), (int) (color.g / 1.7), (int) (color.b / 1.7), color.a);
-    }
+    public static Color MakeDarker(this Color color, float darkFactor = DefaultDarkFactor)
+        => new((int) (color.r / darkFactor), (int) (color.g / darkFactor), (int) (color.b / darkFactor), color.a);
 
     /// <summary>
     /// this draws text in a <see cref="Rectangle"/> and wraps it according to said <see cref="Rectangle"/>
@@ -198,7 +183,7 @@ public static class Extensions
                     if (selectStart >= 0 && k >= selectStart && k < selectStart + selectLength)
                     {
                         DrawRectangleRec(
-                            new Rectangle(rect.X + textOffsetX - 1, rect.Y + textOffsetY, glyphWidth,
+                            new(rect.X + textOffsetX - 1, rect.Y + textOffsetY, glyphWidth,
                                 font.baseSize * scaleFactor), selectBackTint);
                         isGlyphSelected = true;
                     }
@@ -206,7 +191,7 @@ public static class Extensions
                     // Draw current character glyph
                     if (codepoint != ' ' && codepoint != '\t')
                     {
-                        DrawTextCodepoint(font, codepoint, new Vector2(rect.X + textOffsetX, rect.Y + textOffsetY),
+                        DrawTextCodepoint(font, codepoint, new(rect.X + textOffsetX, rect.Y + textOffsetY),
                             fontSize, isGlyphSelected ? selectTint : tint);
                     }
                 }

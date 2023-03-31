@@ -1,6 +1,6 @@
 namespace RayWork.ECS;
 
-public interface DebugComponent : Component
+public interface IDebugComponent : IComponent
 {
     public void Debug();
 }

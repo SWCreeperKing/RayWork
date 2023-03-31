@@ -9,35 +9,36 @@ public static class Input
     public static float KeyboardDelaySeconds { get; set; } = .5f;
     public static float KeyboardRepeatsPerSecond { get; set; } = 30;
 
-    private static List<KeyboardKey> _keysActive = new();
-    private static Dictionary<KeyboardKey, float> _keyDelay = new();
-    private static Dictionary<KeyboardKey, float> _keyRepeatTimers = new();
-    private static Dictionary<KeyboardKey, KeyEvent> _keyEventCache = new();
+    private static List<KeyboardKey> KeysActive = new();
+    private static Dictionary<KeyboardKey, float> KeyDelay = new();
+    private static Dictionary<KeyboardKey, float> KeyRepeatTimers = new();
+    private static Dictionary<KeyboardKey, KeyEvent> KeyEventCache = new();
 
     public static event EventHandler<KeyEvent> OnKeyPressed;
     public static event EventHandler<KeyEvent> OnKeyReleased;
     public static event EventHandler<KeyEvent> OnKeyRepeat;
-    
+
     // mouse
     public static GameObject MouseOccupier = null;
-    
+
     public static MouseCursor CurrentMouseCursor
     {
-        get => _currentMouseCursor;
+        get => _CurrentMouseCursor;
         private set
         {
-            _currentMouseCursor = value;
+            _CurrentMouseCursor = value;
             Raylib.SetMouseCursor(value);
         }
     }
 
-    private static MouseCursor _currentMouseCursor;
-    private static List<MouseCursor> _mouseCursorQueue = new();
+    private static MouseCursor _CurrentMouseCursor;
+
+    private static List<MouseCursor> MouseCursorQueue = new();
 
     public static void UpdateInput(float deltaTime)
     {
         // update keyboard
-        _keysActive.RemoveAll(key =>
+        KeysActive.RemoveAll(key =>
         {
             if (Raylib.IsKeyDown(key)) return false;
             RemoveKey(key);
@@ -46,22 +47,22 @@ public static class Input
 
         if (OnKeyRepeat is not null)
         {
-            foreach (var key in _keysActive)
+            foreach (var key in KeysActive)
             {
-                if (_keyDelay[key] > 0)
+                if (KeyDelay[key] > 0)
                 {
-                    _keyDelay[key] -= deltaTime;
+                    KeyDelay[key] -= deltaTime;
                     continue;
                 }
-                
-                if (_keyRepeatTimers[key] > 0)
+
+                if (KeyRepeatTimers[key] > 0)
                 {
-                    _keyRepeatTimers[key] -= deltaTime;
+                    KeyRepeatTimers[key] -= deltaTime;
                     continue;
                 }
-                
+
                 OnKeyRepeat(null, GetKeyEvent(key));
-                _keyRepeatTimers[key] += KeyboardRepeatsPerSecond / 1000f;
+                KeyRepeatTimers[key] += KeyboardRepeatsPerSecond / 1000f;
             }
         }
 
@@ -71,60 +72,57 @@ public static class Input
             AddKey(keyPressed);
             keyPressed = Raylib.GetKeyPressed_();
         }
-        
+
         // update mouse
         if (MouseOccupier is not null)
         {
             CurrentMouseCursor = MouseOccupier.OccupiedMouseCursor();
         }
-        else if (_mouseCursorQueue.Any())
+        else if (MouseCursorQueue.Any())
         {
-            CurrentMouseCursor = _mouseCursorQueue[^1];
-        } else if (_currentMouseCursor is not MouseCursor.MOUSE_CURSOR_DEFAULT)
+            CurrentMouseCursor = MouseCursorQueue[^1];
+        }
+        else if (_CurrentMouseCursor is not MouseCursor.MOUSE_CURSOR_DEFAULT)
         {
             CurrentMouseCursor = MouseCursor.MOUSE_CURSOR_DEFAULT;
         }
-        
-        _mouseCursorQueue.Clear();
+
+        MouseCursorQueue.Clear();
     }
 
-    public static bool IsKeyDown(KeyboardKey key)
-    {
-        return _keysActive.Contains(key);
-    }
+    public static bool IsKeyDown(KeyboardKey key) => KeysActive.Contains(key);
+    public static bool IsKeyUp(KeyboardKey key) => !IsKeyDown(key);
 
-    public static bool IsKeyUp(KeyboardKey key)
-    {
-        return !IsKeyDown(key);
-    }
-    
     private static void RemoveKey(KeyboardKey key)
     {
-        _keyDelay.Remove(key);
-        _keyRepeatTimers.Remove(key);
+        KeyDelay.Remove(key);
+        KeyRepeatTimers.Remove(key);
 
         if (OnKeyReleased is null) return;
+        
         OnKeyReleased(null, GetKeyEvent(key));
     }
 
     private static void AddKey(KeyboardKey key)
     {
-        _keysActive.Add(key);
-        _keyDelay.Add(key, KeyboardDelaySeconds);
-        _keyRepeatTimers.Add(key, KeyboardRepeatsPerSecond / 1000f);
+        KeysActive.Add(key);
+        KeyDelay.Add(key, KeyboardDelaySeconds);
+        KeyRepeatTimers.Add(key, KeyboardRepeatsPerSecond / 1000f);
 
         if (OnKeyPressed is null) return;
+        
         OnKeyPressed(null, GetKeyEvent(key));
     }
 
     private static KeyEvent GetKeyEvent(KeyboardKey key)
     {
-        if (!_keyEventCache.ContainsKey(key)) _keyEventCache.Add(key, new KeyEvent(key));
-        return _keyEventCache[key];
+        if (!KeyEventCache.ContainsKey(key))
+        {
+            KeyEventCache.Add(key, new(key));
+        }
+
+        return KeyEventCache[key];
     }
 
-    public static void SetMouseCursor(MouseCursor mouseCursor)
-    {
-        _mouseCursorQueue.Add(mouseCursor);
-    }
+    public static void SetMouseCursor(MouseCursor mouseCursor) => MouseCursorQueue.Add(mouseCursor);
 }

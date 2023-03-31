@@ -6,19 +6,16 @@ namespace RayWorkTester;
 
 public class TestObject : GameObject
 {
-    private PositionComponent _pos;
-    private SizeComponent _size;
-    private ColorComponent _color;
+    private PositionComponent Pos;
+    private SizeComponent Size;
+    private ColorComponent Color;
 
     public TestObject()
     {
-        AddComponent(_pos = new PositionComponent(200, 100));
-        AddComponent(_size = new StaticSizeComponent(50, 50));
-        AddComponent(_color = new ColorComponent(Raylib.RED));
+        AddComponent(Pos = new(200, 100));
+        AddComponent(Size = new StaticSizeComponent(50, 50));
+        AddComponent(Color = new(Raylib.RED));
     }
 
-    public override void RenderLoop()
-    {
-        Raylib.DrawRectangleV(_pos.Position, _size.Size, _color.color);
-    }
+    public override void RenderLoop() => Raylib.DrawRectangleV(Pos.Position, Size.Size, Color.Color);
 }

@@ -3,7 +3,7 @@ using RayWork.ECS;
 
 namespace RayWork.CoreComponents;
 
-public abstract class TransformComponent : DebugComponent
+public abstract class TransformComponent : IDebugComponent
 {
     public abstract Vector2 Position { get; set; }
 

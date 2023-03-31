@@ -5,7 +5,7 @@ using RayWork.CoreComponents;
 using RayWork.Objects;
 using RayWorkTester;
 
-var app = new RayApplication(new Program(), new Vector2(1280, 720), 
+var app = new RayApplication(new Program(), new(1280, 720), 
     "Test", 60, ConfigFlags.FLAG_WINDOW_RESIZABLE);
 
 public partial class Program : Scene
@@ -15,27 +15,24 @@ public partial class Program : Scene
 
     public override void Initialize()
     {
-        TextComponent.DefaultFont = Raylib.LoadFont("Assets/Fonts/CascadiaCode.ttf");
+        FontComponent.DefaultFont = Raylib.LoadFont("Assets/Fonts/CascadiaCode.ttf");
         
         SceneManager.AddScene("simon", new SimonSays());
         
-        Button button = new("Test", new Vector2(500));
+        Button button = new("Test", new(500));
         button.OnButtonPressed += (_, _) => SceneManager.SwitchScene("simon");
 
         AddChild(new TestObject());
         AddChild(new AnchorTestObject());
         AddChild(new TextBlock(LoremIpsum, new(200, 300, 300, 60)));
-        AddChild(new InputBox(new Vector2(300, 20), new Vector2(300, 30)));
+        AddChild(new InputBox(new(300, 20), new Vector2(300, 30)));
         AddChild(button);
 
         Input.OnKeyPressed += (_, key) =>   
         {
-            if (key.key is KeyboardKey.KEY_F3) Debugger.ToggleDebugger();
+            if (key.Key is KeyboardKey.KEY_F3) Debugger.ToggleDebugger();
         };
     }
 
-    public override void RenderLoop()
-    {
-        Raylib.DrawFPS(0, 0);
-    }
+    public override void RenderLoop() => Raylib.DrawFPS(0, 0);
 }

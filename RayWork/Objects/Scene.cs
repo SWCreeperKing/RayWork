@@ -4,21 +4,21 @@ namespace RayWork;
 
 public abstract class Scene
 {
-    private readonly ListRegister<GameObject> _childRegister = new();
+    private readonly ListRegister<GameObject> ChildRegister = new();
 
     public void Update()
     {
-        _childRegister.UpdateRegister();
+        ChildRegister.UpdateRegister();
         UpdateLoop();
-        _childRegister.ExecuteRegister(child => child.Update());
+        ChildRegister.ExecuteRegister(child => child.Update());
     }
 
     public void Render()
     {
         RenderLoop();
-        _childRegister.ExecuteRegister(child => child.Render());
+        ChildRegister.ExecuteRegister(child => child.Render());
     }
-    
+
     public virtual void Initialize()
     {
     }
@@ -26,7 +26,7 @@ public abstract class Scene
     public virtual void ReInitialize()
     {
     }
-    
+
     public virtual void UpdateLoop()
     {
     }
@@ -38,26 +38,19 @@ public abstract class Scene
     public virtual void DisposeLoop()
     {
     }
-    
+
     public void AddChild(GameObject gameObject)
     {
         gameObject.Parent = this;
-        _childRegister.AddToRegister(gameObject);
+        ChildRegister.AddToRegister(gameObject);
     }
 
     public void RemoveChild(GameObject gameObject)
     {
         gameObject.Parent = null;
-        _childRegister.RemoveFromRegister(gameObject);
+        ChildRegister.RemoveFromRegister(gameObject);
     }
 
-    public GameObject[] GetChildren()
-    {
-        return _childRegister.GetRegisterTypes();
-    }
-
-    public bool HasChildren()
-    {
-        return !_childRegister.IsRegisterEmpty();
-    }
+    public GameObject[] GetChildren() => ChildRegister.GetRegisterTypes();
+    public bool HasChildren() => !ChildRegister.IsRegisterEmpty();
 }

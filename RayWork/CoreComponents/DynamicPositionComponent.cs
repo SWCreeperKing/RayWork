@@ -7,24 +7,21 @@ public class DynamicPositionComponent : TransformComponent
 {
     public override Vector2 Position
     {
-        get => _position = positionEquation();
+        get => _Position = PositionEquation();
         set { }
     }
 
-    public Func<Vector2> positionEquation;
+    private Vector2 _Position;
 
-    private Vector2 _position;
+    public Func<Vector2> PositionEquation;
 
-    public DynamicPositionComponent(Func<Vector2> positionEquation)
-    {
-        this.positionEquation = positionEquation;
-    }
+    public DynamicPositionComponent(Func<Vector2> positionEquation) => PositionEquation = positionEquation;
 
     public override void Debug()
     {
-        ImGui.Text($"Position: {_position}");
+        ImGui.Text($"Position: {_Position}");
 
         if (!ImGui.Button("Recalculate")) return;
-        _position = positionEquation();
+        _Position = PositionEquation();
     }
 }

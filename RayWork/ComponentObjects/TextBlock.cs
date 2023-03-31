@@ -6,13 +6,13 @@ namespace RayWork.Objects;
 
 public class TextBlock : GameObject
 {
-    public RectangleComponent rectangleComponent;
-    public TextRectangleComponent textRectangleComponent;
+    public RectangleComponent RectangleComponent;
+    public TextRectangleComponent TextRectangleComponent;
 
     public TextBlock(string text, TransformComponent position, SizeComponent size, Color? color = null)
     {
-        AddComponent(rectangleComponent = new RectangleComponent(position, size));
-        AddComponent(textRectangleComponent = new TextRectangleComponent(text, color));
+        AddComponent(RectangleComponent = new(position, size));
+        AddComponent(TextRectangleComponent = new(text, color));
     }
 
     public TextBlock(string text, Vector2 position, Vector2 size, Color? color = null) : this(text,
@@ -26,8 +26,5 @@ public class TextBlock : GameObject
     {
     }
 
-    public override void RenderLoop()
-    {
-        textRectangleComponent.DrawText(rectangleComponent.Rectangle);
-    }
+    public override void RenderLoop() => TextRectangleComponent.DrawText(RectangleComponent.Rectangle);
 }

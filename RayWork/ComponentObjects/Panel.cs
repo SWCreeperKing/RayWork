@@ -6,23 +6,17 @@ namespace RayWork.Objects;
 
 public class Panel : GameObject
 {
-    public PanelComponent panelComponent;
+    public PanelComponent PanelComponent;
 
-    public Panel(Vector2 position, Vector2 size)
-    {
-        AddComponent(panelComponent = new PanelComponent(position, size));
-    }
+    public Panel(Vector2 position, Vector2 size) => AddComponent(PanelComponent = new(position, size));
 
     public Panel(Rectangle rectangle) : this(rectangle.Position, rectangle.Size)
     {
     }
-    
+
     public Panel(RayRectangle rectangle) : this(rectangle.Position(), rectangle.Size())
     {
     }
 
-    public override void RenderLoop()
-    {
-        panelComponent.DrawPanel();
-    }
+    public override void RenderLoop() => PanelComponent.DrawPanel();
 }

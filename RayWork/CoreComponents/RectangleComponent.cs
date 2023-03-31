@@ -6,29 +6,29 @@ using RayRectangle = Raylib_CsLo.Rectangle;
 
 namespace RayWork.CoreComponents;
 
-public class RectangleComponent : DebugComponent
+public class RectangleComponent : IDebugComponent
 {
     public RayRectangle RayLibRectangle
     {
-        get => _rectangle.RayLibRectangle;
-        set => _rectangle.RayLibRectangle = value;
+        get => _Rectangle.RayLibRectangle;
+        set => _Rectangle.RayLibRectangle = value;
     }
-    
+
     public Rectangle Rectangle
     {
         get
         {
-            var position = _position.Position;
-            var size = _size.Size;
-            if (position != _rectangle.Position) _rectangle.Position = position;
-            if (size != _rectangle.Size) _rectangle.Size = size;
-            return _rectangle;
+            var position = _Position.Position;
+            var size = _Size.Size;
+            if (position != _Rectangle.Position) _Rectangle.Position = position;
+            if (size != _Rectangle.Size) _Rectangle.Size = size;
+            return _Rectangle;
         }
         set
         {
-            _rectangle.RayLibRectangle = value.RayLibRectangle;
-            _position.Position = value.Position;
-            _size.Size = value.Size;
+            _Rectangle.RayLibRectangle = value.RayLibRectangle;
+            _Position.Position = value.Position;
+            _Size.Size = value.Size;
         }
     }
 
@@ -36,14 +36,14 @@ public class RectangleComponent : DebugComponent
     {
         get
         {
-            var position = _position.Position;
-            if (position != _rectangle.Position) _rectangle.Position = position;
+            var position = _Position.Position;
+            if (position != _Rectangle.Position) _Rectangle.Position = position;
             return position;
         }
         set
         {
-            _position.Position = value;
-            _rectangle.Position = value;
+            _Position.Position = value;
+            _Rectangle.Position = value;
         }
     }
 
@@ -51,26 +51,26 @@ public class RectangleComponent : DebugComponent
     {
         get
         {
-            var size = _size.Size;
-            if (size != _rectangle.Size) _rectangle.Size = size;
+            var size = _Size.Size;
+            if (size != _Rectangle.Size) _Rectangle.Size = size;
             return size;
         }
         set
         {
-            _size.Size = value;
-            _rectangle.Size = value;
+            _Size.Size = value;
+            _Rectangle.Size = value;
         }
     }
 
-    private TransformComponent _position;
-    private SizeComponent _size;
-    private Rectangle _rectangle;
+    private TransformComponent _Position;
+    private SizeComponent _Size;
+    private Rectangle _Rectangle;
 
     public RectangleComponent(TransformComponent position, SizeComponent size)
     {
-        _position = position;
-        _size = size;
-        _rectangle = new(_position.Position, _size.Size);
+        _Position = position;
+        _Size = size;
+        _Rectangle = new(_Position.Position, _Size.Size);
     }
 
     public RectangleComponent(Vector2 position, Vector2 size) : this((PositionComponent) position,
@@ -88,12 +88,27 @@ public class RectangleComponent : DebugComponent
 
     public void Debug()
     {
-        var pos = _position.Position;
-        var size = _size.Size;
-        if (ImGui.DragFloat("X", ref pos.X)) Position = pos;
-        if (ImGui.DragFloat("Y", ref pos.Y)) Position = pos;
-        if (ImGui.DragFloat("W", ref size.X)) Size = size;
-        if (ImGui.DragFloat("H", ref size.Y)) Size = size;
+        var pos = _Position.Position;
+        var size = _Size.Size;
+        if (ImGui.DragFloat("X", ref pos.X))
+        {
+            Position = pos;
+        }
+
+        if (ImGui.DragFloat("Y", ref pos.Y))
+        {
+            Position = pos;
+        }
+
+        if (ImGui.DragFloat("W", ref size.X))
+        {
+            Size = size;
+        }
+
+        if (ImGui.DragFloat("H", ref size.Y))
+        {
+            Size = size;
+        }
     }
 
     public static implicit operator RectangleComponent(Rectangle rectangle) => new(rectangle);

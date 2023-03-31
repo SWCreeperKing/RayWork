@@ -2,54 +2,32 @@
 
 public class ComponentObject
 {
-    private readonly ListRegister<Component> _componentRegister = new();
-    private DebugComponent[] _debugComponents = Array.Empty<DebugComponent>();
+    private readonly ListRegister<IComponent> ComponentRegister = new();
+    private IDebugComponent[] DebugComponents = Array.Empty<IDebugComponent>();
 
     public ComponentObject()
     {
-        _componentRegister.OnRegisterCacheUpdated += (_, _) =>
+        ComponentRegister.OnRegisterCacheUpdated += (_, _) =>
         {
-            _debugComponents = GetAllComponents().OfType<DebugComponent>().ToArray();
+            DebugComponents = GetAllComponents().OfType<IDebugComponent>().ToArray();
         };
     }
 
-    public void UpdateRegister()
-    {
-        _componentRegister.UpdateRegister();
-    }
-    
-    public void AddComponent(Component componentToAdd)
-    {
-        _componentRegister.AddToRegister(componentToAdd);
-    }
+    public void UpdateRegister() => ComponentRegister.UpdateRegister();
+    public void AddComponent(IComponent componentToAdd) => ComponentRegister.AddToRegister(componentToAdd);
 
-    public void RemoveComponent(Component componentToRemove)
-    {
-        _componentRegister.RemoveFromRegister(componentToRemove);
-    }
+    public void RemoveComponent(IComponent componentToRemove)
+        => ComponentRegister.RemoveFromRegister(componentToRemove);
 
-    public bool ContainsComponent<ComponentType>() where ComponentType : Component
-    {
-        return _componentRegister.RegisterContainsType<ComponentType>();
-    }
+    public bool ContainsComponent<TComponentType>() where TComponentType : IComponent
+        => ComponentRegister.RegisterContainsType<TComponentType>();
 
-    public ComponentType GetComponent<ComponentType>() where ComponentType : Component
-    {
-        return _componentRegister.GetTypeFromRegister<ComponentType>();
-    }
-    
-    public ComponentType[] GetComponents<ComponentType>() where ComponentType : Component
-    {
-        return _componentRegister.GetTypesFromRegister<ComponentType>();
-    }
+    public TComponentType GetComponent<TComponentType>() where TComponentType : IComponent
+        => ComponentRegister.GetTypeFromRegister<TComponentType>();
 
-    public DebugComponent[] GetDebugComponents()
-    {
-        return _debugComponents;
-    }
-    
-    public Component[] GetAllComponents()
-    {
-        return _componentRegister.GetRegisterTypes();
-    } 
+    public TComponentType[] GetComponents<TComponentType>() where TComponentType : IComponent
+        => ComponentRegister.GetTypesFromRegister<TComponentType>();
+
+    public IDebugComponent[] GetDebugComponents() => DebugComponents;
+    public IComponent[] GetAllComponents() => ComponentRegister.GetRegisterTypes();
 }

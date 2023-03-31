@@ -7,50 +7,49 @@ namespace RayWorkTester;
 
 public class SimonButton : GameObject
 {
-    public RectangleComponent rectangleComponent;
-    public ButtonComponent buttonComponent;
+    public RectangleComponent RectangleComponent;
+    public ButtonComponent ButtonComponent;
 
-    public bool active;
-    public float activeDurationSeconds = .5f;
+    public bool Active;
+    public float ActiveDurationSeconds = .5f;
 
-    private Color _color;
-    private Color _highlightColor;
-    private SimonSays _parent;
+    private Color Color;
+    private Color HighlightColor;
+    private SimonSays Parent;
 
     public SimonButton(Vector2 position, Vector2 size, Color color)
     {
-        AddComponent(rectangleComponent = new RectangleComponent(position, size));
-        AddComponent(buttonComponent = new ButtonComponent(rectangleComponent));
-        _color = color;
-        _highlightColor = _color.MakeLighter();
+        AddComponent(RectangleComponent = new(position, size));
+        AddComponent(ButtonComponent = new(RectangleComponent));
+        Color = color;
+        HighlightColor = Color.MakeLighter();
+        Parent = (SimonSays) base.Parent;
     }
 
     public bool ShowOrder()
     {
-        if (!active) return false;
-        activeDurationSeconds -= RayApplication.DeltaTime;
+        if (!Active) return false;
+        ActiveDurationSeconds -= RayApplication.DeltaTime;
 
-        if (activeDurationSeconds > 0) return false;
-        activeDurationSeconds = .5f;
-        active = false;
+        if (ActiveDurationSeconds > 0) return false;
+        ActiveDurationSeconds = .5f;
+        Active = false;
         return true;
     }
 
     public override void RenderLoop()
     {
-        if (_parent is null) _parent = (SimonSays) Parent;
-
-        if (_parent.readIn && rectangleComponent.Rectangle.IsMouseIn())
+        if (Parent.ReadIn && RectangleComponent.Rectangle.IsMouseIn())
         {
-            Raylib.DrawRectangleRec(rectangleComponent.Rectangle, _highlightColor);
-            buttonComponent.TestClick();
+            Raylib.DrawRectangleRec(RectangleComponent.Rectangle, HighlightColor);
+            ButtonComponent.TestClick();
         }
-        else Raylib.DrawRectangleRec(rectangleComponent.Rectangle, active ? _highlightColor : _color);
+        else Raylib.DrawRectangleRec(RectangleComponent.Rectangle, Active ? HighlightColor : Color);
     }
 
     public void Reset()
     {
-        activeDurationSeconds = .5f;
-        active = false;
+        ActiveDurationSeconds = .5f;
+        Active = false;
     }
 }

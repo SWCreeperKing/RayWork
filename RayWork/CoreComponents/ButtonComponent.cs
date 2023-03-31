@@ -6,17 +6,14 @@ using static Raylib_CsLo.Raylib;
 
 namespace RayWork.CoreComponents;
 
-public class ButtonComponent : DebugComponent
+public class ButtonComponent : IDebugComponent
 {
-    public RectangleComponent rectangleComponent;
+    public RectangleComponent RectangleComponent;
 
-    public ButtonComponent(RectangleComponent rectangleComponent)
-    {
-        this.rectangleComponent = rectangleComponent;
-    }
+    public ButtonComponent(RectangleComponent rectangleComponent) => RectangleComponent = rectangleComponent;
 
     public ButtonComponent(TransformComponent transformComponent, SizeComponent sizeComponent) : this(
-        new RectangleComponent(transformComponent, sizeComponent))
+        new(transformComponent, sizeComponent))
     {
     }
 
@@ -29,13 +26,10 @@ public class ButtonComponent : DebugComponent
 
     public bool TestClick()
     {
-        if (!rectangleComponent.Rectangle.IsMouseIn() || !IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) return false;
+        if (!RectangleComponent.Rectangle.IsMouseIn() || !IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) return false;
         if (OnClicked is not null) OnClicked(null, null);
         return true;
     }
 
-    public void Debug()
-    {
-        ImGui.Text(OnClicked is null ? "No Events assigned" : "Events are active");
-    }
+    public void Debug() => ImGui.Text(OnClicked is null ? "No Events assigned" : "Events are active");
 }

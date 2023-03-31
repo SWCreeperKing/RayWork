@@ -1,8 +1,8 @@
 namespace RayWork.SaveSystem;
 
-public interface Savable
+public interface ISavable
 {
-    public string FileName();
+    public string GetFileName();
     public string SaveString();
     public void LoadString(string data, string file);
 }

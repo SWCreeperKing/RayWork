@@ -4,24 +4,20 @@ using RayWork.Objects;
 
 namespace RayWork.CoreComponents;
 
-public class ColorComponent : DebugComponent
+public class ColorComponent : IDebugComponent
 {
-    public CompatibleColor color;
-    public string label = "Color";
+    public CompatibleColor Color;
+    public string Label = "Color";
 
     public ColorComponent(Color color)
     {
-        this.color = color;
+        Color = color;
     }
-    
-    public ColorComponent(short r = 0, short g = 0, short b = 0, short a = 255) : this(new Color(r, g, b, a))
+
+    public ColorComponent(short r = 0, short g = 0, short b = 0, short a = 255) : this(new(r, g, b, a))
     {
     }
 
-    public void Debug()
-    {
-        color.ImGuiColorEdit(label);
-    }
-
+    public void Debug() => Color.ImGuiColorEdit(Label);
     public static implicit operator ColorComponent(Color color) => new(color);
 }

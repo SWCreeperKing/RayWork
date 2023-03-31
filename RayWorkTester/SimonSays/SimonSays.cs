@@ -10,76 +10,73 @@ public class SimonSays : Scene
 {
     private static readonly Random Random = new();
 
-    public SimonButton[] buttons;
-    public List<int> order = new();
+    public SimonButton[] Buttons;
+    public List<int> Order = new();
 
-    public bool readIn;
-    public float readWaitSeconds = 1;
-    public HighScore highScore = new();
+    public bool ReadIn;
+    public float ReadWaitSeconds = 1;
+    public HighScore HighScore = new();
 
-    private int _readIndex = 0;
-    private int _readInput = 0;
+    private int ReadIndex = 0;
+    private int ReadInput = 0;
 
     public override void Initialize()
     {
         SaveSystem.InitializeSaveSystem("SW_CreeperKing", "SimonSays");
-        SaveSystem.AddSaveItem("highscore", highScore);
+        SaveSystem.AddSaveItem("highscore", HighScore);
         SaveSystem.LoadItems();
 
-        buttons = new SimonButton[]
+        Buttons = new SimonButton[]
         {
-            new(new Vector2(300), new Vector2(75), Raylib.BLUE.MakeDarker()),
-            new(new Vector2(300, 390), new Vector2(75), Raylib.GREEN.MakeDarker()),
-            new(new Vector2(390, 300), new Vector2(75), Raylib.RED.MakeDarker()),
-            new(new Vector2(390), new Vector2(75), Raylib.YELLOW.MakeDarker())
+            new(new(300), new(75), Raylib.BLUE.MakeDarker()),
+            new(new(300, 390), new(75), Raylib.GREEN.MakeDarker()),
+            new(new(390, 300), new(75), Raylib.RED.MakeDarker()),
+            new(new(390), new(75), Raylib.YELLOW.MakeDarker())
         };
-        
-        for (var i = 0; i < buttons.Length; i++)
+
+        for (var i = 0; i < Buttons.Length; i++)
         {
-            var button = buttons[i];
+            var button = Buttons[i];
             var i1 = i;
-            button.buttonComponent.OnClicked += (_, _) => Pressed(i1);
+            button.ButtonComponent.OnClicked += (_, _) => Pressed(i1);
             AddChild(button);
         }
 
-        Button resetButton = new("Restart", new Vector2(500));
+        Button resetButton = new("Restart", new(500));
         resetButton.OnButtonPressed += (_, _) => Reset();
 
         AddChild(resetButton);
-        
         AddToOrder();
     }
 
     public override void UpdateLoop()
     {
-        if (readWaitSeconds > 0)
+        if (ReadWaitSeconds > 0)
         {
-            readWaitSeconds -= RayApplication.DeltaTime;
+            ReadWaitSeconds -= RayApplication.DeltaTime;
             return;
         }
 
-        if (readIn) return;
-        if (!buttons[order[_readIndex]].active)
+        if (ReadIn) return;
+        if (!Buttons[Order[ReadIndex]].Active)
         {
-            buttons[order[_readIndex]].active = true;
+            Buttons[Order[ReadIndex]].Active = true;
         }
 
-        if (!buttons[order[_readIndex]].ShowOrder()) return;
-        _readIndex++;
-        
-        if (_readIndex < order.Count) return;
-        _readIndex = 0;
-        readIn = true;
+        if (!Buttons[Order[ReadIndex]].ShowOrder()) return;
+        ReadIndex++;
+
+        if (ReadIndex < Order.Count) return;
+        ReadIndex = 0;
+        ReadIn = true;
     }
 
     public override void RenderLoop()
-    {
-        Raylib.DrawText($"Score: {order.Count}\nHigh Score: {highScore.highScore}", 15, 15, 24, Raylib.BLUE);
-    }
+        => Raylib.DrawText($"Score: {Order.Count}\nHigh Score: {HighScore.Score}", 15, 15, 24, Raylib.BLUE);
 
     public void ResetButtons()
     {
-        foreach (var button in buttons)
+        foreach (var button in Buttons)
         {
             button.Reset();
         }
@@ -88,50 +85,44 @@ public class SimonSays : Scene
     public void Reset()
     {
         ResetButtons();
-        _readIndex = 0;
-        _readInput = 0;
-        readIn = false;
-        readWaitSeconds = 1f;
+        ReadIndex = 0;
+        ReadInput = 0;
+        ReadIn = false;
+        ReadWaitSeconds = 1f;
     }
-    
-    public void AddToOrder()
-    {
-        order.Add(Random.Next(buttons.Length));
-    }
+
+    public void AddToOrder() => Order.Add(Random.Next(Buttons.Length));
 
     public void Pressed(int i)
     {
-        if (!readIn) return;
-        if (i != order[_readInput])
+        if (!ReadIn) return;
+        if (i != Order[ReadInput])
         {
             Reset();
             OnFail();
             return;
         }
-        
-        _readInput++;
-        if (_readInput < order.Count) return;
 
-        _readInput = 0;
+        ReadInput++;
+        if (ReadInput < Order.Count) return;
+
+        ReadInput = 0;
         AddToOrder();
         Reset();
     }
 
     public void OnFail()
     {
-        highScore.highScore = Math.Max(order.Count, highScore.highScore);
+        HighScore.Score = Math.Max(Order.Count, HighScore.Score);
         SaveSystem.OpenDirectory();
-        order.Clear();
+        Order.Clear();
         AddToOrder();
     }
 
-    public override void DisposeLoop()
-    {
-        SaveSystem.SaveItems();
-    }
+    public override void DisposeLoop() => SaveSystem.SaveItems();
 }
 
 public class HighScore
 {
-    public int highScore;
+    public int Score;
 }

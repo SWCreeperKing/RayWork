@@ -33,22 +33,22 @@ public static class RlImgui
     public static readonly Vector4 V4MaxValue = new(float.MaxValue, float.MaxValue, float.MaxValue, float.MaxValue);
     public static readonly Vector4 V4MinValue = new(float.MinValue, float.MinValue, float.MinValue, float.MinValue);
 
-    public static nint imGuiContext = nint.Zero;
+    public static nint ImGuiContext = nint.Zero;
 
     private const int StackAllocationSizeLimit = 2048;
-    private static ImGuiMouseCursor _currentMouseCursor = ImGuiMouseCursor.COUNT;
-    private static Dictionary<ImGuiMouseCursor, MouseCursor> _mouseCursorMap;
-    private static KeyboardKey[] _keyEnumMap;
-    private static Texture _fontTexture;
-    private static Func<Vector2> _windowSize;
+    private static ImGuiMouseCursor CurrentMouseCursor = ImGuiMouseCursor.COUNT;
+    private static Dictionary<ImGuiMouseCursor, MouseCursor> MouseCursorMap;
+    private static KeyboardKey[] KeyEnumMap;
+    private static Texture FontTexture;
+    private static Func<Vector2> WindowSize;
 
     public static void Setup(Func<Vector2> windowSize, bool darkTheme = true)
     {
-        _windowSize = windowSize;
-        _mouseCursorMap = new Dictionary<ImGuiMouseCursor, MouseCursor>();
-        _keyEnumMap = Enum.GetValues(typeof(KeyboardKey)) as KeyboardKey[];
+        WindowSize = windowSize;
+        MouseCursorMap = new();
+        KeyEnumMap = Enum.GetValues(typeof(KeyboardKey)) as KeyboardKey[];
 
-        _fontTexture.id = 0;
+        FontTexture.id = 0;
 
         BeginInitImGui();
 
@@ -58,25 +58,25 @@ public static class RlImgui
         EndInitImGui();
     }
 
-    public static void BeginInitImGui() => imGuiContext = ImGui.CreateContext();
+    public static void BeginInitImGui() => ImGuiContext = ImGui.CreateContext();
 
     private static void SetupMouseCursors()
     {
-        _mouseCursorMap.Clear();
-        _mouseCursorMap[ImGuiMouseCursor.Arrow] = MouseCursor.MOUSE_CURSOR_ARROW;
-        _mouseCursorMap[ImGuiMouseCursor.TextInput] = MouseCursor.MOUSE_CURSOR_IBEAM;
-        _mouseCursorMap[ImGuiMouseCursor.Hand] = MouseCursor.MOUSE_CURSOR_POINTING_HAND;
-        _mouseCursorMap[ImGuiMouseCursor.ResizeAll] = MouseCursor.MOUSE_CURSOR_RESIZE_ALL;
-        _mouseCursorMap[ImGuiMouseCursor.ResizeEW] = MouseCursor.MOUSE_CURSOR_RESIZE_EW;
-        _mouseCursorMap[ImGuiMouseCursor.ResizeNESW] = MouseCursor.MOUSE_CURSOR_RESIZE_NESW;
-        _mouseCursorMap[ImGuiMouseCursor.ResizeNS] = MouseCursor.MOUSE_CURSOR_RESIZE_NS;
-        _mouseCursorMap[ImGuiMouseCursor.ResizeNWSE] = MouseCursor.MOUSE_CURSOR_RESIZE_NWSE;
-        _mouseCursorMap[ImGuiMouseCursor.NotAllowed] = MouseCursor.MOUSE_CURSOR_NOT_ALLOWED;
+        MouseCursorMap.Clear();
+        MouseCursorMap[ImGuiMouseCursor.Arrow] = MouseCursor.MOUSE_CURSOR_ARROW;
+        MouseCursorMap[ImGuiMouseCursor.TextInput] = MouseCursor.MOUSE_CURSOR_IBEAM;
+        MouseCursorMap[ImGuiMouseCursor.Hand] = MouseCursor.MOUSE_CURSOR_POINTING_HAND;
+        MouseCursorMap[ImGuiMouseCursor.ResizeAll] = MouseCursor.MOUSE_CURSOR_RESIZE_ALL;
+        MouseCursorMap[ImGuiMouseCursor.ResizeEW] = MouseCursor.MOUSE_CURSOR_RESIZE_EW;
+        MouseCursorMap[ImGuiMouseCursor.ResizeNESW] = MouseCursor.MOUSE_CURSOR_RESIZE_NESW;
+        MouseCursorMap[ImGuiMouseCursor.ResizeNS] = MouseCursor.MOUSE_CURSOR_RESIZE_NS;
+        MouseCursorMap[ImGuiMouseCursor.ResizeNWSE] = MouseCursor.MOUSE_CURSOR_RESIZE_NWSE;
+        MouseCursorMap[ImGuiMouseCursor.NotAllowed] = MouseCursor.MOUSE_CURSOR_NOT_ALLOWED;
     }
 
     public static unsafe void ReloadFonts()
     {
-        ImGui.SetCurrentContext(imGuiContext);
+        ImGui.SetCurrentContext(ImGuiContext);
         var io = ImGui.GetIO();
 
         io.Fonts.GetTexDataAsRGBA32(out byte* pixels, out var width, out var height, out var bytesPerPixel);
@@ -90,16 +90,16 @@ public static class RlImgui
             format = (int) PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
         };
 
-        _fontTexture = Raylib.LoadTextureFromImage(image);
+        FontTexture = Raylib.LoadTextureFromImage(image);
 
-        io.Fonts.SetTexID(new nint(_fontTexture.id));
+        io.Fonts.SetTexID(new(FontTexture.id));
     }
 
     public static void EndInitImGui()
     {
         SetupMouseCursors();
 
-        ImGui.SetCurrentContext(imGuiContext);
+        ImGui.SetCurrentContext(ImGuiContext);
         var io = ImGui.GetIO();
 
         io.Fonts.AddFontDefault();
@@ -134,11 +134,11 @@ public static class RlImgui
         if (Raylib.IsWindowFullscreen())
         {
             var monitor = Raylib.GetCurrentMonitor();
-            io.DisplaySize = new Vector2(Raylib.GetMonitorWidth(monitor), Raylib.GetMonitorHeight(monitor));
+            io.DisplaySize = new(Raylib.GetMonitorWidth(monitor), Raylib.GetMonitorHeight(monitor));
         }
-        else io.DisplaySize = _windowSize();
+        else io.DisplaySize = WindowSize();
 
-        io.DisplayFramebufferScale = new Vector2(1, 1);
+        io.DisplayFramebufferScale = new(1, 1);
         io.DeltaTime = Raylib.GetFrameTime();
 
         io.KeyCtrl = Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT_CONTROL) ||
@@ -160,9 +160,9 @@ public static class RlImgui
         if ((io.ConfigFlags & ImGuiConfigFlags.NoMouseCursorChange) != 0) return;
 
         var imguiCursor = ImGui.GetMouseCursor();
-        if (imguiCursor == _currentMouseCursor && !io.MouseDrawCursor) return;
+        if (imguiCursor == CurrentMouseCursor && !io.MouseDrawCursor) return;
 
-        _currentMouseCursor = imguiCursor;
+        CurrentMouseCursor = imguiCursor;
         if (io.MouseDrawCursor || imguiCursor == ImGuiMouseCursor.None) Raylib.HideCursor();
         else
         {
@@ -170,9 +170,9 @@ public static class RlImgui
 
             if ((io.ConfigFlags & ImGuiConfigFlags.NoMouseCursorChange) != 0) return;
 
-            Raylib.SetMouseCursor(!_mouseCursorMap.ContainsKey(imguiCursor)
+            Raylib.SetMouseCursor(!MouseCursorMap.ContainsKey(imguiCursor)
                 ? MouseCursor.MOUSE_CURSOR_DEFAULT
-                : _mouseCursorMap[imguiCursor]);
+                : MouseCursorMap[imguiCursor]);
         }
     }
 
@@ -180,7 +180,7 @@ public static class RlImgui
     {
         var io = ImGui.GetIO();
 
-        foreach (var key in _keyEnumMap) io.KeysDown[(int) key] = Raylib.IsKeyDown(key);
+        foreach (var key in KeyEnumMap) io.KeysDown[(int) key] = Raylib.IsKeyDown(key);
 
         var pressed = (uint) Raylib.GetCharPressed();
         while (pressed != 0)
@@ -192,7 +192,7 @@ public static class RlImgui
 
     public static void Begin()
     {
-        ImGui.SetCurrentContext(imGuiContext);
+        ImGui.SetCurrentContext(ImGuiContext);
 
         NewFrame();
         FrameEvents();
@@ -205,13 +205,13 @@ public static class RlImgui
         RlGl.rlScissor((int) x, Raylib.GetScreenHeight() - (int) (y + height), (int) width, (int) height);
     }
 
-    private static void TriangleVert(ImDrawVertPtr idx_vert)
+    private static void TriangleVert(ImDrawVertPtr idxVert)
     {
-        var c = ImGui.ColorConvertU32ToFloat4(idx_vert.col);
+        var c = ImGui.ColorConvertU32ToFloat4(idxVert.col);
 
         RlGl.rlColor4f(c.X, c.Y, c.Z, c.W);
-        RlGl.rlTexCoord2f(idx_vert.uv.X, idx_vert.uv.Y);
-        RlGl.rlVertex2f(idx_vert.pos.X, idx_vert.pos.Y);
+        RlGl.rlTexCoord2f(idxVert.uv.X, idxVert.uv.Y);
+        RlGl.rlVertex2f(idxVert.pos.X, idxVert.pos.Y);
     }
 
     private static void RenderTriangles(uint count, uint indexStart, ImVector<ushort> indexBuffer,
@@ -282,24 +282,24 @@ public static class RlImgui
 
     public static void End()
     {
-        ImGui.SetCurrentContext(imGuiContext);
+        ImGui.SetCurrentContext(ImGuiContext);
         ImGui.Render();
         RenderData();
     }
 
-    public static void Shutdown() => Raylib.UnloadTexture(_fontTexture);
+    public static void Shutdown() => Raylib.UnloadTexture(FontTexture);
 
     public static void Image(Texture image)
     {
-        ImGui.Image(new nint(image.id), new Vector2(image.width, image.height));
+        ImGui.Image(new(image.id), new(image.width, image.height));
     }
 
     public static void ImageSize(Texture image, int width, int height)
     {
-        ImGui.Image(new nint(image.id), new Vector2(width, height));
+        ImGui.Image(new(image.id), new(width, height));
     }
 
-    public static void ImageSize(Texture image, Vector2 size) => ImGui.Image(new nint(image.id), size);
+    public static void ImageSize(Texture image, Vector2 size) => ImGui.Image(new(image.id), size);
 
     public static void ImageRect(Texture image, int destWidth, int destHeight, Rectangle sourceRect)
     {
@@ -328,7 +328,7 @@ public static class RlImgui
             uv1.Y = uv0.Y + sourceRect.height / image.height;
         }
 
-        ImGui.Image(new nint(image.id), new Vector2(destWidth, destHeight), uv0, uv1);
+        ImGui.Image(new(image.id), new(destWidth, destHeight), uv0, uv1);
     }
 
     public static Vector4 ToV4(this Color color) => new Vector4(color.r, color.g, color.b, color.a) / 255f;
@@ -338,55 +338,37 @@ public static class RlImgui
     public static Color ToColor(this Vector3 color) => new((short) color.X, (short) color.Y, (short) color.Z, 255);
 
     public static Color ToColor(this Vector4 color)
-    {
-        return new((byte) (color.X * 255), (byte) (color.Y * 255), (byte) (color.Z * 255), (byte) (color.W * 255));
-    }
+        => new((byte) (color.X * 255), (byte) (color.Y * 255), (byte) (color.Z * 255), (byte) (color.W * 255));
 
     public static Vector2 MeasureText(this string text) => ImGui.CalcTextSize(text);
 
     public static Vector2 MeasureText(this string text, bool hideAfterDoubleHash)
-    {
-        return ImGui.CalcTextSize(text, hideAfterDoubleHash);
-    }
+        => ImGui.CalcTextSize(text, hideAfterDoubleHash);
 
     public static Vector2 MeasureText(this string text, bool hideAfterDoubleHash, float wrapWidth)
-    {
-        return ImGui.CalcTextSize(text, hideAfterDoubleHash, wrapWidth);
-    }
+        => ImGui.CalcTextSize(text, hideAfterDoubleHash, wrapWidth);
 
     public static Vector2 MeasureText(this string text, float wrapWidth) => ImGui.CalcTextSize(text, wrapWidth);
     public static Vector2 MeasureText(this string text, int start) => ImGui.CalcTextSize(text, start);
 
     public static Vector2 MeasureText(this string text, int start, bool hideAfterDoubleHash)
-    {
-        return ImGui.CalcTextSize(text, start, hideAfterDoubleHash);
-    }
+        => ImGui.CalcTextSize(text, start, hideAfterDoubleHash);
 
     public static Vector2 MeasureText(this string text, int start, float wrapWidth)
-    {
-        return ImGui.CalcTextSize(text, start, wrapWidth);
-    }
+        => ImGui.CalcTextSize(text, start, wrapWidth);
 
     public static Vector2 MeasureText(this string text, int start, int length)
-    {
-        return ImGui.CalcTextSize(text, start, length);
-    }
+        => ImGui.CalcTextSize(text, start, length);
 
     public static Vector2 MeasureText(this string text, int start, int length, bool hideAfterDoubleHash)
-    {
-        return ImGui.CalcTextSize(text, start, length, hideAfterDoubleHash);
-    }
+        => ImGui.CalcTextSize(text, start, length, hideAfterDoubleHash);
 
     public static Vector2 MeasureText(this string text, int start, int length, bool hideAfterDoubleHash,
         float wrapWidth)
-    {
-        return ImGui.CalcTextSize(text, start, length, hideAfterDoubleHash, wrapWidth);
-    }
+        => ImGui.CalcTextSize(text, start, length, hideAfterDoubleHash, wrapWidth);
 
     public static Vector2 MeasureText(this string text, int start, int length, float wrapWidth)
-    {
-        return ImGui.CalcTextSize(text, start, length, wrapWidth);
-    }
+        => ImGui.CalcTextSize(text, start, length, wrapWidth);
 
     public static void SetScale(float scale = 1) => ImGui.GetIO().FontGlobalScale = scale;
 
@@ -400,31 +382,27 @@ public static class RlImgui
     public static bool IsInRange(this Range range, int i) => range.Start.Value <= i && i < range.End.Value;
 
     public static bool Equals(this Range range1, Range range2)
-    {
-        return range1.Start.Value == range2.Start.Value && range1.End.Value == range2.End.Value;
-    }
+        => range1.Start.Value == range2.Start.Value && range1.End.Value == range2.End.Value;
 
     public static bool Intercept(this Range range1, Range range2)
-    {
-        return range1.IsInRange(range2.Start.Value) || range1.IsInRange(range2.End.Value) ||
-               range2.IsInRange(range1.Start.Value) || range2.IsInRange(range1.End.Value);
-    }
+        => range1.IsInRange(range2.Start.Value) || range1.IsInRange(range2.End.Value) ||
+           range2.IsInRange(range1.Start.Value) || range2.IsInRange(range1.End.Value);
 
-    public static void AddText(this ImDrawListPtr drawPtr, Vector2 pos, uint col, Span<char> text_begin)
+    public static void AddText(this ImDrawListPtr drawPtr, Vector2 pos, uint col, Span<char> textBegin)
     {
         unsafe
         {
-            var text_begin_byteCount = Encoding.UTF8.GetByteCount(text_begin);
-            var native_text_begin = stackalloc byte[text_begin_byteCount + 1];
-            fixed (char* text_begin_ptr = text_begin)
+            var textBeginByteCount = Encoding.UTF8.GetByteCount(textBegin);
+            var nativeTextBegin = stackalloc byte[textBeginByteCount + 1];
+            fixed (char* textBeginPtr = textBegin)
             {
-                var native_text_begin_offset = Encoding.UTF8.GetBytes(text_begin_ptr, text_begin.Length,
-                    native_text_begin, text_begin_byteCount);
-                native_text_begin[native_text_begin_offset] = 0;
+                var nativeTextBeginOffset = Encoding.UTF8.GetBytes(textBeginPtr, textBegin.Length,
+                    nativeTextBegin, textBeginByteCount);
+                nativeTextBegin[nativeTextBeginOffset] = 0;
             }
 
-            byte* native_text_end = null;
-            ImGuiNative.ImDrawList_AddText_Vec2(drawPtr.NativePtr, pos, col, native_text_begin, native_text_end);
+            byte* nativeTextEnd = null;
+            ImGuiNative.ImDrawList_AddText_Vec2(drawPtr.NativePtr, pos, col, nativeTextBegin, nativeTextEnd);
         }
     }
 
@@ -462,14 +440,10 @@ public static class RlImgui
     }
 
     public static bool ImguiComobox(this Enum options, string label, ref int currentItem, params string[] items)
-    {
-        return ImGui.Combo(label, ref currentItem, items, items.Length);
-    }
+        => ImGui.Combo(label, ref currentItem, items, items.Length);
 
     public static bool ImguiComobox(this Enum options, string label, ref int currentItem)
-    {
-        return options.ImguiComobox(label, ref currentItem, options.GetType().GetEnumNames());
-    }
+        => options.ImguiComobox(label, ref currentItem, options.GetType().GetEnumNames());
 
     private static int CalcSizeInUtf8(Span<char> s, int start, int length)
     {
@@ -487,6 +461,5 @@ public static class RlImgui
     }
 
     private static unsafe byte* Allocate(int byteCount) => (byte*) Marshal.AllocHGlobal(byteCount);
-
     private static unsafe void Free(byte* ptr) => Marshal.FreeHGlobal((nint) ptr);
 }

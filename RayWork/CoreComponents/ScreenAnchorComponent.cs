@@ -7,33 +7,33 @@ public class ScreenAnchorComponent : TransformComponent
 {
     public override Vector2 Position
     {
-        get => _position;
+        get => _Position;
         set { }
     }
+    private Vector2 _Position;
 
-    public Func<Vector2, Vector2> anchorEquation;
+    public Func<Vector2, Vector2> AnchorEquation;
 
-    private Vector2 _position;
-    private Vector2 _windowSize;
+    private Vector2 WindowSize;
 
     public ScreenAnchorComponent(Func<Vector2, Vector2> anchorEquation)
     {
-        _windowSize = RayApplication.WindowSize;
-        this.anchorEquation = anchorEquation;
-        _position = this.anchorEquation(_windowSize);
+        WindowSize = RayApplication.WindowSize;
+        AnchorEquation = anchorEquation;
+        _Position = AnchorEquation(WindowSize);
 
         RayApplication.OnWindowSizeChanged += (_, windowChangeArgs) =>
         {
-            _position = this.anchorEquation(_windowSize = windowChangeArgs.newWindowSize);
+            _Position = AnchorEquation(WindowSize = windowChangeArgs.NewWindowSize);
         };
     }
 
     public override void Debug()
     {
-        ImGui.Text($"Position: {_position}");
-        ImGui.Text($"WindowSize: {_windowSize}");
+        ImGui.Text($"Position: {_Position}");
+        ImGui.Text($"WindowSize: {WindowSize}");
 
         if (!ImGui.Button("Recalculate")) return;
-        _position = anchorEquation(_windowSize);
+        _Position = AnchorEquation(WindowSize);
     }
 }

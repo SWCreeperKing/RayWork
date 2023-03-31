@@ -3,7 +3,7 @@ using RayWork.ECS;
 
 namespace RayWork.CoreComponents;
 
-public abstract class SizeComponent : DebugComponent
+public abstract class SizeComponent : IDebugComponent
 {
     public abstract Vector2 Size { get; set; }
 

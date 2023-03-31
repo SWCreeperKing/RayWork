@@ -15,7 +15,7 @@ public static class SaveSystem
     public static string SaveDirectory { get; private set; }
     public static Encryptor Encryption { get; set; } = null;
 
-    private static List<Savable> _savables = new();
+    private static readonly List<ISavable> Savables = new();
 
     public static void InitializeSaveSystem(string developerName, string applicationName)
     {
@@ -35,22 +35,25 @@ public static class SaveSystem
     /// <summary>
     /// REMEMBER: objects need to keep references otherwise loaded items will fail to update
     /// </summary>
-    public static void AddSaveItem<SaveType>(string fileName, SaveType saveType)
+    public static void AddSaveItem<TSaveType>(string fileName, TSaveType saveType)
     {
-        var savableObject = new SavableObject<SaveType>(saveType, fileName);
-        _savables.Add(savableObject);
+        var savableObject = new SavableObject<TSaveType>(saveType, fileName);
+        Savables.Add(savableObject);
     }
 
     public static void SaveItems()
     {
-        if (!Directory.Exists(SaveDirectory)) Directory.CreateDirectory(SaveDirectory);
+        if (!Directory.Exists(SaveDirectory))
+        {
+            Directory.CreateDirectory(SaveDirectory);
+        }
 
-        foreach (var savable in _savables)
+        foreach (var savable in Savables)
         {
             var data = savable.SaveString();
             if (Encryption is not null) data = Encryption.Encrypt(data);
 
-            using var sw = File.CreateText($"{SaveDirectory}/{savable.FileName()}.json");
+            using var sw = File.CreateText($"{SaveDirectory}/{savable.GetFileName()}.json");
             sw.Write(data);
             sw.Close();
         }
@@ -58,9 +61,9 @@ public static class SaveSystem
 
     public static void LoadItems()
     {
-        foreach (var savable in _savables)
+        foreach (var savable in Savables)
         {
-            var file = $"{SaveDirectory}/{savable.FileName()}.json";
+            var file = $"{SaveDirectory}/{savable.GetFileName()}.json";
             if (!File.Exists(file)) continue;
 
             using StreamReader sr = new(file);
@@ -72,11 +75,8 @@ public static class SaveSystem
         }
     }
 
-    public static void OpenDirectory()
-    {
-        Process.Start("explorer.exe", $@"{SaveDirectory}".Replace("/", "\\"));
-    }
-    
+    public static void OpenDirectory() => Process.Start("explorer.exe", $@"{SaveDirectory}".Replace("/", "\\"));
+
     /// <summary>
     /// this is basically = but it doesn't not reset the original reference
     /// </summary>

@@ -2,30 +2,31 @@ using Newtonsoft.Json;
 
 namespace RayWork.SaveSystem;
 
-public class SavableObject<SaveType> : Savable
+public class SavableObject<TSaveType> : ISavable
 {
-    public static JsonSerializerSettings? settings = null;
-    private SaveType _saveType;
-    private string _fileName;
+    public static JsonSerializerSettings? Settings = null;
 
-    public SavableObject(SaveType saveType, string fileName)
+    private TSaveType SaveType;
+    private string FileName;
+
+    public SavableObject(TSaveType saveType, string fileName)
     {
-        _saveType = saveType ?? throw new ArgumentException("Save item given was null");
-        _fileName = fileName;
+        SaveType = saveType ?? throw new ArgumentException("Save item given was null");
+        FileName = fileName;
     }
 
-    public string FileName() => _fileName;
+    public string GetFileName() => FileName;
 
     public string SaveString()
     {
-        return JsonConvert.SerializeObject(_saveType, settings);
+        return JsonConvert.SerializeObject(SaveType, Settings);
     }
 
     public void LoadString(string data, string file)
     {
         try
         {
-            _saveType.Set(JsonConvert.DeserializeObject<SaveType>(data, settings));
+            SaveType.Set(JsonConvert.DeserializeObject<TSaveType>(data, Settings));
         }
         catch (ArgumentException)
         {

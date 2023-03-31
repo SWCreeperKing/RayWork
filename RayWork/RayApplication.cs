@@ -10,37 +10,38 @@ public class RayApplication
     public static Color BackgroundColor { get; set; } = new(177, 177, 177, 255);
     public static float DeltaTime { get; private set; }
 
-    public static Vector2 WindowSize => _windowSize;
+    public static Vector2 WindowSize => _WindowSize;
 
     public static event EventHandler<WindowSizeChangedEventArgs> OnWindowSizeChanged;
 
-    private static long _lastUpdate;
-    private static Vector2 _windowSize;
+    private static long LastUpdate;
+    private static Vector2 _WindowSize;
 
     public RayApplication(Scene mainScene, Vector2 windowSize, string title = "Untitled",
         int fps = 60, ConfigFlags configFlags = 0)
     {
         Raylib.SetConfigFlags(configFlags);
         Raylib.SetTargetFPS(fps);
-        _windowSize = windowSize;
+        _WindowSize = windowSize;
 
         Logger.Initialize();
         Debugger.Initialize();
         Raylib.InitWindow((int) windowSize.X, (int) windowSize.Y, title);
         SceneManager.AddScene("main", mainScene);
-        RlImgui.Setup(() => _windowSize);
+        RlImgui.Setup(() => _WindowSize);
 
         Start();
     }
 
-    public RayApplication(Scene mainScene, int windowWidth, int windowHeight, string title = "Untitled", int fps = 60,
-        ConfigFlags configFlags = 0) : this(mainScene, new Vector2(windowWidth, windowHeight), title, fps, configFlags)
+    public RayApplication(Scene mainScene, int windowWidth, int windowHeight, string title = "Untitled",
+        int fps = 60, ConfigFlags configFlags = 0)
+        : this(mainScene, new(windowWidth, windowHeight), title, fps, configFlags)
     {
     }
 
     private void Start()
     {
-        _lastUpdate = GetTimeMs();
+        LastUpdate = GetTimeMs();
 
         try
         {
@@ -71,11 +72,11 @@ public class RayApplication
     {
         var currentWindowSize = new Vector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
         var currentTimeMs = GetTimeMs();
-        DeltaTime = (currentTimeMs - _lastUpdate) / 1000f;
+        DeltaTime = (currentTimeMs - LastUpdate) / 1000f;
 
-        if (currentWindowSize != _windowSize)
+        if (currentWindowSize != _WindowSize)
         {
-            var windowSizeChangeArgs = new WindowSizeChangedEventArgs(_windowSize = currentWindowSize);
+            var windowSizeChangeArgs = new WindowSizeChangedEventArgs(_WindowSize = currentWindowSize);
             if (OnWindowSizeChanged is not null)
             {
                 OnWindowSizeChanged(null, windowSizeChangeArgs);
@@ -85,7 +86,7 @@ public class RayApplication
         Input.UpdateInput(DeltaTime);
         SceneManager.Scene.Update();
 
-        _lastUpdate = currentTimeMs;
+        LastUpdate = currentTimeMs;
     }
 
     private void Render()

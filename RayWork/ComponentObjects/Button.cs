@@ -8,73 +8,90 @@ namespace RayWork.Objects;
 
 public class Button : GameObject
 {
-    public Label label;
-    public bool disabled;
+    public Label Label;
+    public bool Disabled;
 
-    private ColorComponent _panelColor = new();
-    private ColorComponent _hoverColor = new();
-    private ColorComponent _disabledColor = new();
-    private bool _wasDisabled;
-    private bool _wasHover;
+    private ColorComponent PanelColor = new();
+    private ColorComponent HoverColor = new();
+    private ColorComponent DisabledColor = new();
+    private bool WasDisabled;
+    private bool WasHover;
 
     public EventHandler OnButtonHover;
     public EventHandler OnButtonPressed;
 
     public Button(Label label, Color? panelColor = null, Color? hoverColor = null, Color? disabledColor = null)
     {
-        AddChild(this.label = label);
+        AddChild(Label = label);
         SetColor(panelColor, hoverColor, disabledColor);
-        label.panelComponent.panelColor = _panelColor.color;
+        label.PanelComponent.PanelColor = PanelColor.Color;
     }
 
-    public Button(string text, Vector2 position, Color? color = null) : this(new Label(text, position), color)
+    public Button(string text, Vector2 position, Color? color = null) : this(new(text, position), color)
     {
     }
 
     public void SetColor(Color? panelColor = null, Color? hoverColor = null, Color? disabledColor = null)
     {
         var nonNullPanelColor = panelColor ?? new Color(80, 100, 160, 255);
-        _panelColor.color = nonNullPanelColor;
-        _hoverColor.color = hoverColor ?? nonNullPanelColor.MakeLighter();
-        _disabledColor.color = disabledColor ?? nonNullPanelColor.MakeDarker();
+        PanelColor.Color = nonNullPanelColor;
+        HoverColor.Color = hoverColor ?? nonNullPanelColor.MakeLighter();
+        DisabledColor.Color = disabledColor ?? nonNullPanelColor.MakeDarker();
     }
 
     public override void UpdateLoop()
     {
-        if (disabled)
+        if (Disabled)
         {
-            if (!_wasDisabled)
+            if (!WasDisabled)
             {
-                if (_wasHover) _wasHover = false;
-                _wasDisabled = true;
-                label.panelComponent.panelColor = _disabledColor.color;
+                if (WasHover)
+                {
+                    WasHover = false;
+                }
+
+                WasDisabled = true;
+                Label.PanelComponent.PanelColor = DisabledColor.Color;
             }
         }
-        else if (label.rectangle.IsMouseIn())
+        else if (Label.Rectangle.IsMouseIn())
         {
-            if (!_wasHover)
+            if (!WasHover)
             {
-                if (_wasDisabled) _wasDisabled = false;
-                _wasHover = true;
+                if (WasDisabled)
+                {
+                    WasDisabled = false;
+                }
 
-                if (OnButtonHover is not null) OnButtonHover(null, null);
-                label.panelComponent.panelColor = _hoverColor.color;
+                WasHover = true;
+
+                if (OnButtonHover is not null)
+                {
+                    OnButtonHover(null, null);
+                }
+
+                Label.PanelComponent.PanelColor = HoverColor.Color;
             }
         }
-        else if (_wasDisabled || _wasHover)
+        else if (WasDisabled || WasHover)
         {
-            if (_wasHover) _wasHover = false;
-            if (_wasDisabled) _wasDisabled = false;
-            label.panelComponent.panelColor = _panelColor.color;
+            if (WasHover)
+            {
+                WasHover = false;
+            }
+
+            if (WasDisabled)
+            {
+                WasDisabled = false;
+            }
+
+            Label.PanelComponent.PanelColor = PanelColor.Color;
         }
 
-        if (!_wasHover || !IsMouseButtonPressed(MOUSE_BUTTON_LEFT) ||
+        if (!WasHover || !IsMouseButtonPressed(MOUSE_BUTTON_LEFT) ||
             OnButtonPressed is null) return;
         OnButtonPressed(null, null);
     }
 
-    public override void RenderLoop()
-    {
-        label.Render();
-    }
+    public override void RenderLoop() => Label.Render();
 }

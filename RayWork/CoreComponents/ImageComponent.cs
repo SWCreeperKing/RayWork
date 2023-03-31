@@ -7,16 +7,16 @@ using RayRectangle = Raylib_CsLo.Rectangle;
 
 namespace RayWork.CoreComponents;
 
-public class ImageComponent : DebugComponent
+public class ImageComponent : IDebugComponent
 {
-    public Image image;
-    public Texture texture;
-    public CompatibleColor tint;
+    public Image Image;
+    public Texture Texture;
+    public CompatibleColor Tint;
 
     public ImageComponent(Image image)
     {
-        this.image = image;
-        texture = image.GetTexture();
+        Image = image;
+        Texture = image.GetTexture();
     }
 
     public ImageComponent(string imagePath) : this(Raylib.LoadImage(imagePath))
@@ -24,17 +24,10 @@ public class ImageComponent : DebugComponent
     }
 
     public void Draw(Vector2 position, float rotation = 0, float scale = 1)
-    {
-        Raylib.DrawTextureEx(texture, position, rotation, scale, tint);
-    }
+        => Raylib.DrawTextureEx(Texture, position, rotation, scale, Tint);
 
     public void Draw(RayRectangle source, RayRectangle destination, Vector2 origin, float rotation = 0)
-    {
-        Raylib.DrawTexturePro(texture, source, destination, origin, rotation, tint);
-    }
+        => Raylib.DrawTexturePro(Texture, source, destination, origin, rotation, Tint);
 
-    public virtual void Debug()
-    {
-        tint.ImGuiColorEdit("Tint");
-    }
+    public virtual void Debug() => Tint.ImGuiColorEdit("Tint");
 }

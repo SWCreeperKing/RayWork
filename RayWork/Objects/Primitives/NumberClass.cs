@@ -67,8 +67,8 @@ public record NumberClass
         return delta switch
         {
             0 => new(n1.Mantissa + n2.Mantissa, n1.Exponent),
-            < 0 => new NumberClass(n1.Mantissa / Math.Pow(10, Math.Abs(delta)) + n2.Mantissa, n2.Exponent),
-            _ => new NumberClass(n2.Mantissa / Math.Pow(10, delta) + n1.Mantissa, n1.Exponent)
+            < 0 => new(n1.Mantissa / Math.Pow(10, Math.Abs(delta)) + n2.Mantissa, n2.Exponent),
+            _ => new(n2.Mantissa / Math.Pow(10, delta) + n1.Mantissa, n1.Exponent)
         };
     }
 
@@ -80,8 +80,8 @@ public record NumberClass
         return delta switch
         {
             0 => new(n1.Mantissa - n2.Mantissa, n1.Exponent),
-            < 0 => new NumberClass(n1.Mantissa / Math.Pow(10, Math.Abs(delta)) - n2.Mantissa, n2.Exponent),
-            _ => new NumberClass(n1.Mantissa - n2.Mantissa / Math.Pow(10, delta), n1.Exponent)
+            < 0 => new(n1.Mantissa / Math.Pow(10, Math.Abs(delta)) - n2.Mantissa, n2.Exponent),
+            _ => new(n1.Mantissa - n2.Mantissa / Math.Pow(10, delta), n1.Exponent)
         };
     }
 
@@ -90,7 +90,7 @@ public record NumberClass
         if (n1 == Zero || n2 == Zero) return Zero;
         if (n1 == One) return n2;
         if (n2 == One) return n1;
-        return new NumberClass(n1.Mantissa * n2.Mantissa, n1.Exponent + n2.Exponent);
+        return new(n1.Mantissa * n2.Mantissa, n1.Exponent + n2.Exponent);
     }
 
     public static NumberClass operator /(NumberClass n1, NumberClass n2)
@@ -99,7 +99,7 @@ public record NumberClass
         if (n2 == Zero) throw new DivideByZeroException();
         if (n2 == One) return n1;
         if (n1 == n2) return One;
-        return new NumberClass(n1.Mantissa / n2.Mantissa, n1.Exponent - n2.Exponent);
+        return new(n1.Mantissa / n2.Mantissa, n1.Exponent - n2.Exponent);
     }
 
     public static bool operator <(NumberClass n1, NumberClass n2)
@@ -108,61 +108,31 @@ public record NumberClass
         return n1.Mantissa < n2.Mantissa;
     }
 
-    public static bool operator <=(NumberClass n1, NumberClass n2)
-    {
-        return n1 < n2 || n1 == n2;
-    }
-
-    public static bool operator >(NumberClass n1, NumberClass n2)
-    {
-        return !(n1 <= n2);
-    }
-
-    public static bool operator >=(NumberClass n1, NumberClass n2)
-    {
-        return !(n1 < n2);
-    }
+    public static bool operator <=(NumberClass n1, NumberClass n2) => n1 < n2 || n1 == n2;
+    public static bool operator >(NumberClass n1, NumberClass n2) => !(n1 <= n2);
+    public static bool operator >=(NumberClass n1, NumberClass n2) => !(n1 < n2);
 
     #endregion
 
     #region Casting Overloading
 
-    public static implicit operator NumberClass(double number)
-    {
-        return new NumberClass(number);
-    }
-    
+    public static implicit operator NumberClass(double number) => new(number);
+
     public static implicit operator NumberClass((double mantissa, double exponent) number)
-    {
-        return new NumberClass(number.mantissa, number.exponent);
-    }
-    
-    public static implicit operator NumberClass(string number)
-    {
-        return new NumberClass(number);
-    }
+        => new(number.mantissa, number.exponent);
+
+    public static implicit operator NumberClass(string number) => new(number);
 
     #endregion
 
-    public NumberClass Max(NumberClass number)
-    {
-        return this > number ? this : number;
-    }
+    public NumberClass Max(NumberClass number) => this > number ? this : number;
 
-    public NumberClass Power(double powerBy)
-    {
-        return new NumberClass(Math.Pow(powerBy, Mantissa), Exponent);
-    }
+    public NumberClass Power(double powerBy) => new(Math.Pow(powerBy, Mantissa), Exponent);
 
     public NumberClass Power(NumberClass powerBy)
-    {
-        return new NumberClass(Math.Pow(powerBy.Mantissa, Mantissa), Exponent + powerBy.Exponent);
-    }
+        => new(Math.Pow(powerBy.Mantissa, Mantissa), Exponent + powerBy.Exponent);
 
-    public NumberClass Log()
-    {
-        return Log(E);
-    }
+    public NumberClass Log() => Log(E);
 
     public NumberClass Log(NumberClass logBase)
     {
@@ -170,20 +140,9 @@ public record NumberClass
         return Log10() / logBase.Log10();
     }
 
-    public NumberClass Log2()
-    {
-        return Log(Two);
-    }
-
-    public double Log10()
-    {
-        return Exponent + Math.Log10(Mantissa);
-    }
-
-    public override string ToString()
-    {
-        return ToString(true);
-    }
+    public NumberClass Log2() => Log(Two);
+    public double Log10() => Exponent + Math.Log10(Mantissa);
+    public override string ToString() => ToString(true);
 
     public string ToString(bool cutOffTrail)
     {
@@ -194,8 +153,5 @@ public record NumberClass
         return $"{Mantissa:0.00}e{Exponent:###,##0.###}";
     }
 
-    public string ToLongString()
-    {
-        return $"{this} | {Mantissa} | {Exponent}";
-    }
+    public string ToLongString() => $"{this} | {Mantissa} | {Exponent}";
 }
