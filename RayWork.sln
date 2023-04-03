@@ -10,6 +10,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayWorkTester", "RayWorkTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayWork.SaveSystem", "RayWork.SaveSystem\RayWork.SaveSystem.csproj", "{A03BDA9C-49E7-40CD-9092-EAB55C798887}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayWork.SelfUpdater", "RayWork.SelfUpdater\RayWork.SelfUpdater.csproj", "{7A499B17-B8D5-4BBA-AE92-63D9DFB21D9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateTester", "UpdateTester\UpdateTester.csproj", "{CCBD25EC-05B9-4EA8-B29A-83AE599E6A61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +40,13 @@ Global
 		{A03BDA9C-49E7-40CD-9092-EAB55C798887}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A03BDA9C-49E7-40CD-9092-EAB55C798887}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A03BDA9C-49E7-40CD-9092-EAB55C798887}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A499B17-B8D5-4BBA-AE92-63D9DFB21D9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A499B17-B8D5-4BBA-AE92-63D9DFB21D9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A499B17-B8D5-4BBA-AE92-63D9DFB21D9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A499B17-B8D5-4BBA-AE92-63D9DFB21D9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCBD25EC-05B9-4EA8-B29A-83AE599E6A61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCBD25EC-05B9-4EA8-B29A-83AE599E6A61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCBD25EC-05B9-4EA8-B29A-83AE599E6A61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCBD25EC-05B9-4EA8-B29A-83AE599E6A61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

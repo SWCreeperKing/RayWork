@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Text;
+using Newtonsoft.Json;
 using Raylib_CsLo;
 using static Raylib_CsLo.Raylib;
 
@@ -74,9 +75,7 @@ public static class Extensions
     /// <param name="wordWrap">to wrap words instead of just characters</param>
     public static void DrawTextRec(this Font font, string text, Rectangle rect, Color fontColor,
         float fontSize = 24, float spacing = 1.5f, bool wordWrap = true)
-    {
-        DrawTextRec(font, text, rect, fontColor, fontSize, spacing, wordWrap, 0, 0, WHITE, WHITE);
-    }
+        => DrawTextRec(font, text, rect, fontColor, fontSize, spacing, wordWrap, 0, 0, WHITE, WHITE);
 
     /// <inheritdoc cref="DrawTextRec(Font,string,Rectangle,Color,float,float,bool,int,int,Color,Color)"/>
     /// <param name="selectStart">unknown</param>

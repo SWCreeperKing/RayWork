@@ -1,11 +1,13 @@
 ﻿using System.Numerics;
+using Newtonsoft.Json;
 using Raylib_CsLo;
 using RayWork;
 using RayWork.CoreComponents;
 using RayWork.Objects;
+using RayWork.SelfUpdater;
 using RayWorkTester;
 
-var app = new RayApplication(new Program(), new(1280, 720), 
+var app = new RayApplication(new Program(), new(1280, 720),
     "Test", 60, ConfigFlags.FLAG_WINDOW_RESIZABLE);
 
 public partial class Program : Scene
@@ -16,9 +18,9 @@ public partial class Program : Scene
     public override void Initialize()
     {
         FontComponent.DefaultFont = Raylib.LoadFont("Assets/Fonts/CascadiaCode.ttf");
-        
+
         SceneManager.AddScene("simon", new SimonSays());
-        
+
         Button button = new("Test", new(500));
         button.OnButtonPressed += (_, _) => SceneManager.SwitchScene("simon");
 
@@ -28,7 +30,7 @@ public partial class Program : Scene
         AddChild(new InputBox(new(300, 20), new Vector2(300, 30)));
         AddChild(button);
 
-        Input.OnKeyPressed += (_, key) =>   
+        Input.OnKeyPressed += (_, key) =>
         {
             if (key.Key is KeyboardKey.KEY_F3) Debugger.ToggleDebugger();
         };

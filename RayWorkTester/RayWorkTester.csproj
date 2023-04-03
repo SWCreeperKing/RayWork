@@ -8,12 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RayWork\RayWork.csproj"/>
+        <ProjectReference Include="..\RayWork.SelfUpdater\RayWork.SelfUpdater.csproj" />
+        <ProjectReference Include="..\RayWork\RayWork.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Assets/**" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always"/>
-        <Folder Include="Assets\Fonts"/>
+        <Content Include="Assets/**" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
+        <Folder Include="Assets\Fonts" />
     </ItemGroup>
 
 </Project>
