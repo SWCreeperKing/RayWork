@@ -1,6 +1,7 @@
 using System.Numerics;
 using ImGuiNET;
 using RayWork.ECS;
+using RayWork.EventArguments;
 using static Raylib_CsLo.MouseButton;
 using static Raylib_CsLo.Raylib;
 
@@ -10,7 +11,19 @@ public class ButtonComponent : IDebugComponent
 {
     public RectangleComponent RectangleComponent;
 
-    public ButtonComponent(RectangleComponent rectangleComponent) => RectangleComponent = rectangleComponent;
+    private EventHandler<MouseStateEvent> MouseClickEvent;
+
+    public ButtonComponent(RectangleComponent rectangleComponent)
+    {
+        RectangleComponent = rectangleComponent;
+
+        MouseClickEvent = (_, mouseEvent) =>
+        {
+            if (!mouseEvent.IsMouseIn(rectangleComponent) || OnClicked is null || !mouseEvent[MOUSE_BUTTON_LEFT]) return;
+            OnClicked(null, null);
+        };
+        Input.MouseEvent += MouseClickEvent;
+    }
 
     public ButtonComponent(TransformComponent transformComponent, SizeComponent sizeComponent) : this(
         new(transformComponent, sizeComponent))
@@ -24,12 +37,10 @@ public class ButtonComponent : IDebugComponent
 
     public EventHandler OnClicked;
 
-    public bool TestClick()
-    {
-        if (!RectangleComponent.Rectangle.IsMouseIn() || !IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) return false;
-        if (OnClicked is not null) OnClicked(null, null);
-        return true;
-    }
-
     public void Debug() => ImGui.Text(OnClicked is null ? "No Events assigned" : "Events are active");
+
+    ~ButtonComponent()
+    {
+        Input.MouseEvent -= MouseClickEvent;
+    }
 }

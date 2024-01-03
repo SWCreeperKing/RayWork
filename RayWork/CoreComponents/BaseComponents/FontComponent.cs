@@ -20,7 +20,7 @@ public abstract class FontComponent : IDebugComponent
     public Vector2 Size()
     {
         if (Cache.Item1 == Text && Cache.Item2 == FontSize && Cache.Item3 == Spacing) return Cache.Item4;
-        var measure = Raylib.MeasureTextEx(Font, Text, FontSize, Spacing);
+        var measure = MeasureText(Text);
         Cache = (Text, FontSize, Spacing, measure);
 
         return Cache.Item4;
@@ -31,4 +31,9 @@ public abstract class FontComponent : IDebugComponent
     }
 
     public void SetFont(Font font) => _Font = font;
+
+    public Vector2 MeasureText(string text)
+    {
+        return Raylib.MeasureTextEx(Font, text, FontSize, Spacing);
+    }
 }

@@ -17,8 +17,8 @@ public class SimonSays : Scene
     public float ReadWaitSeconds = 1;
     public HighScore HighScore = new();
 
-    private int ReadIndex = 0;
-    private int ReadInput = 0;
+    private int ReadIndex;
+    private int ReadInput;
 
     public override void Initialize()
     {

@@ -15,7 +15,7 @@ public class SimonButton : GameObject
 
     private Color Color;
     private Color HighlightColor;
-    private SimonSays Parent;
+    private SimonSays? Parent;
 
     public SimonButton(Vector2 position, Vector2 size, Color color)
     {
@@ -23,7 +23,6 @@ public class SimonButton : GameObject
         AddComponent(ButtonComponent = new(RectangleComponent));
         Color = color;
         HighlightColor = Color.MakeLighter();
-        Parent = (SimonSays) base.Parent;
     }
 
     public bool ShowOrder()
@@ -39,10 +38,11 @@ public class SimonButton : GameObject
 
     public override void RenderLoop()
     {
+        Parent ??= (SimonSays) base.Parent;
+
         if (Parent.ReadIn && RectangleComponent.Rectangle.IsMouseIn())
         {
             Raylib.DrawRectangleRec(RectangleComponent.Rectangle, HighlightColor);
-            ButtonComponent.TestClick();
         }
         else Raylib.DrawRectangleRec(RectangleComponent.Rectangle, Active ? HighlightColor : Color);
     }

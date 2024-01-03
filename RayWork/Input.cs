@@ -6,6 +6,7 @@ namespace RayWork;
 public static class Input
 {
     // keyboard
+    public static bool HandleKeyboardEvents = true;
     public static float KeyboardDelaySeconds { get; set; } = .5f;
     public static float KeyboardRepeatsPerSecond { get; set; } = 30;
 
@@ -19,7 +20,8 @@ public static class Input
     public static event EventHandler<KeyEvent> OnKeyRepeat;
 
     // mouse
-    public static GameObject MouseOccupier = null;
+    public static bool HandleMouseEvents = true;
+    public static GameObject? MouseOccupier = null;
 
     public static MouseCursor CurrentMouseCursor
     {
@@ -32,12 +34,27 @@ public static class Input
     }
 
     private static MouseCursor _CurrentMouseCursor;
-
     private static List<MouseCursor> MouseCursorQueue = new();
+
+    public static event EventHandler<MouseStateEvent> MouseEvent;
 
     public static void UpdateInput(float deltaTime)
     {
         // update keyboard
+        if (HandleKeyboardEvents)
+        {
+            HandleKeyboardEvent(deltaTime);
+        }
+
+        // update mouse
+        if (HandleMouseEvents)
+        {
+            HandleMouseEvent();
+        }
+    }
+
+    private static void HandleKeyboardEvent(float deltaTime)
+    {
         KeysActive.RemoveAll(key =>
         {
             if (Raylib.IsKeyDown(key)) return false;
@@ -72,8 +89,20 @@ public static class Input
             AddKey(keyPressed);
             keyPressed = Raylib.GetKeyPressed_();
         }
+    }
 
-        // update mouse
+    private static void HandleMouseEvent()
+    {
+        if (MouseEvent is not null)
+        {
+            var mousePosition = Raylib.GetMousePosition();
+            var mousePressed = Enum.GetValues<MouseButton>().Where(Raylib.IsMouseButtonPressed).ToArray();
+            var mouseDown = Enum.GetValues<MouseButton>().Where(Raylib.IsMouseButtonDown).ToArray();
+            MouseStateEvent mouseState = new(mousePosition, mousePressed, mouseDown);
+
+            MouseEvent(null, mouseState);
+        }
+
         if (MouseOccupier is not null)
         {
             CurrentMouseCursor = MouseOccupier.OccupiedMouseCursor();
@@ -95,22 +124,32 @@ public static class Input
 
     private static void RemoveKey(KeyboardKey key)
     {
-        KeyDelay.Remove(key);
-        KeyRepeatTimers.Remove(key);
+        if (KeysActive.Contains(key))
+        {
+            KeyDelay.Remove(key);
+            KeyRepeatTimers.Remove(key);
+        }
 
         if (OnKeyReleased is null) return;
-        
+
         OnKeyReleased(null, GetKeyEvent(key));
     }
 
     private static void AddKey(KeyboardKey key)
     {
-        KeysActive.Add(key);
-        KeyDelay.Add(key, KeyboardDelaySeconds);
-        KeyRepeatTimers.Add(key, KeyboardRepeatsPerSecond / 1000f);
+        if (!KeysActive.Contains(key))
+        {
+            KeysActive.Add(key);
+            KeyDelay.Add(key, KeyboardDelaySeconds);
+            KeyRepeatTimers.Add(key, KeyboardRepeatsPerSecond / 1000f);
+        }
+        else
+        {
+            KeyRepeatTimers[key] = KeyboardRepeatsPerSecond / 1000f;
+        }
 
         if (OnKeyPressed is null) return;
-        
+
         OnKeyPressed(null, GetKeyEvent(key));
     }
 

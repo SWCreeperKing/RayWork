@@ -1,6 +1,7 @@
 using System.Numerics;
 using Raylib_CsLo;
 using RayWork.CoreComponents;
+using RayWork.EventArguments;
 using static Raylib_CsLo.KeyboardKey;
 
 namespace RayWork.Objects;
@@ -51,6 +52,7 @@ public class InputBox : GameObject
 
     private bool CursorBlink;
     private float CursorTimer;
+    private EventHandler<KeyEvent> KeyActionEvent;
 
     public InputBox(TransformComponent transformComponent, SizeComponent sizeComponent)
     {
@@ -112,29 +114,58 @@ public class InputBox : GameObject
 
     public override void RenderLoop()
     {
+        var rectangleSize = RectangleComponent.Size;
+        var rectanglePosition = RectangleComponent.Position;
+        var textSize = TextComponent.Size();
+
+        var cursorOffset = TextComponent.MeasureText(Text).X - textSize.X;
+        var textOffset = textSize.X - cursorOffset - rectangleSize.X;
+        var textPosition = rectanglePosition;
+
+        if (textOffset > 0 && Input.MouseOccupier == this)
+        {
+            var percent = (float) CursorPosition / Text.Length;
+            textPosition.X -= textOffset * percent;
+        }
+
         PanelComponent.DrawPanel();
-        RectangleComponent.Rectangle.DrawMask(RectangleComponent.Size - _Padding2, () =>
-            TextComponent.DrawText(RectangleComponent.Position + _Padding, Vector2.Zero));
+        (rectanglePosition + _Padding).MaskDraw(rectangleSize - _Padding2, () =>
+            TextComponent.DrawText(textPosition + _Padding, Vector2.Zero));
     }
 
-    public override MouseCursor OccupiedMouseCursor()
-    {
-        return MouseCursor.MOUSE_CURSOR_IBEAM;
-    }
+    public override MouseCursor OccupiedMouseCursor() => MouseCursor.MOUSE_CURSOR_IBEAM;
 
     private void SetupInputEvent()
     {
-        Input.OnKeyPressed += (_, key) => KeyEvent(key.Key);
-        Input.OnKeyRepeat += (_, key) => KeyEvent(key.Key);
+        KeyActionEvent = (_, key) => KeyEvent(key.Key);
+        Input.OnKeyPressed += KeyActionEvent;
+        Input.OnKeyRepeat += KeyActionEvent;
     }
 
     private void KeyEvent(KeyboardKey key)
     {
         if (Input.MouseOccupier != this) return;
         var shift = Raylib.IsKeyDown(KEY_LEFT_SHIFT) || Raylib.IsKeyDown(KEY_RIGHT_SHIFT);
+        var ctrl = Raylib.IsKeyDown(KEY_LEFT_CONTROL) || Raylib.IsKeyDown(KEY_RIGHT_CONTROL);
 
         switch (key)
         {
+            case KEY_C when ctrl:
+                Raylib.SetClipboardText(Text);
+                break;
+
+            case KEY_V when ctrl:
+                var clipboardText = Raylib.GetClipboardText_();
+                Text = Text.Insert(CursorPosition, clipboardText);
+                CursorPosition += clipboardText.Length;
+                break;
+
+            case KEY_X when ctrl:
+                Raylib.SetClipboardText(Text);
+                CursorPosition = 0;
+                Text = "";
+                break;
+
             case >= KEY_A and <= KEY_Z:
                 var character = (int) key;
                 if (!shift)
@@ -162,8 +193,22 @@ public class InputBox : GameObject
                 break;
 
             case KEY_BACKSPACE when CursorPosition > 0:
-                Text = Text.Remove(CursorPosition - 1, 1);
-                CursorPosition--;
+                if (!ctrl)
+                {
+                    Text = Text.Remove(--CursorPosition, 1);
+                }
+                else
+                {
+                    var lastSpace = Math.Max(0, Text[..CursorPosition].LastIndexOf(' '));
+                    Text = Text.Remove(lastSpace, CursorPosition - lastSpace);
+                    CursorPosition = lastSpace;
+                }
+
+                break;
+
+            case KEY_DELETE when Text.Length > 0 && ctrl && shift:
+                CursorPosition = 0;
+                Text = "";
                 break;
 
             case KEY_DELETE when CursorPosition < Text.Length:
@@ -206,7 +251,7 @@ public class InputBox : GameObject
 
     ~InputBox()
     {
-        Input.OnKeyPressed -= (_, key) => KeyEvent(key.Key);
-        Input.OnKeyRepeat -= (_, key) => KeyEvent(key.Key);
+        Input.OnKeyPressed -= KeyActionEvent;
+        Input.OnKeyRepeat -= KeyActionEvent;
     }
 }
