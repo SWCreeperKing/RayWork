@@ -1,14 +1,14 @@
 using System.Numerics;
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork.CoreComponents;
 using RayWork.EventArguments;
-using static Raylib_CsLo.KeyboardKey;
+using static Raylib_cs.KeyboardKey;
 
 namespace RayWork.Objects;
 
 public class InputBox : GameObject
 {
-    public static readonly string[] CapitalNumbers = { ")", "!", "@", "#", "$", "%", "^", "&", "*", "(" };
+    public static readonly string[] CapitalNumbers = [")", "!", "@", "#", "$", "%", "^", "&", "*", "("];
 
     public static readonly Dictionary<KeyboardKey, string> KeyCharacters = new()
     {
@@ -56,18 +56,18 @@ public class InputBox : GameObject
 
     public InputBox(TransformComponent transformComponent, SizeComponent sizeComponent)
     {
-        AddComponent(TextComponent = new(Text));
+        AddComponent(TextComponent = new TextComponent(Text));
         AddComponent(PanelComponent =
-            new(RectangleComponent = new(transformComponent, sizeComponent)));
+            new PanelComponent(RectangleComponent = new RectangleComponent(transformComponent, sizeComponent)));
         SetupInputEvent();
     }
 
     public InputBox(Vector2 position, Vector2 size)
     {
-        AddComponent(TextComponent = new(Text));
+        AddComponent(TextComponent = new TextComponent(Text));
         AddComponent(PanelComponent =
-            new(RectangleComponent =
-                new((PositionComponent) position, (StaticSizeComponent) size)));
+            new PanelComponent(RectangleComponent =
+                new RectangleComponent((PositionComponent) position, (StaticSizeComponent) size)));
         SetupInputEvent();
     }
 

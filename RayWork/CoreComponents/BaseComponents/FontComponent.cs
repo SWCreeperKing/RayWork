@@ -1,5 +1,5 @@
 using System.Numerics;
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork.ECS;
 
 namespace RayWork.CoreComponents;

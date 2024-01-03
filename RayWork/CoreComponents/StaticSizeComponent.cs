@@ -7,7 +7,7 @@ public class StaticSizeComponent : SizeComponent
 {
     public override Vector2 Size { get; set; }
 
-    public StaticSizeComponent(float width = 0, float height = 0) : this(new(width, height))
+    public StaticSizeComponent(float width = 0, float height = 0) : this(new Vector2(width, height))
     {
     }
 

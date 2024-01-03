@@ -1,8 +1,9 @@
 using System.Numerics;
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork;
 using RayWork.Objects;
 using RayWork.SaveSystem;
+using static Raylib_cs.Color;
 
 namespace RayWorkTester;
 
@@ -26,13 +27,13 @@ public class SimonSays : Scene
         SaveSystem.AddSaveItem("highscore", HighScore);
         SaveSystem.LoadItems();
 
-        Buttons = new SimonButton[]
-        {
-            new(new(300), new(75), Raylib.BLUE.MakeDarker()),
-            new(new(300, 390), new(75), Raylib.GREEN.MakeDarker()),
-            new(new(390, 300), new(75), Raylib.RED.MakeDarker()),
-            new(new(390), new(75), Raylib.YELLOW.MakeDarker())
-        };
+        Buttons =
+        [
+            new(new Vector2(300), new Vector2(75), BLUE.MakeDarker()),
+            new(new Vector2(300, 390), new Vector2(75), GREEN.MakeDarker()),
+            new(new Vector2(390, 300), new Vector2(75), RED.MakeDarker()),
+            new(new Vector2(390), new Vector2(75), YELLOW.MakeDarker())
+        ];
 
         for (var i = 0; i < Buttons.Length; i++)
         {
@@ -42,7 +43,7 @@ public class SimonSays : Scene
             AddChild(button);
         }
 
-        Button resetButton = new("Restart", new(500));
+        Button resetButton = new("Restart", new Vector2(500));
         resetButton.OnButtonPressed += (_, _) => Reset();
 
         AddChild(resetButton);
@@ -72,7 +73,7 @@ public class SimonSays : Scene
     }
 
     public override void RenderLoop()
-        => Raylib.DrawText($"Score: {Order.Count}\nHigh Score: {HighScore.Score}", 15, 15, 24, Raylib.BLUE);
+        => Raylib.DrawText($"Score: {Order.Count}\nHigh Score: {HighScore.Score}", 15, 15, 24, BLUE);
 
     public void ResetButtons()
     {

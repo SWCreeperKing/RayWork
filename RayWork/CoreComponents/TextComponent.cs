@@ -1,7 +1,8 @@
 using System.Numerics;
 using ImGuiNET;
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork.Objects;
+using static Raylib_cs.Color;
 
 namespace RayWork.CoreComponents;
 
@@ -13,7 +14,7 @@ public class TextComponent : FontComponent
     public TextComponent(string text, Color? color = null)
     {
         Text = text;
-        Color = color ?? Raylib.BLACK;
+        Color = color ?? BLACK;
     }
 
     public void DrawText(Vector2 position, Vector2 origin)

@@ -1,9 +1,10 @@
 using System.Numerics;
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork.ECS;
 using RayWork.Objects;
-using Image = Raylib_CsLo.Image;
-using RayRectangle = Raylib_CsLo.Rectangle;
+using Image = Raylib_cs.Image;
+using RayRectangle = Raylib_cs.Rectangle;
+using Texture = Raylib_cs.Texture2D;
 
 namespace RayWork.CoreComponents;
 

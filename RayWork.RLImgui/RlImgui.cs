@@ -1,26 +1,26 @@
 ﻿/*******************************************************************************************
-*
-*   raylib-extras [ImGui] example - Simple Integration
-*
-*	This is a simple ImGui Integration
-*	It is done using C++ but with C style code
-*	It can be done in C as well if you use the C ImGui wrapper
-*	https://github.com/cimgui/cimgui
-*
-*   Copyright (c) 2021 Jeffery Myers
-*
-********************************************************************************************/
+ *
+ *   raylib-extras [ImGui] example - Simple Integration
+ *
+ *	This is a simple ImGui Integration
+ *	It is done using C++ but with C style code
+ *	It can be done in C as well if you use the C ImGui wrapper
+ *	https://github.com/cimgui/cimgui
+ *
+ *   Copyright (c) 2021 Jeffery Myers
+ *
+ ********************************************************************************************/
 /*******************************************************************************************
  *
  * Modified for Raylib-cslo
- * 
-********************************************************************************************/
+ *
+ ********************************************************************************************/
 
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using ImGuiNET;
-using Raylib_CsLo;
+using Raylib_cs;
 
 namespace RayWork.RLImgui;
 
@@ -37,18 +37,18 @@ public static class RlImgui
 
     private const int StackAllocationSizeLimit = 2048;
     private static ImGuiMouseCursor CurrentMouseCursor = ImGuiMouseCursor.COUNT;
-    private static Dictionary<ImGuiMouseCursor, MouseCursor> MouseCursorMap;
-    private static KeyboardKey[] KeyEnumMap;
-    private static Texture FontTexture;
-    private static Func<Vector2> WindowSize;
+    private static Dictionary<ImGuiMouseCursor, MouseCursor>? MouseCursorMap;
+    private static KeyboardKey[]? KeyEnumMap;
+    private static Texture2D FontTexture;
+    private static Func<Vector2>? WindowSize;
 
-    public static void Setup(Func<Vector2> windowSize, bool darkTheme = true)
+    public static void Setup(Func<Vector2>? windowSize, bool darkTheme = true)
     {
         WindowSize = windowSize;
-        MouseCursorMap = new();
+        MouseCursorMap = new Dictionary<ImGuiMouseCursor, MouseCursor>();
         KeyEnumMap = Enum.GetValues(typeof(KeyboardKey)) as KeyboardKey[];
 
-        FontTexture.id = 0;
+        FontTexture.Id = 0;
 
         BeginInitImGui();
 
@@ -62,7 +62,7 @@ public static class RlImgui
 
     private static void SetupMouseCursors()
     {
-        MouseCursorMap.Clear();
+        MouseCursorMap!.Clear();
         MouseCursorMap[ImGuiMouseCursor.Arrow] = MouseCursor.MOUSE_CURSOR_ARROW;
         MouseCursorMap[ImGuiMouseCursor.TextInput] = MouseCursor.MOUSE_CURSOR_IBEAM;
         MouseCursorMap[ImGuiMouseCursor.Hand] = MouseCursor.MOUSE_CURSOR_POINTING_HAND;
@@ -83,16 +83,16 @@ public static class RlImgui
 
         var image = new Image
         {
-            data = pixels,
-            width = width,
-            height = height,
-            mipmaps = 1,
-            format = (int) PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
+            Data = pixels,
+            Width = width,
+            Height = height,
+            Mipmaps = 1,
+            Format = PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
         };
 
         FontTexture = Raylib.LoadTextureFromImage(image);
 
-        io.Fonts.SetTexID(new(FontTexture.id));
+        io.Fonts.SetTexID(new IntPtr(FontTexture.Id));
     }
 
     public static void EndInitImGui()
@@ -134,11 +134,11 @@ public static class RlImgui
         if (Raylib.IsWindowFullscreen())
         {
             var monitor = Raylib.GetCurrentMonitor();
-            io.DisplaySize = new(Raylib.GetMonitorWidth(monitor), Raylib.GetMonitorHeight(monitor));
+            io.DisplaySize = new Vector2(Raylib.GetMonitorWidth(monitor), Raylib.GetMonitorHeight(monitor));
         }
         else io.DisplaySize = WindowSize();
 
-        io.DisplayFramebufferScale = new(1, 1);
+        io.DisplayFramebufferScale = new Vector2(1, 1);
         io.DeltaTime = Raylib.GetFrameTime();
 
         io.KeyCtrl = Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT_CONTROL) ||
@@ -201,17 +201,17 @@ public static class RlImgui
 
     private static void EnableScissor(float x, float y, float width, float height)
     {
-        RlGl.rlEnableScissorTest();
-        RlGl.rlScissor((int) x, Raylib.GetScreenHeight() - (int) (y + height), (int) width, (int) height);
+        Rlgl.EnableScissorTest();
+        Rlgl.Scissor((int) x, Raylib.GetScreenHeight() - (int) (y + height), (int) width, (int) height);
     }
 
     private static void TriangleVert(ImDrawVertPtr idxVert)
     {
         var c = ImGui.ColorConvertU32ToFloat4(idxVert.col);
 
-        RlGl.rlColor4f(c.X, c.Y, c.Z, c.W);
-        RlGl.rlTexCoord2f(idxVert.uv.X, idxVert.uv.Y);
-        RlGl.rlVertex2f(idxVert.pos.X, idxVert.pos.Y);
+        Rlgl.Color4f(c.X, c.Y, c.Z, c.W);
+        Rlgl.TexCoord2f(idxVert.uv.X, idxVert.uv.Y);
+        Rlgl.Vertex2f(idxVert.pos.X, idxVert.pos.Y);
     }
 
     private static void RenderTriangles(uint count, uint indexStart, ImVector<ushort> indexBuffer,
@@ -222,15 +222,15 @@ public static class RlImgui
         uint textureId = 0;
         if (texturePtr != nint.Zero) textureId = (uint) texturePtr.ToInt32();
 
-        RlGl.rlBegin(RlGl.RL_TRIANGLES);
-        RlGl.rlSetTexture(textureId);
+        Rlgl.Begin(DrawMode.TRIANGLES);
+        Rlgl.SetTexture(textureId);
 
         for (var i = 0; i <= count - 3; i += 3)
         {
-            if (RlGl.rlCheckRenderBatchLimit(3))
+            if (Rlgl.CheckRenderBatchLimit(3))
             {
-                RlGl.rlBegin(RlGl.RL_TRIANGLES);
-                RlGl.rlSetTexture(textureId);
+                Rlgl.Begin(DrawMode.TRIANGLES);
+                Rlgl.SetTexture(textureId);
             }
 
             TriangleVert(vertBuffer[indexBuffer[(int) indexStart + i]]);
@@ -238,15 +238,15 @@ public static class RlImgui
             TriangleVert(vertBuffer[indexBuffer[(int) indexStart + i + 2]]);
         }
 
-        RlGl.rlEnd();
+        Rlgl.End();
     }
 
     private delegate void Callback(ImDrawListPtr list, ImDrawCmdPtr cmd);
 
     private static void RenderData()
     {
-        RlGl.rlDrawRenderBatchActive();
-        RlGl.rlDisableBackfaceCulling();
+        Rlgl.DrawRenderBatchActive();
+        Rlgl.DisableBackfaceCulling();
 
         var data = ImGui.GetDrawData();
 
@@ -271,13 +271,13 @@ public static class RlImgui
                 RenderTriangles(cmd.ElemCount, cmd.IdxOffset, commandList.IdxBuffer, commandList.VtxBuffer,
                     cmd.TextureId);
 
-                RlGl.rlDrawRenderBatchActive();
+                Rlgl.DrawRenderBatchActive();
             }
         }
 
-        RlGl.rlSetTexture(0);
-        RlGl.rlDisableScissorTest();
-        RlGl.rlEnableBackfaceCulling();
+        Rlgl.SetTexture(0);
+        Rlgl.DisableScissorTest();
+        Rlgl.EnableBackfaceCulling();
     }
 
     public static void End()
@@ -289,50 +289,48 @@ public static class RlImgui
 
     public static void Shutdown() => Raylib.UnloadTexture(FontTexture);
 
-    public static void Image(Texture image)
+    public static void Image(Texture2D image)
     {
-        ImGui.Image(new(image.id), new(image.width, image.height));
+        ImGui.Image(new IntPtr(image.Id), new Vector2(image.Width, image.Height));
     }
 
-    public static void ImageSize(Texture image, int width, int height)
-    {
-        ImGui.Image(new(image.id), new(width, height));
-    }
+    public static void ImageSize(Texture2D image, int width, int height)
+        => ImGui.Image(new IntPtr(image.Id), new Vector2(width, height));
 
-    public static void ImageSize(Texture image, Vector2 size) => ImGui.Image(new(image.id), size);
+    public static void ImageSize(Texture2D image, Vector2 size) => ImGui.Image(new IntPtr(image.Id), size);
 
-    public static void ImageRect(Texture image, int destWidth, int destHeight, Rectangle sourceRect)
+    public static void ImageRect(Texture2D image, int destWidth, int destHeight, Rectangle sourceRect)
     {
         var uv0 = new Vector2();
         var uv1 = new Vector2();
 
-        if (sourceRect.width < 0)
+        if (sourceRect.Width < 0)
         {
-            uv0.X = -(sourceRect.x / image.width);
-            uv1.X = uv0.X - Math.Abs(sourceRect.width) / image.width;
+            uv0.X = -(sourceRect.X / image.Width);
+            uv1.X = uv0.X - Math.Abs(sourceRect.Width) / image.Width;
         }
         else
         {
-            uv0.X = sourceRect.x / image.width;
-            uv1.X = uv0.X + sourceRect.width / image.width;
+            uv0.X = sourceRect.X / image.Width;
+            uv1.X = uv0.X + sourceRect.Width / image.Width;
         }
 
-        if (sourceRect.height < 0)
+        if (sourceRect.Height < 0)
         {
-            uv0.Y = -(sourceRect.y / image.height);
-            uv1.Y = uv0.Y - Math.Abs(sourceRect.height) / image.height;
+            uv0.Y = -(sourceRect.Y / image.Height);
+            uv1.Y = uv0.Y - Math.Abs(sourceRect.Height) / image.Height;
         }
         else
         {
-            uv0.Y = sourceRect.y / image.height;
-            uv1.Y = uv0.Y + sourceRect.height / image.height;
+            uv0.Y = sourceRect.Y / image.Height;
+            uv1.Y = uv0.Y + sourceRect.Height / image.Height;
         }
 
-        ImGui.Image(new(image.id), new(destWidth, destHeight), uv0, uv1);
+        ImGui.Image(new IntPtr(image.Id), new Vector2(destWidth, destHeight), uv0, uv1);
     }
 
-    public static Vector4 ToV4(this Color color) => new Vector4(color.r, color.g, color.b, color.a) / 255f;
-    public static Vector3 ToV3(this Color color) => new Vector3(color.r, color.g, color.b) / 255f;
+    public static Vector4 ToV4(this Color color) => new Vector4(color.R, color.G, color.B, color.A) / 255f;
+    public static Vector3 ToV3(this Color color) => new Vector3(color.R, color.G, color.B) / 255f;
     public static uint ToUint(this Vector4 color) => ImGui.ColorConvertFloat4ToU32(color);
     public static uint ToUint(this Color color) => color.ToV4().ToUint();
     public static Color ToColor(this Vector3 color) => new((short) color.X, (short) color.Y, (short) color.Z, 255);

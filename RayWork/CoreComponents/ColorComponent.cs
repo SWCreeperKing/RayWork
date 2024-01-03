@@ -1,4 +1,4 @@
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork.ECS;
 using RayWork.Objects;
 
@@ -14,7 +14,7 @@ public class ColorComponent : IDebugComponent
         Color = color;
     }
 
-    public ColorComponent(short r = 0, short g = 0, short b = 0, short a = 255) : this(new(r, g, b, a))
+    public ColorComponent(short r = 0, short g = 0, short b = 0, short a = 255) : this(new Color(r, g, b, a))
     {
     }
 

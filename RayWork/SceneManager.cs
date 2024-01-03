@@ -3,7 +3,7 @@ namespace RayWork;
 public static class SceneManager
 {
     private static readonly Dictionary<string, Scene> Scenes = new();
-    private static readonly List<string> InitializedScenes = new();
+    private static readonly List<string> InitializedScenes = [];
     private static string ActiveSceneId = "main";
 
     public static event EventHandler OnSceneListChanged;

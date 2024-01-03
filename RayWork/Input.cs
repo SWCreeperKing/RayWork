@@ -1,16 +1,18 @@
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork.EventArguments;
 
 namespace RayWork;
 
 public static class Input
 {
+    public static readonly MouseButton[] MouseButtons = Enum.GetValues<MouseButton>();
+
     // keyboard
     public static bool HandleKeyboardEvents = true;
     public static float KeyboardDelaySeconds { get; set; } = .5f;
     public static float KeyboardRepeatsPerSecond { get; set; } = 30;
 
-    private static List<KeyboardKey> KeysActive = new();
+    private static List<KeyboardKey> KeysActive = [];
     private static Dictionary<KeyboardKey, float> KeyDelay = new();
     private static Dictionary<KeyboardKey, float> KeyRepeatTimers = new();
     private static Dictionary<KeyboardKey, KeyEvent> KeyEventCache = new();
@@ -34,7 +36,7 @@ public static class Input
     }
 
     private static MouseCursor _CurrentMouseCursor;
-    private static List<MouseCursor> MouseCursorQueue = new();
+    private static List<MouseCursor> MouseCursorQueue = [];
 
     public static event EventHandler<MouseStateEvent> MouseEvent;
 
@@ -83,11 +85,11 @@ public static class Input
             }
         }
 
-        var keyPressed = Raylib.GetKeyPressed_();
+        var keyPressed = Raylib.GetKeyPressed();
         while (keyPressed > 0)
         {
-            AddKey(keyPressed);
-            keyPressed = Raylib.GetKeyPressed_();
+            AddKey((KeyboardKey) keyPressed);
+            keyPressed = Raylib.GetKeyPressed();
         }
     }
 
@@ -96,8 +98,8 @@ public static class Input
         if (MouseEvent is not null)
         {
             var mousePosition = Raylib.GetMousePosition();
-            var mousePressed = Enum.GetValues<MouseButton>().Where(Raylib.IsMouseButtonPressed).ToArray();
-            var mouseDown = Enum.GetValues<MouseButton>().Where(Raylib.IsMouseButtonDown).ToArray();
+            var mousePressed = MouseButtons.Where(button => Raylib.IsMouseButtonPressed(button));
+            var mouseDown = MouseButtons.Where(button => Raylib.IsMouseButtonDown(button));
             MouseStateEvent mouseState = new(mousePosition, mousePressed, mouseDown);
 
             MouseEvent(null, mouseState);
@@ -107,7 +109,7 @@ public static class Input
         {
             CurrentMouseCursor = MouseOccupier.OccupiedMouseCursor();
         }
-        else if (MouseCursorQueue.Any())
+        else if (MouseCursorQueue.Count != 0)
         {
             CurrentMouseCursor = MouseCursorQueue[^1];
         }
@@ -155,12 +157,12 @@ public static class Input
 
     private static KeyEvent GetKeyEvent(KeyboardKey key)
     {
-        if (!KeyEventCache.ContainsKey(key))
+        if (!KeyEventCache.TryGetValue(key, out var keyEvent))
         {
-            KeyEventCache.Add(key, new(key));
+            keyEvent = KeyEventCache[key] = new KeyEvent(key);
         }
 
-        return KeyEventCache[key];
+        return keyEvent;
     }
 
     public static void SetMouseCursor(MouseCursor mouseCursor) => MouseCursorQueue.Add(mouseCursor);

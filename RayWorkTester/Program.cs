@@ -1,13 +1,12 @@
 ﻿using System.Numerics;
-using Newtonsoft.Json;
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork;
 using RayWork.CoreComponents;
 using RayWork.Objects;
-using RayWork.SelfUpdater;
 using RayWorkTester;
+using Rectangle = RayWork.Objects.Rectangle;
 
-var app = new RayApplication(new Program(), new(1280, 720),
+var app = new RayApplication(new Program(), new Vector2(1280, 720),
     "Test", 60, ConfigFlags.FLAG_WINDOW_RESIZABLE);
 
 public partial class Program : Scene
@@ -21,13 +20,13 @@ public partial class Program : Scene
 
         SceneManager.AddScene("simon", new SimonSays());
 
-        Button button = new("Test", new(500));
+        Button button = new("Test", new Vector2(500));
         button.OnButtonPressed += (_, _) => SceneManager.SwitchScene("simon");
 
         AddChild(new TestObject());
         AddChild(new AnchorTestObject());
-        AddChild(new TextBlock(LoremIpsum, new(200, 300, 300, 60)));
-        AddChild(new InputBox(new(300, 20), new Vector2(300, 30)));
+        AddChild(new TextBlock(LoremIpsum, new Rectangle(200, 300, 300, 60)));
+        AddChild(new InputBox(new Vector2(300, 20), new Vector2(300, 30)));
         AddChild(button);
 
         Input.OnKeyPressed += (_, key) =>

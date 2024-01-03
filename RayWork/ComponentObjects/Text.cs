@@ -1,5 +1,5 @@
 using System.Numerics;
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork.CoreComponents;
 
 namespace RayWork.Objects;
@@ -12,7 +12,7 @@ public class Text : GameObject
     public Text(string text, TransformComponent transformComponent, Color? color = null)
     {
         AddComponent(TransformComponent = transformComponent);
-        AddComponent(TextComponent = new(text, color));
+        AddComponent(TextComponent = new TextComponent(text, color));
     }
 
     public Text(string text, Vector2 position, Color? color = null) : this(text, new PositionComponent(position), color)

@@ -1,7 +1,8 @@
-﻿using System.Runtime.InteropServices;
-using Raylib_CsLo;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using Raylib_cs;
 using RayWork.EventArguments;
-using static Raylib_CsLo.TraceLogLevel;
+using static Raylib_cs.TraceLogLevel;
 using static RayWork.Logger.Level;
 
 namespace RayWork;
@@ -23,19 +24,19 @@ public static class Logger
     public static readonly string StatusSave = $"{Directory.GetCurrentDirectory().Replace('\\', '/')}/CrashLogs";
     public static readonly string Guid = System.Guid.NewGuid().ToString();
 
-    private static readonly List<string> LogList = new();
+    private static readonly List<string> LogList = [];
 
     public static bool ShowDebugLogs = true;
 
     private static bool HasError;
 
-    public static event EventHandler<LogReceivedEventArgs> LogRecieved;
+    public static event EventHandler<LogReceivedEventArgs> LogReceived;
 
     public static unsafe void Initialize()
     {
         Raylib.SetTraceLogCallback(&RayLog);
 
-        LogRecieved += (_, args) =>
+        LogReceived += (_, args) =>
         {
             Console.ForegroundColor = args.LogMessageLevel switch
             {
@@ -48,31 +49,25 @@ public static class Logger
                 _ => throw new ArgumentOutOfRangeException(nameof(args.LogMessageLevel), args.LogMessageLevel, null)
             };
 
-            if (args.LogMessageLevel is Error)
-            {
-                Console.WriteLine($"[{args.TimeOfMessage}]\n\t{args.LogMessage}");
-            }
-            else
-            {
-                Console.WriteLine($"[{args.TimeOfMessage}]: [{args.LogMessage}]");
-            }
+            Console.WriteLine(args.LogMessageLevel is Error ? $"[{args.TimeOfMessage}]\n\t{args.LogMessage}"
+                : $"[{args.TimeOfMessage}]: [{args.LogMessage}]");
 
             Console.ForegroundColor = ConsoleColor.White;
         };
     }
 
-    [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    public static unsafe void RayLog(int logLevel, sbyte* text, sbyte* args)
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
+    private static unsafe void RayLog(int logLevel, sbyte* text, sbyte* args)
     {
         Log(logLevel switch
-        {
-            (int) LOG_ALL => Other,
-            (int) LOG_TRACE or (int) LOG_DEBUG => Debug,
-            (int) LOG_INFO or (int) LOG_NONE => Info,
-            (int) LOG_WARNING => Warning,
-            (int) LOG_ERROR or (int) LOG_FATAL => Error,
-            _ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null)
-        }, $"from raylib: {LoggingLogger.Logging.GetLogMessage(new(text), new(args))} ");
+            {
+                (int) LOG_ALL => Other,
+                (int) LOG_TRACE or (int) LOG_DEBUG => Debug,
+                (int) LOG_INFO or (int) LOG_NONE => Info,
+                (int) LOG_WARNING => Warning,
+                (int) LOG_ERROR or (int) LOG_FATAL => Error,
+                _ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null)
+            }, $"from raylib: {LoggingLogger.Logging.GetLogMessage(new IntPtr(text), new IntPtr(args))} ");
     }
 
     public static void Log(string text) => Log(Debug, text);
@@ -102,9 +97,9 @@ public static class Logger
         }
 
 
-        if (LogRecieved is not null)
+        if (LogReceived is not null)
         {
-            LogRecieved(null, new(level, time, text.Trim()));
+            LogReceived(null, new LogReceivedEventArgs(level, time, text.Trim()));
         }
     }
 

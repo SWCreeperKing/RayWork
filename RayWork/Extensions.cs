@@ -1,8 +1,9 @@
 using System.Numerics;
 using System.Text;
-using Newtonsoft.Json;
-using Raylib_CsLo;
-using static Raylib_CsLo.Raylib;
+using Raylib_cs;
+using static Raylib_cs.Color;
+using static Raylib_cs.Raylib;
+using Texture = Raylib_cs.Texture2D;
 
 namespace RayWork;
 
@@ -15,7 +16,7 @@ public static class Extensions
     private static readonly Dictionary<string, byte[]> StringCache = new();
 
     public static Vector2 Position(this Rectangle rectangle) => new(rectangle.X, rectangle.Y);
-    public static Vector2 Size(this Rectangle rectangle) => new(rectangle.width, rectangle.height);
+    public static Vector2 Size(this Rectangle rectangle) => new(rectangle.Width, rectangle.Height);
 
     public static bool IsVector2In(this Rectangle rectangle, Vector2 vector2)
         => CheckCollisionPointRec(vector2, rectangle);
@@ -50,10 +51,8 @@ public static class Extensions
     /// <param name="color"><see cref="Color"/> to make lighter</param>
     /// <returns>the lighter version of <paramref name="color"/></returns>
     public static Color MakeLighter(this Color color, float lightFactor = DefaultLightFactor)
-    {
-        return new((int) Math.Min(color.r * lightFactor, 255), (int) Math.Min(color.g * lightFactor, 255),
-            (int) Math.Min(color.b * lightFactor, 255), color.a);
-    }
+        => new((int) Math.Min(color.R * lightFactor, 255), (int) Math.Min(color.G * lightFactor, 255),
+            (int) Math.Min(color.B * lightFactor, 255), color.A);
 
     /// <summary>
     /// makes a <see cref="Color"/> slightly darker
@@ -61,7 +60,7 @@ public static class Extensions
     /// <param name="color"><see cref="Color"/> to make darker</param>
     /// <returns>the darker version of <paramref name="color"/></returns>
     public static Color MakeDarker(this Color color, float darkFactor = DefaultDarkFactor)
-        => new((int) (color.r / darkFactor), (int) (color.g / darkFactor), (int) (color.b / darkFactor), color.a);
+        => new((int) (color.R / darkFactor), (int) (color.G / darkFactor), (int) (color.B / darkFactor), color.A);
 
     /// <summary>
     /// this draws text in a <see cref="Rectangle"/> and wraps it according to said <see cref="Rectangle"/>
@@ -96,7 +95,7 @@ public static class Extensions
         var textOffsetY = 0f; // Offset between lines (on line break '\n')
         var textOffsetX = 0f; // Offset X to next character to draw
 
-        var scaleFactor = fontSize / font.baseSize;
+        var scaleFactor = fontSize / font.BaseSize;
         var state = !wordWrap;
 
         var startLine = -1; // Index where to begin drawing (where a line begins)
@@ -118,9 +117,9 @@ public static class Extensions
             float glyphWidth = 0;
             if (codepoint != '\n')
             {
-                glyphWidth = font.glyphs[index].advanceX == 0
-                    ? font.recs[index].width * scaleFactor
-                    : font.glyphs[index].advanceX * scaleFactor;
+                glyphWidth = font.Glyphs[index].AdvanceX == 0
+                    ? font.Recs[index].Width * scaleFactor
+                    : font.Glyphs[index].AdvanceX * scaleFactor;
 
                 if (i + 1 < length) glyphWidth += spacing;
             }
@@ -129,7 +128,7 @@ public static class Extensions
             {
                 if (codepoint is ' ' or '\t' or '\n') endLine = i;
 
-                if (textOffsetX + glyphWidth > rect.width)
+                if (textOffsetX + glyphWidth > rect.Width)
                 {
                     endLine = endLine < 1 ? i : endLine;
                     if (i == endLine) endLine -= codepointByteCount;
@@ -162,42 +161,42 @@ public static class Extensions
                 {
                     if (!wordWrap)
                     {
-                        textOffsetY += (font.baseSize + font.baseSize / 2) * scaleFactor;
+                        textOffsetY += (font.BaseSize + font.BaseSize / 2f) * scaleFactor;
                         textOffsetX = 0;
                     }
                 }
                 else
                 {
-                    if (!wordWrap && textOffsetX + glyphWidth > rect.width)
+                    if (!wordWrap && textOffsetX + glyphWidth > rect.Width)
                     {
-                        textOffsetY += (font.baseSize + font.baseSize / 2) * scaleFactor;
+                        textOffsetY += (font.BaseSize + font.BaseSize / 2f) * scaleFactor;
                         textOffsetX = 0;
                     }
 
                     // When text overflows rectangle height limit, just stop drawing
-                    if (textOffsetY + font.baseSize * scaleFactor > rect.height) break;
+                    if (textOffsetY + font.BaseSize * scaleFactor > rect.Height) break;
 
                     // Draw selection background
                     var isGlyphSelected = false;
                     if (selectStart >= 0 && k >= selectStart && k < selectStart + selectLength)
                     {
                         DrawRectangleRec(
-                            new(rect.X + textOffsetX - 1, rect.Y + textOffsetY, glyphWidth,
-                                font.baseSize * scaleFactor), selectBackTint);
+                            new Rectangle(rect.X + textOffsetX - 1, rect.Y + textOffsetY, glyphWidth,
+                                font.BaseSize * scaleFactor), selectBackTint);
                         isGlyphSelected = true;
                     }
 
                     // Draw current character glyph
                     if (codepoint != ' ' && codepoint != '\t')
                     {
-                        DrawTextCodepoint(font, codepoint, new(rect.X + textOffsetX, rect.Y + textOffsetY),
+                        DrawTextCodepoint(font, codepoint, new Vector2(rect.X + textOffsetX, rect.Y + textOffsetY),
                             fontSize, isGlyphSelected ? selectTint : tint);
                     }
                 }
 
                 if (wordWrap && i == endLine)
                 {
-                    textOffsetY += (font.baseSize + font.baseSize / 2) * scaleFactor;
+                    textOffsetY += (font.BaseSize + font.BaseSize / 2f) * scaleFactor;
                     textOffsetX = 0;
                     startLine = endLine;
                     endLine = -1;

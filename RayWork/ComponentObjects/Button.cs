@@ -1,10 +1,10 @@
 using System.Numerics;
 using ImGuiNET;
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork.CoreComponents;
 using RayWork.EventArguments;
-using static Raylib_CsLo.MouseCursor;
-using static Raylib_CsLo.Raylib;
+using static Raylib_cs.MouseButton;
+using static Raylib_cs.MouseCursor;
 
 namespace RayWork.Objects;
 
@@ -40,7 +40,7 @@ public class Button : GameObject
         }));
     }
 
-    public Button(string text, Vector2 position, Color? color = null) : this(new(text, position), color)
+    public Button(string text, Vector2 position, Color? color = null) : this(new Label(text, position), color)
     {
     }
 
@@ -114,7 +114,7 @@ public class Button : GameObject
                 Label.PanelComponent.PanelColor = PanelColor.Color;
             }
 
-            if (!mouseState.IsMouseIn(Label.Rectangle) || !WasHover || !mouseState[MOUSE_LEFT_BUTTON] ||
+            if (!mouseState.IsMouseIn(Label.Rectangle) || !WasHover || !mouseState[MOUSE_BUTTON_LEFT] ||
                 OnButtonPressed is null) return;
             OnButtonPressed(null, null);
         };

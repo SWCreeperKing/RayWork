@@ -1,8 +1,9 @@
 using System.Numerics;
 using ImGuiNET;
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork.ECS;
 using RayWork.Objects;
+using static Raylib_cs.Color;
 
 namespace RayWork.CoreComponents;
 
@@ -21,11 +22,11 @@ public class PanelComponent : IDebugComponent
     {
         RectangleComponent = rectangleComponent;
         PanelColor = new Color(80, 100, 160, 255);
-        OutlineColor = Raylib.BLACK;
+        OutlineColor = BLACK;
     }
 
     public PanelComponent(TransformComponent transformComponent, SizeComponent sizeComponent) : this(
-        new(transformComponent, sizeComponent))
+        new RectangleComponent(transformComponent, sizeComponent))
     {
     }
 

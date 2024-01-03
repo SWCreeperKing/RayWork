@@ -2,8 +2,7 @@ using System.Numerics;
 using ImGuiNET;
 using RayWork.ECS;
 using RayWork.EventArguments;
-using static Raylib_CsLo.MouseButton;
-using static Raylib_CsLo.Raylib;
+using static Raylib_cs.MouseButton;
 
 namespace RayWork.CoreComponents;
 
@@ -26,7 +25,7 @@ public class ButtonComponent : IDebugComponent
     }
 
     public ButtonComponent(TransformComponent transformComponent, SizeComponent sizeComponent) : this(
-        new(transformComponent, sizeComponent))
+        new RectangleComponent(transformComponent, sizeComponent))
     {
     }
 

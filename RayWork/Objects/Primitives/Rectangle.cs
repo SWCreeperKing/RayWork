@@ -1,6 +1,7 @@
 using System.Numerics;
-using Raylib_CsLo;
-using RayRectangle = Raylib_CsLo.Rectangle;
+using Raylib_cs;
+using static Raylib_cs.Color;
+using RayRectangle = Raylib_cs.Rectangle;
 
 namespace RayWork.Objects;
 
@@ -12,40 +13,40 @@ public class Rectangle
 
     public float X
     {
-        get => RectangleData.x;
+        get => RectangleData.X;
         set
         {
-            RectangleData.x = value;
+            RectangleData.X = value;
             RectanglePosition.X = value;
         }
     }
 
     public float Y
     {
-        get => RectangleData.y;
+        get => RectangleData.Y;
         set
         {
-            RectangleData.y = value;
+            RectangleData.Y = value;
             RectanglePosition.Y = value;
         }
     }
 
     public float Width
     {
-        get => RectangleData.width;
+        get => RectangleData.Width;
         set
         {
-            RectangleData.width = value;
+            RectangleData.Width = value;
             RectangleSize.X = value;
         }
     }
 
     public float Height
     {
-        get => RectangleData.height;
+        get => RectangleData.Height;
         set
         {
-            RectangleData.height = value;
+            RectangleData.Height = value;
             RectangleSize.Y = value;
         }
     }
@@ -75,10 +76,10 @@ public class Rectangle
         get => RectangleData;
         set
         {
-            X = value.x;
-            Y = value.y;
-            Width = value.width;
-            Height = value.height;
+            X = value.X;
+            Y = value.Y;
+            Width = value.Width;
+            Height = value.Height;
         }
     }
 
@@ -110,19 +111,19 @@ public class Rectangle
 
     public bool IsVector2In(Vector2 vector2) => Raylib.CheckCollisionPointRec(vector2, RayLibRectangle);
     public bool IsMouseIn() => IsVector2In(Raylib.GetMousePosition());
-    public void Draw(Color? color = null) => Raylib.DrawRectangleRec(RayLibRectangle, color ?? Raylib.WHITE);
+    public void Draw(Color? color = null) => Raylib.DrawRectangleRec(RayLibRectangle, color ?? WHITE);
 
     public void DrawLines(float lineThickness = 3, Color? color = null)
-        => Raylib.DrawRectangleLinesEx(RayLibRectangle, lineThickness, color ?? Raylib.WHITE);
+        => Raylib.DrawRectangleLinesEx(RayLibRectangle, lineThickness, color ?? WHITE);
 
     public void DrawPro(Vector2? origin = null, float rotation = 0, Color? color = null)
-        => Raylib.DrawRectanglePro(RayLibRectangle, origin ?? Vector2.Zero, rotation, color ?? Raylib.WHITE);
+        => Raylib.DrawRectanglePro(RayLibRectangle, origin ?? Vector2.Zero, rotation, color ?? WHITE);
 
     public void DrawRounded(float roundness = .1f, int segments = 10, Color? color = null)
-        => Raylib.DrawRectangleRounded(RayLibRectangle, roundness, segments, color ?? Raylib.WHITE);
+        => Raylib.DrawRectangleRounded(RayLibRectangle, roundness, segments, color ?? WHITE);
 
     public void DrawRoundedLines(float roundness = .1f, int segments = 10, float lineThickness = 3, Color? color = null)
-        => Raylib.DrawRectangleRoundedLines(RayLibRectangle, roundness, segments, lineThickness, color ?? Raylib.WHITE);
+        => Raylib.DrawRectangleRoundedLines(RayLibRectangle, roundness, segments, lineThickness, color ?? WHITE);
 
     public void DrawGradientH(Color color1, Color color2)
         => Raylib.DrawRectangleGradientH((int) X, (int) Y, (int) Width, (int) Height, color1, color2);

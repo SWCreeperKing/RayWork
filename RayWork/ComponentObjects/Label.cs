@@ -1,6 +1,6 @@
 using System.Numerics;
 using RayWork.CoreComponents;
-using RayRectangle = Raylib_CsLo.Rectangle;
+using RayRectangle = Raylib_cs.Rectangle;
 
 namespace RayWork.Objects;
 
@@ -11,7 +11,7 @@ public class Label : GameObject
         get => _Padding.X;
         set
         {
-            _Padding = new(value);
+            _Padding = new Vector2(value);
             SizePadding = _Padding * 2;
         }
     }
@@ -27,7 +27,7 @@ public class Label : GameObject
 
     public Label(TextComponent textComponent, TransformComponent transformComponent, SizeComponent sizeComponent)
     {
-        AddComponent(PanelComponent = new(new(transformComponent, sizeComponent)));
+        AddComponent(PanelComponent = new PanelComponent(new RectangleComponent(transformComponent, sizeComponent)));
         AddComponent(TextComponent = textComponent);
     }
 
@@ -41,8 +41,8 @@ public class Label : GameObject
         Padding = 2;
         TextPadding = true;
         AddComponent(TextComponent = textComponent);
-        AddComponent(PanelComponent = new(
-            new(transformComponent, new DynamicSizeComponent(
+        AddComponent(PanelComponent = new PanelComponent(
+            new RectangleComponent(transformComponent, new DynamicSizeComponent(
                 () => TextComponent.Size() + SizePadding))));
     }
 

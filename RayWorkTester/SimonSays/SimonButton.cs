@@ -1,5 +1,5 @@
 using System.Numerics;
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork;
 using RayWork.CoreComponents;
 
@@ -19,8 +19,8 @@ public class SimonButton : GameObject
 
     public SimonButton(Vector2 position, Vector2 size, Color color)
     {
-        AddComponent(RectangleComponent = new(position, size));
-        AddComponent(ButtonComponent = new(RectangleComponent));
+        AddComponent(RectangleComponent = new RectangleComponent(position, size));
+        AddComponent(ButtonComponent = new ButtonComponent(RectangleComponent));
         Color = color;
         HighlightColor = Color.MakeLighter();
     }

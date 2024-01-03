@@ -66,9 +66,9 @@ public record NumberClass
 
         return delta switch
         {
-            0 => new(n1.Mantissa + n2.Mantissa, n1.Exponent),
-            < 0 => new(n1.Mantissa / Math.Pow(10, Math.Abs(delta)) + n2.Mantissa, n2.Exponent),
-            _ => new(n2.Mantissa / Math.Pow(10, delta) + n1.Mantissa, n1.Exponent)
+            0 => new NumberClass(n1.Mantissa + n2.Mantissa, n1.Exponent),
+            < 0 => new NumberClass(n1.Mantissa / Math.Pow(10, Math.Abs(delta)) + n2.Mantissa, n2.Exponent),
+            _ => new NumberClass(n2.Mantissa / Math.Pow(10, delta) + n1.Mantissa, n1.Exponent)
         };
     }
 
@@ -79,9 +79,9 @@ public record NumberClass
 
         return delta switch
         {
-            0 => new(n1.Mantissa - n2.Mantissa, n1.Exponent),
-            < 0 => new(n1.Mantissa / Math.Pow(10, Math.Abs(delta)) - n2.Mantissa, n2.Exponent),
-            _ => new(n1.Mantissa - n2.Mantissa / Math.Pow(10, delta), n1.Exponent)
+            0 => new NumberClass(n1.Mantissa - n2.Mantissa, n1.Exponent),
+            < 0 => new NumberClass(n1.Mantissa / Math.Pow(10, Math.Abs(delta)) - n2.Mantissa, n2.Exponent),
+            _ => new NumberClass(n1.Mantissa - n2.Mantissa / Math.Pow(10, delta), n1.Exponent)
         };
     }
 
@@ -90,7 +90,7 @@ public record NumberClass
         if (n1 == Zero || n2 == Zero) return Zero;
         if (n1 == One) return n2;
         if (n2 == One) return n1;
-        return new(n1.Mantissa * n2.Mantissa, n1.Exponent + n2.Exponent);
+        return new NumberClass(n1.Mantissa * n2.Mantissa, n1.Exponent + n2.Exponent);
     }
 
     public static NumberClass operator /(NumberClass n1, NumberClass n2)
@@ -99,7 +99,7 @@ public record NumberClass
         if (n2 == Zero) throw new DivideByZeroException();
         if (n2 == One) return n1;
         if (n1 == n2) return One;
-        return new(n1.Mantissa / n2.Mantissa, n1.Exponent - n2.Exponent);
+        return new NumberClass(n1.Mantissa / n2.Mantissa, n1.Exponent - n2.Exponent);
     }
 
     public static bool operator <(NumberClass n1, NumberClass n2)

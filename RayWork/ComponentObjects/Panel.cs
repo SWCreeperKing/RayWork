@@ -1,6 +1,6 @@
 using System.Numerics;
 using RayWork.CoreComponents;
-using RayRectangle = Raylib_CsLo.Rectangle;
+using RayRectangle = Raylib_cs.Rectangle;
 
 namespace RayWork.Objects;
 
@@ -8,7 +8,7 @@ public class Panel : GameObject
 {
     public PanelComponent PanelComponent;
 
-    public Panel(Vector2 position, Vector2 size) => AddComponent(PanelComponent = new(position, size));
+    public Panel(Vector2 position, Vector2 size) => AddComponent(PanelComponent = new PanelComponent(position, size));
 
     public Panel(Rectangle rectangle) : this(rectangle.Position, rectangle.Size)
     {

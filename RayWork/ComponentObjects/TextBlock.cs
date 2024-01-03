@@ -1,5 +1,5 @@
 using System.Numerics;
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork.CoreComponents;
 
 namespace RayWork.Objects;
@@ -11,8 +11,8 @@ public class TextBlock : GameObject
 
     public TextBlock(string text, TransformComponent position, SizeComponent size, Color? color = null)
     {
-        AddComponent(RectangleComponent = new(position, size));
-        AddComponent(TextRectangleComponent = new(text, color));
+        AddComponent(RectangleComponent = new RectangleComponent(position, size));
+        AddComponent(TextRectangleComponent = new TextRectangleComponent(text, color));
     }
 
     public TextBlock(string text, Vector2 position, Vector2 size, Color? color = null) : this(text,

@@ -7,7 +7,7 @@ public class PositionComponent : TransformComponent
 {
     public override Vector2 Position { get; set; }
 
-    public PositionComponent(float x = 0, float y = 0) : this(new(x, y))
+    public PositionComponent(float x = 0, float y = 0) : this(new Vector2(x, y))
     {
     }
 

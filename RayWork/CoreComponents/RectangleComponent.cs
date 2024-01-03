@@ -2,7 +2,7 @@ using System.Numerics;
 using ImGuiNET;
 using RayWork.ECS;
 using Rectangle = RayWork.Objects.Rectangle;
-using RayRectangle = Raylib_CsLo.Rectangle;
+using RayRectangle = Raylib_cs.Rectangle;
 
 namespace RayWork.CoreComponents;
 
@@ -70,7 +70,7 @@ public class RectangleComponent : IDebugComponent
     {
         _Position = position;
         _Size = size;
-        _Rectangle = new(_Position.Position, _Size.Size);
+        _Rectangle = new Rectangle(_Position.Position, _Size.Size);
     }
 
     public RectangleComponent(Vector2 position, Vector2 size) : this((PositionComponent) position,

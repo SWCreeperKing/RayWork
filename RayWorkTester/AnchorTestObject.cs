@@ -1,8 +1,9 @@
 using System.Numerics;
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork;
 using RayWork.CoreComponents;
 using RayWork.Objects;
+using static Raylib_cs.Color;
 
 namespace RayWorkTester;
 
@@ -15,9 +16,9 @@ public class AnchorTestObject : GameObject
     public AnchorTestObject()
     {
         AddComponent(Size = new StaticSizeComponent(50, 50));
-        AddComponent(Pos = new(windowSize =>
-            new(windowSize.X / 2 - Size.Size.X / 2, windowSize.Y - Size.Size.Y - 20)));
-        AddComponent(Color = new(Raylib.RED));
+        AddComponent(Pos = new ScreenAnchorComponent(windowSize =>
+            new Vector2(windowSize.X / 2 - Size.Size.X / 2, windowSize.Y - Size.Size.Y - 20)));
+        AddComponent(Color = new ColorComponent(RED));
         AddChild(new Text("Testing string", new Vector2(100, 50)));
     }
 

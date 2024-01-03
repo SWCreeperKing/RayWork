@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-using Raylib_CsLo;
+using Raylib_cs;
 using RayWork.EventArguments;
 using RayWork.RLImgui;
 
@@ -35,7 +35,7 @@ public class RayApplication
 
     public RayApplication(Scene mainScene, int windowWidth, int windowHeight, string title = "Untitled",
         int fps = 60, ConfigFlags configFlags = 0)
-        : this(mainScene, new(windowWidth, windowHeight), title, fps, configFlags)
+        : this(mainScene, new Vector2(windowWidth, windowHeight), title, fps, configFlags)
     {
     }
 
