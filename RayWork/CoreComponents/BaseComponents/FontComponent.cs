@@ -4,7 +4,7 @@ using RayWork.ECS;
 
 namespace RayWork.CoreComponents.BaseComponents;
 
-public abstract class FontComponent : IDebugComponent
+public abstract class FontComponent : DebugComponent
 {
     public static Font DefaultFont = Raylib.GetFontDefault();
 
@@ -24,10 +24,6 @@ public abstract class FontComponent : IDebugComponent
         Cache = (Text, FontSize, Spacing, measure);
 
         return Cache.Item4;
-    }
-
-    public virtual void Debug()
-    {
     }
 
     public void SetFont(Font font) => FontHolder = font;

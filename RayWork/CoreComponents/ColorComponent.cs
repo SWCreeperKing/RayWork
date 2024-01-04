@@ -4,7 +4,7 @@ using RayWork.Objects;
 
 namespace RayWork.CoreComponents;
 
-public class ColorComponent(Color color, string label = "Color") : IDebugComponent
+public class ColorComponent(Color color, string label = "Color") : DebugComponent
 {
     public CompatibleColor Color = color;
     public string Label = label;
@@ -13,6 +13,6 @@ public class ColorComponent(Color color, string label = "Color") : IDebugCompone
     {
     }
 
-    public void Debug() => Color.ImGuiColorEdit(Label);
+    public override void Debug() => Color.ImGuiColorEdit(Label);
     public static implicit operator ColorComponent(Color color) => new(color);
 }

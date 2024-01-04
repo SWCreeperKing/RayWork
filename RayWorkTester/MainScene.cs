@@ -12,11 +12,13 @@ public class MainScene : Scene
     public const string LoremIpsum =
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet dapibus metus a faucibus. Pellentesque a libero at ex gravida gravida vitae nec elit. Duis at orci lobortis, tincidunt odio nec, suscipit sapien. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed in sem volutpat metus molestie placerat a quis purus. Proin vitae orci euismod, efficitur nunc et, suscipit dui. Vivamus malesuada suscipit sapien non gravida. Vestibulum dignissim turpis sed quam aliquet porta. Aliquam euismod posuere lorem, ut aliquam tellus porta non. Nulla sit amet aliquam dui. Nunc vel suscipit odio. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.";
 
+    public override string Label => "main";
+
     public override void Initialize()
     {
         FontComponent.DefaultFont = Raylib.LoadFont("Assets/Fonts/CascadiaCode.ttf");
 
-        SceneManager.AddScene("simon", new SimonSays.SimonSays());
+        SceneManager.AddScene(new SimonSays.SimonSays());
 
         Button button = new("Test", new Vector2(500));
         button.OnButtonPressed += (_, _) => SceneManager.SwitchScene("simon");

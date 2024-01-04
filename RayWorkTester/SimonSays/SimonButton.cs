@@ -33,7 +33,7 @@ public class SimonButton : GameObject
         AddComponent(RectangleComponent = new RectangleComponent(position, size));
         AddComponent(ButtonComponent = new ButtonComponent(RectangleComponent));
 
-        AddComponent(new AdaptableDebugComponent(() =>
+        AddComponent(new AdaptableDebugComponent("Simon Button Data", () =>
         {
             ImGui.DragFloat("Active Duration Seconds", ref ActiveDurationSeconds);
             Color.ImGuiColorEdit("Color");

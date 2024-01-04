@@ -5,9 +5,13 @@ namespace RayWork.Objects;
 
 public abstract class GameObject : ComponentObject
 {
+    private static int IncrementedId;
+    public readonly int Id;
     public object? Parent { get; set; }
 
     private readonly ListRegister<GameObject> ChildRegister = new();
+
+    public GameObject() => Id = IncrementedId++;
 
     public void Update()
     {

@@ -1,4 +1,5 @@
 using ImGuiNET;
+using RayWork.CoreComponents;
 using RayWork.ECS;
 using RayWork.Objects;
 
@@ -6,7 +7,7 @@ namespace RayWork;
 
 public static class Debugger
 {
-    private static (string, Scene)[] Scenes;
+    private static Scene[] Scenes = [];
 
     public static bool IsDebugging;
 
@@ -18,16 +19,16 @@ public static class Debugger
         if (!IsDebugging) return;
         if (!ImGui.Begin("SceneManager")) return;
 
-        foreach (var (id, scene) in Scenes)
+        foreach (var scene in Scenes)
         {
             if (scene.HasChildren()) continue;
-            RenderScene(id, scene);
+            RenderScene(scene);
         }
     }
 
-    private static void RenderScene(string id, Scene scene)
+    private static void RenderScene(Scene scene)
     {
-        if (!ImGui.CollapsingHeader(id)) return;
+        if (!ImGui.CollapsingHeader(scene.Label)) return;
         var objects = scene.GetChildren();
 
         for (var i = 0; i < objects.Length; i++)
@@ -39,9 +40,9 @@ public static class Debugger
     private static void RenderGameObject(GameObject gameObject, int i)
     {
         var components = gameObject.GetDebugComponents();
-        if (!ImGui.TreeNode($"({i + 1}) {gameObject.GetType().Name}")) return;
+        if (!ImGui.TreeNode(gameObject.Id, $"({i + 1}) {gameObject.GetType().Name}")) return;
 
-        if (components.Any() && ImGui.CollapsingHeader("Components"))
+        if (components.Length != 0 && ImGui.CollapsingHeader("Components"))
         {
             for (var j = 0; j < components.Length; j++)
             {
@@ -62,9 +63,10 @@ public static class Debugger
         ImGui.TreePop();
     }
 
-    private static void RenderComponent(IDebugComponent component, int i)
+    private static void RenderComponent(DebugComponent component, int i)
     {
-        if (!ImGui.TreeNode($"({i + 1}) {component.GetType().Name}")) return;
+        var name = component is AdaptableDebugComponent adc ? adc.Label : component.GetType().Name;
+        if (!ImGui.TreeNode(component.Id, $"({i + 1}) {name}")) return;
         component.Debug();
         ImGui.TreePop();
     }

@@ -19,6 +19,9 @@ public class RayApplication
     public RayApplication(Scene mainScene, Vector2 windowSize, string title = "Untitled",
         int fps = 60, ConfigFlags configFlags = 0)
     {
+        if (mainScene.Label is not "main")
+            throw new ArgumentException($"mainScene, {mainScene.GetType()}'s label is not 'main'");
+
         Raylib.SetConfigFlags(configFlags);
         Raylib.SetTargetFPS(fps);
         WindowSize = windowSize;
@@ -26,7 +29,7 @@ public class RayApplication
         Logger.Initialize();
         Debugger.Initialize();
         Raylib.InitWindow((int) windowSize.X, (int) windowSize.Y, title);
-        SceneManager.AddScene("main", mainScene);
+        SceneManager.AddScene(mainScene);
         RlImgui.Setup(() => WindowSize);
 
         Start();

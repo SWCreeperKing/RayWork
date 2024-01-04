@@ -7,7 +7,7 @@ using static Raylib_cs.MouseButton;
 
 namespace RayWork.CoreComponents;
 
-public class ButtonComponent : IDebugComponent
+public class ButtonComponent : DebugComponent
 {
     public RectangleComponent RectangleComponent;
     public EventHandler? OnClicked;
@@ -20,7 +20,8 @@ public class ButtonComponent : IDebugComponent
 
         MouseClickEvent = (_, mouseEvent) =>
         {
-            if (!mouseEvent.IsMouseIn(rectangleComponent) || OnClicked is null || !mouseEvent[MOUSE_BUTTON_LEFT]) return;
+            if (!mouseEvent.IsMouseIn(rectangleComponent) || OnClicked is null ||
+                !mouseEvent[MOUSE_BUTTON_LEFT]) return;
             OnClicked(null, null!);
         };
         Input.MouseEvent += MouseClickEvent;
@@ -35,11 +36,8 @@ public class ButtonComponent : IDebugComponent
         (StaticSizeComponent) size)
     {
     }
-    
-    public void Debug() => ImGui.Text(OnClicked is null ? "No Events assigned" : "Events are active");
 
-    ~ButtonComponent()
-    {
-        Input.MouseEvent -= MouseClickEvent;
-    }
+    public override void Debug() => ImGui.Text(OnClicked is null ? "No Events assigned" : "Events are active");
+
+    ~ButtonComponent() => Input.MouseEvent -= MouseClickEvent;
 }

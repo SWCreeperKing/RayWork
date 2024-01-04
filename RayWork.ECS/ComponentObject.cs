@@ -3,13 +3,13 @@
 public class ComponentObject
 {
     private readonly ListRegister<IComponent> ComponentRegister = new();
-    private IDebugComponent[] DebugComponents = Array.Empty<IDebugComponent>();
+    private DebugComponent[] DebugComponents = [];
 
     public ComponentObject()
     {
         ComponentRegister.OnRegisterCacheUpdated += (_, _) =>
         {
-            DebugComponents = GetAllComponents().OfType<IDebugComponent>().ToArray();
+            DebugComponents = GetAllComponents().OfType<DebugComponent>().ToArray();
         };
     }
 
@@ -28,6 +28,6 @@ public class ComponentObject
     public TComponentType[] GetComponents<TComponentType>() where TComponentType : IComponent
         => ComponentRegister.GetTypesFromRegister<TComponentType>();
 
-    public IDebugComponent[] GetDebugComponents() => DebugComponents;
+    public DebugComponent[] GetDebugComponents() => DebugComponents;
     public IComponent[] GetAllComponents() => ComponentRegister.GetRegisterTypes();
 }

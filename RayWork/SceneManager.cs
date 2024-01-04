@@ -21,9 +21,10 @@ public static class SceneManager
         }
     }
 
-    public static void AddScene(string id, Scene scene)
+    public static void AddScene(Scene scene)
     {
-        if (!Scenes.TryAdd(id, scene)) throw new ArgumentException($"SceneManager already contains ID: [{id}]");
+        if (!Scenes.TryAdd(scene.Label, scene))
+            throw new ArgumentException($"SceneManager already contains ID: [{scene.Label}]");
         SceneListChanged();
     }
 
@@ -71,6 +72,6 @@ public static class SceneManager
         }
     }
 
-    public static (string, Scene)[] GetAllScenes() => Scenes.Select(kv => (kv.Key, kv.Value)).ToArray();
+    public static Scene[] GetAllScenes() => Scenes.Select(kv => kv.Value).ToArray();
     private static void SceneListChanged() => OnSceneListChanged?.Invoke(null, null);
 }

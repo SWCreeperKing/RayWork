@@ -5,6 +5,7 @@ namespace RayWork.Objects;
 public abstract class Scene
 {
     private readonly ListRegister<GameObject> ChildRegister = new();
+    public abstract string Label { get; }
 
     public void Update()
     {

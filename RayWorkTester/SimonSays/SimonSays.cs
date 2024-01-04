@@ -22,6 +22,8 @@ public class SimonSays : Scene
     private int ReadIndex;
     private int ReadInput;
 
+    public override string Label => "simon";
+
     public override void Initialize()
     {
         SaveSystem.InitializeSaveSystem("SW_CreeperKing", "SimonSays");

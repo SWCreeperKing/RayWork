@@ -32,7 +32,7 @@ public class Button : GameObject
         label.PanelComponent.PanelColor = PanelColor.Color;
         CreateClickEvent();
 
-        AddComponent(new AdaptableDebugComponent(() =>
+        AddComponent(new AdaptableDebugComponent("Button Data", () =>
         {
             ImGui.Checkbox("Disabled", ref Disabled);
             PanelColor.Color.ImGuiColorEdit("Panel Color");

@@ -8,7 +8,7 @@ using Texture = Raylib_cs.Texture2D;
 
 namespace RayWork.CoreComponents;
 
-public class ImageComponent(Image image) : IDebugComponent
+public class ImageComponent(Image image) : DebugComponent
 {
     public Image Image = image;
     public Texture Texture = image.GetTexture();
@@ -24,5 +24,5 @@ public class ImageComponent(Image image) : IDebugComponent
     public void Draw(RayRectangle source, RayRectangle destination, Vector2 origin, float rotation = 0)
         => Raylib.DrawTexturePro(Texture, source, destination, origin, rotation, Tint);
 
-    public virtual void Debug() => Tint.ImGuiColorEdit("Tint");
+    public override void Debug() => Tint.ImGuiColorEdit("Tint");
 }
