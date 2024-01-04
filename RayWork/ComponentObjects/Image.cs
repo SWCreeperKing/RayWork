@@ -1,4 +1,6 @@
-namespace RayWork.Objects;
+using RayWork.Objects;
+
+namespace RayWork.ComponentObjects;
 
 public class Image : GameObject
 {

@@ -1,15 +1,17 @@
 using System.Numerics;
 using ImGuiNET;
 using Raylib_cs;
+using RayWork.CoreComponents.BaseComponents;
 using RayWork.ECS;
 using RayWork.Objects;
 using static Raylib_cs.Color;
+using Rectangle = RayWork.Objects.Primitives.Rectangle;
+using RayRectangle = Raylib_cs.Rectangle;
 
 namespace RayWork.CoreComponents;
 
 public class PanelComponent : IDebugComponent
 {
-    public RectangleComponent RectangleComponent;
     public CompatibleColor PanelColor;
     public CompatibleColor OutlineColor;
     public float OutlineThickness = 2;
@@ -17,6 +19,32 @@ public class PanelComponent : IDebugComponent
     public int Segments = 10;
     public bool RoundedOutline;
     public bool DrawOutline = true;
+    
+    private RectangleComponent RectangleComponent;
+
+    public RayRectangle RayRectangle
+    {
+        get => RectangleComponent.RayLibRectangle;
+        set => RectangleComponent.RayLibRectangle = value;
+    }
+
+    public Rectangle Rectangle
+    {
+        get => RectangleComponent.Rectangle;
+        set => RectangleComponent.Rectangle = value;
+    }
+
+    public Vector2 Position
+    {
+        get => RectangleComponent.Position;
+        set => RectangleComponent.Position = value;
+    }
+
+    public Vector2 Size
+    {
+        get => RectangleComponent.Size;
+        set => RectangleComponent.Size = value;
+    }
 
     public PanelComponent(RectangleComponent rectangleComponent)
     {

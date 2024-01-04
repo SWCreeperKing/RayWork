@@ -1,5 +1,6 @@
 using Raylib_cs;
 using RayWork.EventArguments;
+using RayWork.Objects;
 
 namespace RayWork;
 
@@ -17,9 +18,9 @@ public static class Input
     private static Dictionary<KeyboardKey, float> KeyRepeatTimers = new();
     private static Dictionary<KeyboardKey, KeyEvent> KeyEventCache = new();
 
-    public static event EventHandler<KeyEvent> OnKeyPressed;
-    public static event EventHandler<KeyEvent> OnKeyReleased;
-    public static event EventHandler<KeyEvent> OnKeyRepeat;
+    public static event EventHandler<KeyEvent>? OnKeyPressed;
+    public static event EventHandler<KeyEvent>? OnKeyReleased;
+    public static event EventHandler<KeyEvent>? OnKeyRepeat;
 
     // mouse
     public static bool HandleMouseEvents = true;
@@ -27,18 +28,18 @@ public static class Input
 
     public static MouseCursor CurrentMouseCursor
     {
-        get => _CurrentMouseCursor;
+        get => CurrentMouseCursorHolder;
         private set
         {
-            _CurrentMouseCursor = value;
+            CurrentMouseCursorHolder = value;
             Raylib.SetMouseCursor(value);
         }
     }
 
-    private static MouseCursor _CurrentMouseCursor;
+    private static MouseCursor CurrentMouseCursorHolder;
     private static List<MouseCursor> MouseCursorQueue = [];
 
-    public static event EventHandler<MouseStateEvent> MouseEvent;
+    public static event EventHandler<MouseStateEvent>? MouseEvent;
 
     public static void UpdateInput(float deltaTime)
     {
@@ -113,7 +114,7 @@ public static class Input
         {
             CurrentMouseCursor = MouseCursorQueue[^1];
         }
-        else if (_CurrentMouseCursor is not MouseCursor.MOUSE_CURSOR_DEFAULT)
+        else if (CurrentMouseCursorHolder is not MouseCursor.MOUSE_CURSOR_DEFAULT)
         {
             CurrentMouseCursor = MouseCursor.MOUSE_CURSOR_DEFAULT;
         }
@@ -132,9 +133,7 @@ public static class Input
             KeyRepeatTimers.Remove(key);
         }
 
-        if (OnKeyReleased is null) return;
-
-        OnKeyReleased(null, GetKeyEvent(key));
+        OnKeyReleased?.Invoke(null, GetKeyEvent(key));
     }
 
     private static void AddKey(KeyboardKey key)
@@ -150,18 +149,12 @@ public static class Input
             KeyRepeatTimers[key] = KeyboardRepeatsPerSecond / 1000f;
         }
 
-        if (OnKeyPressed is null) return;
-
-        OnKeyPressed(null, GetKeyEvent(key));
+        OnKeyPressed?.Invoke(null, GetKeyEvent(key));
     }
 
     private static KeyEvent GetKeyEvent(KeyboardKey key)
     {
-        if (!KeyEventCache.TryGetValue(key, out var keyEvent))
-        {
-            keyEvent = KeyEventCache[key] = new KeyEvent(key);
-        }
-
+        if (!KeyEventCache.TryGetValue(key, out var keyEvent)) return KeyEventCache[key] = new KeyEvent(key);
         return keyEvent;
     }
 

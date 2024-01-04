@@ -1,5 +1,6 @@
 using System.Numerics;
 using ImGuiNET;
+using RayWork.CoreComponents.BaseComponents;
 
 namespace RayWork.CoreComponents;
 
@@ -21,10 +22,8 @@ public class PositionComponent : TransformComponent
             Position = pos;
         }
 
-        if (ImGui.DragFloat("Y", ref pos.Y))
-        {
-            Position = pos;
-        }
+        if (!ImGui.DragFloat("Y", ref pos.Y)) return;
+        Position = pos;
     }
 
     public static implicit operator PositionComponent(Vector2 position) => new(position);

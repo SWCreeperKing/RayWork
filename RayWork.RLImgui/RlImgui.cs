@@ -79,7 +79,7 @@ public static class RlImgui
         ImGui.SetCurrentContext(ImGuiContext);
         var io = ImGui.GetIO();
 
-        io.Fonts.GetTexDataAsRGBA32(out byte* pixels, out var width, out var height, out var bytesPerPixel);
+        io.Fonts.GetTexDataAsRGBA32(out byte* pixels, out var width, out var height, out _);
 
         var image = new Image
         {
@@ -136,7 +136,7 @@ public static class RlImgui
             var monitor = Raylib.GetCurrentMonitor();
             io.DisplaySize = new Vector2(Raylib.GetMonitorWidth(monitor), Raylib.GetMonitorHeight(monitor));
         }
-        else io.DisplaySize = WindowSize();
+        else io.DisplaySize = WindowSize!();
 
         io.DisplayFramebufferScale = new Vector2(1, 1);
         io.DeltaTime = Raylib.GetFrameTime();
@@ -167,12 +167,8 @@ public static class RlImgui
         else
         {
             Raylib.ShowCursor();
-
             if ((io.ConfigFlags & ImGuiConfigFlags.NoMouseCursorChange) != 0) return;
-
-            Raylib.SetMouseCursor(!MouseCursorMap.ContainsKey(imguiCursor)
-                ? MouseCursor.MOUSE_CURSOR_DEFAULT
-                : MouseCursorMap[imguiCursor]);
+            Raylib.SetMouseCursor(MouseCursorMap!.GetValueOrDefault(imguiCursor, MouseCursor.MOUSE_CURSOR_DEFAULT));
         }
     }
 
@@ -180,7 +176,7 @@ public static class RlImgui
     {
         var io = ImGui.GetIO();
 
-        foreach (var key in KeyEnumMap) io.KeysDown[(int) key] = Raylib.IsKeyDown(key);
+        foreach (var key in KeyEnumMap!) io.KeysDown[(int) key] = Raylib.IsKeyDown(key);
 
         var pressed = (uint) Raylib.GetCharPressed();
         while (pressed != 0)
@@ -290,9 +286,7 @@ public static class RlImgui
     public static void Shutdown() => Raylib.UnloadTexture(FontTexture);
 
     public static void Image(Texture2D image)
-    {
-        ImGui.Image(new IntPtr(image.Id), new Vector2(image.Width, image.Height));
-    }
+        => ImGui.Image(new IntPtr(image.Id), new Vector2(image.Width, image.Height));
 
     public static void ImageSize(Texture2D image, int width, int height)
         => ImGui.Image(new IntPtr(image.Id), new Vector2(width, height));

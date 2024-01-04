@@ -1,10 +1,12 @@
 using System.Numerics;
 using Raylib_cs;
 using RayWork.CoreComponents;
+using RayWork.CoreComponents.BaseComponents;
 using RayWork.EventArguments;
+using RayWork.Objects;
 using static Raylib_cs.KeyboardKey;
 
-namespace RayWork.Objects;
+namespace RayWork.ComponentObjects;
 
 public class InputBox : GameObject
 {
@@ -31,16 +33,16 @@ public class InputBox : GameObject
 
     public Vector2 Padding
     {
-        get => _Padding;
+        get => PaddingHolder;
         set
         {
-            _Padding = value;
-            _Padding2 = value * 2;
+            PaddingHolder = value;
+            Padding2Holder = value * 2;
         }
     }
 
-    private Vector2 _Padding = new(3);
-    private Vector2 _Padding2 = new(6);
+    private Vector2 PaddingHolder = new(3);
+    private Vector2 Padding2Holder = new(6);
 
     public string Text = "";
     public string CursorChar = "_";
@@ -52,7 +54,8 @@ public class InputBox : GameObject
 
     private bool CursorBlink;
     private float CursorTimer;
-    private EventHandler<KeyEvent> KeyActionEvent;
+    private bool MouseIn;
+    private EventHandler<KeyEvent>? KeyActionEvent;
 
     public InputBox(TransformComponent transformComponent, SizeComponent sizeComponent)
     {
@@ -73,22 +76,26 @@ public class InputBox : GameObject
 
     public override void UpdateLoop()
     {
+        MouseIn = PanelComponent.Rectangle.IsMouseIn();
+
         if (Input.MouseOccupier != this)
         {
-            if (Input.MouseOccupier is not null ||
-                !PanelComponent.RectangleComponent.Rectangle.IsMouseIn() ||
-                !Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
+            if (MouseIn)
             {
-                return;
+                Input.SetMouseCursor(MouseCursor.MOUSE_CURSOR_IBEAM);
             }
+
+            if (Input.MouseOccupier is not null ||
+                !MouseIn ||
+                !Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
+                return;
 
             CursorBlink = false;
             CursorTimer = CursorBlinkCooldownSeconds;
             Input.MouseOccupier = this;
         }
 
-        if (PanelComponent.RectangleComponent.Rectangle.IsMouseIn() ||
-            !Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
+        if (MouseIn || !Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
         {
             if (DoCursorBlinking)
             {
@@ -129,11 +136,9 @@ public class InputBox : GameObject
         }
 
         PanelComponent.DrawPanel();
-        (rectanglePosition + _Padding).MaskDraw(rectangleSize - _Padding2, () =>
-            TextComponent.DrawText(textPosition + _Padding, Vector2.Zero));
+        (rectanglePosition + PaddingHolder).MaskDraw(rectangleSize - Padding2Holder, () =>
+            TextComponent.DrawText(textPosition + PaddingHolder, Vector2.Zero));
     }
-
-    public override MouseCursor OccupiedMouseCursor() => MouseCursor.MOUSE_CURSOR_IBEAM;
 
     private void SetupInputEvent()
     {
@@ -228,14 +233,14 @@ public class InputBox : GameObject
                 break;
 
             default:
-                if (shift && CapitalKeyCharacters.ContainsKey(key))
+                if (shift && CapitalKeyCharacters.TryGetValue(key, out var capitalKeyCharacter))
                 {
-                    Text = Text.Insert(CursorPosition, CapitalKeyCharacters[key]);
+                    Text = Text.Insert(CursorPosition, capitalKeyCharacter);
                     CursorPosition++;
                 }
-                else if (KeyCharacters.ContainsKey(key))
+                else if (KeyCharacters.TryGetValue(key, out var keyCharacter))
                 {
-                    Text = Text.Insert(CursorPosition, KeyCharacters[key]);
+                    Text = Text.Insert(CursorPosition, keyCharacter);
                     CursorPosition++;
                 }
 
@@ -254,4 +259,7 @@ public class InputBox : GameObject
         Input.OnKeyPressed -= KeyActionEvent;
         Input.OnKeyRepeat -= KeyActionEvent;
     }
+
+    public override MouseCursor OccupiedMouseCursor()
+        => MouseIn ? MouseCursor.MOUSE_CURSOR_IBEAM : MouseCursor.MOUSE_CURSOR_DEFAULT;
 }

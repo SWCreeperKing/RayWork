@@ -30,7 +30,7 @@ public static class Logger
 
     private static bool HasError;
 
-    public static event EventHandler<LogReceivedEventArgs> LogReceived;
+    public static event EventHandler<LogReceivedEventArgs>? LogReceived;
 
     public static unsafe void Initialize()
     {
@@ -67,16 +67,16 @@ public static class Logger
                 (int) LOG_WARNING => Warning,
                 (int) LOG_ERROR or (int) LOG_FATAL => Error,
                 _ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null)
-            }, $"from raylib: {LoggingLogger.Logging.GetLogMessage(new IntPtr(text), new IntPtr(args))} ");
+            }, $"from raylib: {Logging.GetLogMessage(new IntPtr(text), new IntPtr(args))} ");
     }
 
     public static void Log(string text) => Log(Debug, text);
-    public static void Log(object text) => Log(Debug, text.ToString());
+    public static void Log(object text) => Log(Debug, text.ToString()!);
     public static void Log(Exception e) => Log(Error, $"{e.Message}\n{e.StackTrace}");
 
     public static T LogReturn<T>(T t)
     {
-        Log(t.ToString());
+        Log(t!.ToString()!);
         return t;
     }
 
@@ -97,10 +97,7 @@ public static class Logger
         }
 
 
-        if (LogReceived is not null)
-        {
-            LogReceived(null, new LogReceivedEventArgs(level, time, text.Trim()));
-        }
+        LogReceived?.Invoke(null, new LogReceivedEventArgs(level, time, text.Trim()));
     }
 
     public static void Log(Level level, object text) => Log(level, text.ToString());
@@ -124,9 +121,7 @@ public static class Logger
 
     public static void CheckWrite()
     {
-        if (HasError)
-        {
-            WriteLog();
-        }
+        if (!HasError) return;
+        WriteLog();
     }
 }

@@ -3,10 +3,11 @@ using ImGuiNET;
 using Raylib_cs;
 using RayWork.CoreComponents;
 using RayWork.EventArguments;
+using RayWork.Objects;
 using static Raylib_cs.MouseButton;
 using static Raylib_cs.MouseCursor;
 
-namespace RayWork.Objects;
+namespace RayWork.ComponentObjects;
 
 public class Button : GameObject
 {
@@ -19,10 +20,10 @@ public class Button : GameObject
     private bool WasDisabled;
     private bool WasHover;
 
-    public EventHandler OnButtonHover;
-    public EventHandler OnButtonPressed;
+    public EventHandler? OnButtonHover;
+    public EventHandler? OnButtonPressed;
 
-    private EventHandler<MouseStateEvent> MouseClickEvent;
+    private EventHandler<MouseStateEvent>? MouseClickEvent;
 
     public Button(Label label, Color? panelColor = null, Color? hoverColor = null, Color? disabledColor = null)
     {
@@ -70,11 +71,8 @@ public class Button : GameObject
         {
             if (Disabled || Input.MouseOccupier is not null)
             {
-                if (mouseState.IsMouseIn(Label.Rectangle))
-                {
-                    Input.SetMouseCursor(MOUSE_CURSOR_NOT_ALLOWED);
-                }
-
+                if (!mouseState.IsMouseIn(Label.Rectangle)) return;
+                Input.SetMouseCursor(MOUSE_CURSOR_NOT_ALLOWED);
                 return;
             }
 
@@ -89,11 +87,7 @@ public class Button : GameObject
 
                     WasHover = true;
 
-                    if (OnButtonHover is not null)
-                    {
-                        OnButtonHover(null, null);
-                    }
-
+                    OnButtonHover?.Invoke(null, null);
                     Label.PanelComponent.PanelColor = HoverColor.Color;
                 }
 
@@ -116,15 +110,12 @@ public class Button : GameObject
 
             if (!mouseState.IsMouseIn(Label.Rectangle) || !WasHover || !mouseState[MOUSE_BUTTON_LEFT] ||
                 OnButtonPressed is null) return;
-            OnButtonPressed(null, null);
+            OnButtonPressed(null, null!);
         };
         Input.MouseEvent += MouseClickEvent;
     }
 
     public override void RenderLoop() => Label.Render();
 
-    ~Button()
-    {
-        Input.MouseEvent -= MouseClickEvent;
-    }
+    ~Button() => Input.MouseEvent -= MouseClickEvent;
 }

@@ -1,9 +1,10 @@
 using System.Numerics;
 using ImGuiNET;
 using Raylib_cs;
+using RayWork.CoreComponents.BaseComponents;
 using RayWork.Objects;
 using static Raylib_cs.Color;
-using Rectangle = RayWork.Objects.Rectangle;
+using Rectangle = RayWork.Objects.Primitives.Rectangle;
 using RayRectangle = Raylib_cs.Rectangle;
 
 namespace RayWork.CoreComponents;

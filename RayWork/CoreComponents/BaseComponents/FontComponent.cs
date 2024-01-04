@@ -2,16 +2,16 @@ using System.Numerics;
 using Raylib_cs;
 using RayWork.ECS;
 
-namespace RayWork.CoreComponents;
+namespace RayWork.CoreComponents.BaseComponents;
 
 public abstract class FontComponent : IDebugComponent
 {
     public static Font DefaultFont = Raylib.GetFontDefault();
 
-    public Font Font => _Font ?? DefaultFont;
-    private Font? _Font;
+    public Font Font => FontHolder ?? DefaultFont;
+    private Font? FontHolder;
 
-    public string Text;
+    public string Text = "";
     public float FontSize = 24;
     public float Spacing = 1.5f;
 
@@ -30,10 +30,6 @@ public abstract class FontComponent : IDebugComponent
     {
     }
 
-    public void SetFont(Font font) => _Font = font;
-
-    public Vector2 MeasureText(string text)
-    {
-        return Raylib.MeasureTextEx(Font, text, FontSize, Spacing);
-    }
+    public void SetFont(Font font) => FontHolder = font;
+    public Vector2 MeasureText(string text) => Raylib.MeasureTextEx(Font, text, FontSize, Spacing);
 }

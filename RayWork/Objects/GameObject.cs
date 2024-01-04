@@ -1,11 +1,11 @@
 using Raylib_cs;
 using RayWork.ECS;
 
-namespace RayWork;
+namespace RayWork.Objects;
 
 public abstract class GameObject : ComponentObject
 {
-    public object Parent { get; set; }
+    public object? Parent { get; set; }
 
     private readonly ListRegister<GameObject> ChildRegister = new();
 

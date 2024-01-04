@@ -1,8 +1,10 @@
 using System.Numerics;
 using Raylib_cs;
 using RayWork.CoreComponents;
+using RayWork.CoreComponents.BaseComponents;
+using RayWork.Objects;
 
-namespace RayWork.Objects;
+namespace RayWork.ComponentObjects;
 
 public class Text : GameObject
 {

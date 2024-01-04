@@ -1,5 +1,6 @@
 using System.Numerics;
 using ImGuiNET;
+using RayWork.CoreComponents.BaseComponents;
 
 namespace RayWork.CoreComponents;
 
@@ -21,10 +22,8 @@ public class StaticSizeComponent : SizeComponent
             Size = size;
         }
 
-        if (ImGui.DragFloat("Height", ref size.Y))
-        {
-            Size = size;
-        }
+        if (!ImGui.DragFloat("Height", ref size.Y)) return;
+        Size = size;
     }
 
     public static implicit operator StaticSizeComponent(Vector2 size) => new(size);

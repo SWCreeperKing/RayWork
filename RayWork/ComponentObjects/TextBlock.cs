@@ -1,8 +1,11 @@
 using System.Numerics;
 using Raylib_cs;
 using RayWork.CoreComponents;
+using RayWork.CoreComponents.BaseComponents;
+using RayWork.Objects;
+using Rectangle = RayWork.Objects.Primitives.Rectangle;
 
-namespace RayWork.Objects;
+namespace RayWork.ComponentObjects;
 
 public class TextBlock : GameObject
 {

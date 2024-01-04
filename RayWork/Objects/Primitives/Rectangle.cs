@@ -3,7 +3,7 @@ using Raylib_cs;
 using static Raylib_cs.Color;
 using RayRectangle = Raylib_cs.Rectangle;
 
-namespace RayWork.Objects;
+namespace RayWork.Objects.Primitives;
 
 public class Rectangle
 {

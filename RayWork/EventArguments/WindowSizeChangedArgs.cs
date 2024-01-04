@@ -2,9 +2,7 @@ using System.Numerics;
 
 namespace RayWork.EventArguments;
 
-public class WindowSizeChangedEventArgs : EventArgs
+public class WindowSizeChangedEventArgs(Vector2 newWindowSize) : EventArgs
 {
-    public readonly Vector2 NewWindowSize;
-
-    public WindowSizeChangedEventArgs(Vector2 newWindowSize) => NewWindowSize = newWindowSize;
+    public readonly Vector2 NewWindowSize = newWindowSize;
 }

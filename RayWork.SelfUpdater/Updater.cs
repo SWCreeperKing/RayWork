@@ -12,13 +12,13 @@ public static class Updater
         _ => false
     };
 
-    public static string UpdaterFolderPath = "update_downloader";
-    public static string UpdaterTag = "Release1.4";
+    public const string UpdaterFolderPath = "update_downloader";
+    public const string UpdaterTag = "Release1.4";
 
     // updater arguments
-    private static string DownloadWebsite;
-    private static string CopySource;
-    private static string CloseOnComplete;
+    private static string? DownloadWebsite;
+    private static string? CopySource;
+    private static string? CloseOnComplete;
 
     public static void Initialize(string downloadWebsite, string copySource = "null", string closeOnComplete = "true")
     {
@@ -34,14 +34,14 @@ public static class Updater
         Directory.CreateDirectory(UpdaterFolderPath);
         DownloadDownloader($"{UpdaterFolderPath}/AutoUpdater.exe").GetAwaiter().GetResult();
 
-        var arguments = new[]
-        {
+        string[] arguments =
+        [
             DownloadWebsite,
-            Environment.ProcessPath.Remove(Environment.ProcessPath.Replace("\\", "/").LastIndexOf('/')),
+            Environment.ProcessPath!.Remove(Environment.ProcessPath.Replace("\\", "/").LastIndexOf('/')),
             CloseOnComplete,
             CopySource,
             Environment.ProcessPath
-        };
+        ];
 
         Process.Start($"{UpdaterFolderPath}/AutoUpdater.exe", arguments);
     }
@@ -59,10 +59,8 @@ public static class Updater
 
     public static void CheckIfUpdateFinished()
     {
-        if (Directory.Exists(UpdaterFolderPath))
-        {
-            UpdateFinished();
-        }
+        if (!Directory.Exists(UpdaterFolderPath)) return;
+        UpdateFinished();
     }
 
     public static void UpdateFinished()

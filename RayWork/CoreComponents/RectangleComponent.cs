@@ -1,7 +1,8 @@
 using System.Numerics;
 using ImGuiNET;
+using RayWork.CoreComponents.BaseComponents;
 using RayWork.ECS;
-using Rectangle = RayWork.Objects.Rectangle;
+using Rectangle = RayWork.Objects.Primitives.Rectangle;
 using RayRectangle = Raylib_cs.Rectangle;
 
 namespace RayWork.CoreComponents;
@@ -10,25 +11,25 @@ public class RectangleComponent : IDebugComponent
 {
     public RayRectangle RayLibRectangle
     {
-        get => _Rectangle.RayLibRectangle;
-        set => _Rectangle.RayLibRectangle = value;
+        get => RectangleHolder.RayLibRectangle;
+        set => RectangleHolder.RayLibRectangle = value;
     }
 
     public Rectangle Rectangle
     {
         get
         {
-            var position = _Position.Position;
-            var size = _Size.Size;
-            if (position != _Rectangle.Position) _Rectangle.Position = position;
-            if (size != _Rectangle.Size) _Rectangle.Size = size;
-            return _Rectangle;
+            var position = PositionHolder.Position;
+            var size = SizeHolder.Size;
+            if (position != RectangleHolder.Position) RectangleHolder.Position = position;
+            if (size != RectangleHolder.Size) RectangleHolder.Size = size;
+            return RectangleHolder;
         }
         set
         {
-            _Rectangle.RayLibRectangle = value.RayLibRectangle;
-            _Position.Position = value.Position;
-            _Size.Size = value.Size;
+            RectangleHolder.RayLibRectangle = value.RayLibRectangle;
+            PositionHolder.Position = value.Position;
+            SizeHolder.Size = value.Size;
         }
     }
 
@@ -36,14 +37,14 @@ public class RectangleComponent : IDebugComponent
     {
         get
         {
-            var position = _Position.Position;
-            if (position != _Rectangle.Position) _Rectangle.Position = position;
+            var position = PositionHolder.Position;
+            if (position != RectangleHolder.Position) RectangleHolder.Position = position;
             return position;
         }
         set
         {
-            _Position.Position = value;
-            _Rectangle.Position = value;
+            PositionHolder.Position = value;
+            RectangleHolder.Position = value;
         }
     }
 
@@ -51,26 +52,26 @@ public class RectangleComponent : IDebugComponent
     {
         get
         {
-            var size = _Size.Size;
-            if (size != _Rectangle.Size) _Rectangle.Size = size;
+            var size = SizeHolder.Size;
+            if (size != RectangleHolder.Size) RectangleHolder.Size = size;
             return size;
         }
         set
         {
-            _Size.Size = value;
-            _Rectangle.Size = value;
+            SizeHolder.Size = value;
+            RectangleHolder.Size = value;
         }
     }
 
-    private TransformComponent _Position;
-    private SizeComponent _Size;
-    private Rectangle _Rectangle;
+    private TransformComponent PositionHolder;
+    private SizeComponent SizeHolder;
+    private Rectangle RectangleHolder;
 
-    public RectangleComponent(TransformComponent position, SizeComponent size)
+    public RectangleComponent(TransformComponent positionHolder, SizeComponent sizeHolder)
     {
-        _Position = position;
-        _Size = size;
-        _Rectangle = new Rectangle(_Position.Position, _Size.Size);
+        PositionHolder = positionHolder;
+        SizeHolder = sizeHolder;
+        RectangleHolder = new Rectangle(PositionHolder.Position, SizeHolder.Size);
     }
 
     public RectangleComponent(Vector2 position, Vector2 size) : this((PositionComponent) position,
@@ -88,8 +89,8 @@ public class RectangleComponent : IDebugComponent
 
     public void Debug()
     {
-        var pos = _Position.Position;
-        var size = _Size.Size;
+        var pos = PositionHolder.Position;
+        var size = SizeHolder.Size;
         if (ImGui.DragFloat("X", ref pos.X))
         {
             Position = pos;
@@ -105,10 +106,8 @@ public class RectangleComponent : IDebugComponent
             Size = size;
         }
 
-        if (ImGui.DragFloat("H", ref size.Y))
-        {
-            Size = size;
-        }
+        if (!ImGui.DragFloat("H", ref size.Y)) return;
+        Size = size;
     }
 
     public static implicit operator RectangleComponent(Rectangle rectangle) => new(rectangle);

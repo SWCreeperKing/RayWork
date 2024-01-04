@@ -1,7 +1,7 @@
 using System.Numerics;
 using RayWork.ECS;
 
-namespace RayWork.CoreComponents;
+namespace RayWork.CoreComponents.BaseComponents;
 
 public abstract class SizeComponent : IDebugComponent
 {

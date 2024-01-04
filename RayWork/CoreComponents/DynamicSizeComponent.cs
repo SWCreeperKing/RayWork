@@ -1,5 +1,7 @@
 using System.Numerics;
 using ImGuiNET;
+using Raylib_cs;
+using RayWork.CoreComponents.BaseComponents;
 
 namespace RayWork.CoreComponents;
 
@@ -7,11 +9,11 @@ public class DynamicSizeComponent : SizeComponent
 {
     public override Vector2 Size
     {
-        get => _Size = SizeEquation();
-        set { }
+        get => SizeHolder = SizeEquation();
+        set => Logger.Log("Can not set Size of DynamicSizeComponent");
     }
 
-    private Vector2 _Size;
+    private Vector2 SizeHolder;
 
     public Func<Vector2> SizeEquation;
 
@@ -19,9 +21,9 @@ public class DynamicSizeComponent : SizeComponent
 
     public override void Debug()
     {
-        ImGui.Text($"Size: {_Size}");
+        ImGui.Text($"Size: {SizeHolder}");
 
         if (!ImGui.Button("Recalculate")) return;
-        _Size = SizeEquation();
+        SizeHolder = SizeEquation();
     }
 }

@@ -1,8 +1,10 @@
 using System.Numerics;
 using RayWork.CoreComponents;
+using RayWork.Objects;
+using RayWork.Objects.Primitives;
 using RayRectangle = Raylib_cs.Rectangle;
 
-namespace RayWork.Objects;
+namespace RayWork.ComponentObjects;
 
 public class Panel : GameObject
 {

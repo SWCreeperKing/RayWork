@@ -1,11 +1,12 @@
 using System.Numerics;
 using Raylib_cs;
 using RayWork;
+using RayWork.ComponentObjects;
 using RayWork.Objects;
 using RayWork.SaveSystem;
 using static Raylib_cs.Color;
 
-namespace RayWorkTester;
+namespace RayWorkTester.SimonSays;
 
 public class SimonSays : Scene
 {
@@ -39,7 +40,7 @@ public class SimonSays : Scene
         {
             var button = Buttons[i];
             var i1 = i;
-            button.ButtonComponent.OnClicked += (_, _) => Pressed(i1);
+            button.OnClicked += (_, _) => Pressed(i1);
             AddChild(button);
         }
 

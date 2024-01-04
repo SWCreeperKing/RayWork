@@ -1,4 +1,4 @@
-namespace RayWork.Objects;
+namespace RayWork.Objects.Primitives;
 
 // double = 1.79e308 or 1.79 * 10 ^ 308
 // this = 1.79ee308 or 1.79 * 10 ^ (1.79 * 10 ^ 308)

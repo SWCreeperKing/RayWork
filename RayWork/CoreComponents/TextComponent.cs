@@ -1,6 +1,7 @@
 using System.Numerics;
 using ImGuiNET;
 using Raylib_cs;
+using RayWork.CoreComponents.BaseComponents;
 using RayWork.Objects;
 using static Raylib_cs.Color;
 
@@ -28,10 +29,8 @@ public class TextComponent : FontComponent
         Color.ImGuiColorEdit("Color");
 
         var rad = Rotation / 57.2958f;
-        if (ImGui.SliderAngle("Rotation", ref rad))
-        {
-            Rotation = rad * 57.2958f;
-        }
+        if (!ImGui.SliderAngle("Rotation", ref rad)) return;
+        Rotation = rad * 57.2958f;
     }
 
     public static implicit operator TextComponent(string text) => new(text);

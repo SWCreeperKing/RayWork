@@ -1,28 +1,44 @@
 using System.Numerics;
+using ImGuiNET;
 using Raylib_cs;
 using RayWork;
 using RayWork.CoreComponents;
+using RayWork.Objects;
 
-namespace RayWorkTester;
+namespace RayWorkTester.SimonSays;
 
 public class SimonButton : GameObject
 {
-    public RectangleComponent RectangleComponent;
-    public ButtonComponent ButtonComponent;
+    private readonly RectangleComponent RectangleComponent;
+    private readonly ButtonComponent ButtonComponent;
 
     public bool Active;
     public float ActiveDurationSeconds = .5f;
 
-    private Color Color;
-    private Color HighlightColor;
-    private SimonSays? Parent;
+    private CompatibleColor Color;
+    private CompatibleColor HighlightColor;
+    private new SimonSays? Parent;
+
+    public EventHandler? OnClicked
+    {
+        get => ButtonComponent.OnClicked;
+        set => ButtonComponent.OnClicked = value;
+    }
 
     public SimonButton(Vector2 position, Vector2 size, Color color)
     {
-        AddComponent(RectangleComponent = new RectangleComponent(position, size));
-        AddComponent(ButtonComponent = new ButtonComponent(RectangleComponent));
         Color = color;
         HighlightColor = Color.MakeLighter();
+
+        AddComponent(RectangleComponent = new RectangleComponent(position, size));
+        AddComponent(ButtonComponent = new ButtonComponent(RectangleComponent));
+
+        AddComponent(new AdaptableDebugComponent(() =>
+        {
+            ImGui.DragFloat("Active Duration Seconds", ref ActiveDurationSeconds);
+            Color.ImGuiColorEdit("Color");
+            HighlightColor.ImGuiColorEdit("Highlight Color");
+        }));
     }
 
     public bool ShowOrder()
@@ -38,7 +54,7 @@ public class SimonButton : GameObject
 
     public override void RenderLoop()
     {
-        Parent ??= (SimonSays) base.Parent;
+        Parent ??= (SimonSays) base.Parent!;
 
         if (Parent.ReadIn && RectangleComponent.Rectangle.IsMouseIn())
         {

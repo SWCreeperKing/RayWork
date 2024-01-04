@@ -10,10 +10,10 @@ public static class SaveSystem
     public static readonly string CoreDir = GetFolderPath(LocalApplicationData);
 
     public static bool SaveSystemInitialized { get; private set; }
-    public static string DeveloperName { get; private set; }
+    public static string? DeveloperName { get; private set; }
     public static string ApplicationName { get; private set; } = "Unknown App";
-    public static string SaveDirectory { get; private set; }
-    public static Encryptor Encryption { get; set; } = null;
+    public static string? SaveDirectory { get; private set; }
+    public static Encryptor? Encryption { get; set; } = null;
 
     private static readonly List<ISavable> Savables = new();
 
@@ -45,7 +45,7 @@ public static class SaveSystem
     {
         if (!Directory.Exists(SaveDirectory))
         {
-            Directory.CreateDirectory(SaveDirectory);
+            Directory.CreateDirectory(SaveDirectory!);
         }
 
         foreach (var savable in Savables)
@@ -91,7 +91,7 @@ public static class SaveSystem
             {
                 field.SetValue(t, field.GetValue(overrider));
             }
-            catch (TargetException e)
+            catch (TargetException)
             {
                 throw new ArgumentException("Item corruption possibly detected");
             }

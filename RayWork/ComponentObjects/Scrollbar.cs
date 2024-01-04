@@ -1,6 +1,6 @@
-using Raylib_cs;
+using RayWork.Objects;
 
-namespace RayWork.Objects;
+namespace RayWork.ComponentObjects;
 
 public class Scrollbar : GameObject
 {

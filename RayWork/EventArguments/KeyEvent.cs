@@ -2,9 +2,7 @@ using Raylib_cs;
 
 namespace RayWork.EventArguments;
 
-public class KeyEvent : EventArgs
+public class KeyEvent(KeyboardKey key) : EventArgs
 {
-    public readonly KeyboardKey Key;
-
-    public KeyEvent(KeyboardKey key) => Key = key;
+    public readonly KeyboardKey Key = key;
 }

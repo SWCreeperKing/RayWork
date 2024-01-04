@@ -8,17 +8,11 @@ using Texture = Raylib_cs.Texture2D;
 
 namespace RayWork.CoreComponents;
 
-public class ImageComponent : IDebugComponent
+public class ImageComponent(Image image) : IDebugComponent
 {
-    public Image Image;
-    public Texture Texture;
-    public CompatibleColor Tint;
-
-    public ImageComponent(Image image)
-    {
-        Image = image;
-        Texture = image.GetTexture();
-    }
+    public Image Image = image;
+    public Texture Texture = image.GetTexture();
+    public CompatibleColor Tint = Color.WHITE;
 
     public ImageComponent(string imagePath) : this(Raylib.LoadImage(imagePath))
     {

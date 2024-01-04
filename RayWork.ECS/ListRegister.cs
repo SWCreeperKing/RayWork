@@ -2,37 +2,37 @@
 
 public class ListRegister<TRegisterType>
 {
-    private readonly List<TRegisterType> Register = new();
-    private readonly List<TRegisterType> RegisterAddQueue = new();
-    private readonly List<TRegisterType> RegisterRemoveQueue = new();
+    private readonly List<TRegisterType> Register = [];
+    private readonly List<TRegisterType> RegisterAddQueue = [];
+    private readonly List<TRegisterType> RegisterRemoveQueue = [];
 
-    private TRegisterType[] CachedRegister = Array.Empty<TRegisterType>();
+    private TRegisterType[] CachedRegister = [];
 
-    public event EventHandler OnRegisterCacheUpdated;
+    public event EventHandler? OnRegisterCacheUpdated;
 
     public void ExecuteRegister(Action<TRegisterType> registerAction)
     {
-        if (CachedRegister is null || CachedRegister.Length < 0) return;
-        for (var i = 0; i < CachedRegister.Length; i++)
+        if (CachedRegister.Length < 1) return;
+        foreach (var t in CachedRegister)
         {
-            registerAction(CachedRegister[i]);
+            registerAction(t);
         }
     }
 
     public void UpdateRegister()
     {
-        if (RegisterAddQueue.Any())
+        if (RegisterAddQueue.Count != 0)
         {
             Register.AddRange(RegisterAddQueue);
             RegisterAddQueue.Clear();
             UpdateRegisterCache();
         }
 
-        if (!RegisterRemoveQueue.Any()) return;
+        if (RegisterRemoveQueue.Count == 0) return;
 
-        for (var i = 0; i < RegisterRemoveQueue.Count; i++)
+        foreach (var t in RegisterRemoveQueue)
         {
-            Register.Remove(RegisterRemoveQueue[i]);
+            Register.Remove(t);
             UpdateRegisterCache();
         }
     }
@@ -50,15 +50,11 @@ public class ListRegister<TRegisterType>
         => Register.OfType<TYpeToGet>().ToArray();
 
     public TRegisterType[] GetRegisterTypes() => CachedRegister;
-    public bool IsRegisterEmpty() => Register.Any();
+    public bool IsRegisterEmpty() => Register.Count != 0;
 
     public void UpdateRegisterCache()
     {
         CachedRegister = Register.ToArray();
-
-        if (OnRegisterCacheUpdated is not null)
-        {
-            OnRegisterCacheUpdated(null, null);
-        }
+        OnRegisterCacheUpdated?.Invoke(null, null);
     }
 }

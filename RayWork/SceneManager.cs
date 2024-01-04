@@ -1,3 +1,5 @@
+using RayWork.Objects;
+
 namespace RayWork;
 
 public static class SceneManager
@@ -6,42 +8,33 @@ public static class SceneManager
     private static readonly List<string> InitializedScenes = [];
     private static string ActiveSceneId = "main";
 
-    public static event EventHandler OnSceneListChanged;
+    public static event EventHandler? OnSceneListChanged;
 
     public static Scene Scene
     {
         get
         {
-            if (!Scenes.ContainsKey(ActiveSceneId))
-            {
+            if (!Scenes.TryGetValue(ActiveSceneId, out var value))
                 throw new ArgumentException($"The current scene ID [{ActiveSceneId}] does not exist");
-            }
 
-            return Scenes[ActiveSceneId];
+            return value;
         }
     }
 
     public static void AddScene(string id, Scene scene)
     {
-        if (Scenes.ContainsKey(id)) throw new ArgumentException($"SceneManager already contains ID: [{id}]");
-        Scenes[id] = scene;
+        if (!Scenes.TryAdd(id, scene)) throw new ArgumentException($"SceneManager already contains ID: [{id}]");
         SceneListChanged();
     }
 
     public static void RemoveScene(string id, out Scene removedScene)
     {
-        if (!Scenes.ContainsKey(id))
-        {
+        if (!Scenes.TryGetValue(id, out var value))
             throw new ArgumentException($"SceneManager can not remove the ID: [{id}] because it doesn't exist");
-        }
 
-        removedScene = Scenes[id];
+        removedScene = value;
         Scenes.Remove(id);
-        if (InitializedScenes.Contains(id))
-        {
-            InitializedScenes.Remove(id);
-        }
-
+        InitializedScenes.Remove(id);
         SceneListChanged();
     }
 
@@ -64,9 +57,7 @@ public static class SceneManager
     public static void SwitchScene(string id)
     {
         if (!Scenes.ContainsKey(id))
-        {
             throw new ArgumentException($"The current scene ID [{ActiveSceneId}] does not exist");
-        }
 
         ActiveSceneId = id;
         if (!InitializedScenes.Contains(id))
@@ -81,12 +72,5 @@ public static class SceneManager
     }
 
     public static (string, Scene)[] GetAllScenes() => Scenes.Select(kv => (kv.Key, kv.Value)).ToArray();
-
-    private static void SceneListChanged()
-    {
-        if (OnSceneListChanged is not null)
-        {
-            OnSceneListChanged(null, null);
-        }
-    }
+    private static void SceneListChanged() => OnSceneListChanged?.Invoke(null, null);
 }

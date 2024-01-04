@@ -1,7 +1,9 @@
 using System.Numerics;
 using Raylib_cs;
 using RayWork;
+using RayWork.ComponentObjects;
 using RayWork.CoreComponents;
+using RayWork.CoreComponents.BaseComponents;
 using RayWork.Objects;
 using static Raylib_cs.Color;
 

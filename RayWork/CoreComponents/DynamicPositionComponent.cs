@@ -1,27 +1,26 @@
 using System.Numerics;
 using ImGuiNET;
+using RayWork.CoreComponents.BaseComponents;
 
 namespace RayWork.CoreComponents;
 
-public class DynamicPositionComponent : TransformComponent
+public class DynamicPositionComponent(Func<Vector2> positionEquation) : TransformComponent
 {
     public override Vector2 Position
     {
-        get => _Position = PositionEquation();
-        set { }
+        get => PositionHolder = PositionEquation();
+        set => Logger.Log("Can not set Position of DynamicPositionComponent");
     }
 
-    private Vector2 _Position;
+    private Vector2 PositionHolder;
 
-    public Func<Vector2> PositionEquation;
-
-    public DynamicPositionComponent(Func<Vector2> positionEquation) => PositionEquation = positionEquation;
+    public Func<Vector2> PositionEquation = positionEquation;
 
     public override void Debug()
     {
-        ImGui.Text($"Position: {_Position}");
+        ImGui.Text($"Position: {PositionHolder}");
 
         if (!ImGui.Button("Recalculate")) return;
-        _Position = PositionEquation();
+        PositionHolder = PositionEquation();
     }
 }

@@ -2,10 +2,8 @@ using RayWork.ECS;
 
 namespace RayWork.CoreComponents;
 
-public class AdaptableDebugComponent : IDebugComponent
+public class AdaptableDebugComponent(Action onDebug) : IDebugComponent
 {
-    public Action OnDebug;
-
-    public AdaptableDebugComponent(Action onDebug) => OnDebug = onDebug;
+    public Action? OnDebug = onDebug;
     public void Debug() => OnDebug?.Invoke();
 }

@@ -1,6 +1,8 @@
 using Raylib_cs;
 using RayWork;
 using RayWork.CoreComponents;
+using RayWork.CoreComponents.BaseComponents;
+using RayWork.Objects;
 using static Raylib_cs.Color;
 
 namespace RayWorkTester;

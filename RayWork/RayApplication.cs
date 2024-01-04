@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Raylib_cs;
 using RayWork.EventArguments;
+using RayWork.Objects;
 using RayWork.RLImgui;
 
 namespace RayWork;
@@ -9,26 +10,24 @@ public class RayApplication
 {
     public static Color BackgroundColor { get; set; } = new(177, 177, 177, 255);
     public static float DeltaTime { get; private set; }
+    public static Vector2 WindowSize { get; private set; }
 
-    public static Vector2 WindowSize => _WindowSize;
-
-    public static event EventHandler<WindowSizeChangedEventArgs> OnWindowSizeChanged;
+    public static event EventHandler<WindowSizeChangedEventArgs>? OnWindowSizeChanged;
 
     private static long LastUpdate;
-    private static Vector2 _WindowSize;
 
     public RayApplication(Scene mainScene, Vector2 windowSize, string title = "Untitled",
         int fps = 60, ConfigFlags configFlags = 0)
     {
         Raylib.SetConfigFlags(configFlags);
         Raylib.SetTargetFPS(fps);
-        _WindowSize = windowSize;
+        WindowSize = windowSize;
 
         Logger.Initialize();
         Debugger.Initialize();
         Raylib.InitWindow((int) windowSize.X, (int) windowSize.Y, title);
         SceneManager.AddScene("main", mainScene);
-        RlImgui.Setup(() => _WindowSize);
+        RlImgui.Setup(() => WindowSize);
 
         Start();
     }
@@ -74,13 +73,10 @@ public class RayApplication
         var currentTimeMs = GetTimeMs();
         DeltaTime = (currentTimeMs - LastUpdate) / 1000f;
 
-        if (currentWindowSize != _WindowSize)
+        if (currentWindowSize != WindowSize)
         {
-            var windowSizeChangeArgs = new WindowSizeChangedEventArgs(_WindowSize = currentWindowSize);
-            if (OnWindowSizeChanged is not null)
-            {
-                OnWindowSizeChanged(null, windowSizeChangeArgs);
-            }
+            var windowSizeChangeArgs = new WindowSizeChangedEventArgs(WindowSize = currentWindowSize);
+            OnWindowSizeChanged?.Invoke(null, windowSizeChangeArgs);
         }
 
         Input.UpdateInput(DeltaTime);

@@ -1,5 +1,6 @@
 using ImGuiNET;
 using RayWork.ECS;
+using RayWork.Objects;
 
 namespace RayWork;
 
@@ -10,9 +11,7 @@ public static class Debugger
     public static bool IsDebugging;
 
     public static void Initialize()
-    {
-        SceneManager.OnSceneListChanged += (_, _) => Scenes = SceneManager.GetAllScenes();
-    }
+        => SceneManager.OnSceneListChanged += (_, _) => Scenes = SceneManager.GetAllScenes();
 
     public static void Render()
     {
@@ -51,7 +50,7 @@ public static class Debugger
         }
 
         var objectChildren = gameObject.GetChildren();
-        if (objectChildren.Any() && ImGui.CollapsingHeader("Children"))
+        if (objectChildren.Length != 0 && ImGui.CollapsingHeader("Children"))
         {
             var objects = gameObject.GetChildren();
             for (var j = 0; j < objects.Length; j++)

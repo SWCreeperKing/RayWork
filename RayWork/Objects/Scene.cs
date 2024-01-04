@@ -1,6 +1,6 @@
 using RayWork.ECS;
 
-namespace RayWork;
+namespace RayWork.Objects;
 
 public abstract class Scene
 {

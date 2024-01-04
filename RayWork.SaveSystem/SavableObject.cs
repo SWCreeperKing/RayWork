@@ -16,11 +16,7 @@ public class SavableObject<TSaveType> : ISavable
     }
 
     public string GetFileName() => FileName;
-
-    public string SaveString()
-    {
-        return JsonConvert.SerializeObject(SaveType, Settings);
-    }
+    public string SaveString() => JsonConvert.SerializeObject(SaveType, Settings);
 
     public void LoadString(string data, string file)
     {
