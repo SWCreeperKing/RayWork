@@ -40,3 +40,5 @@ framework <a href="https://github.com/SWCreeperKing/RayWrapper">RayWrapper</a>
 
 the C# coding is not normal, if you have complaints, direct them towards <a href="https://github.com/AdmiralSnyder">
 AdmSnyder</a>
+unless it's about having `Holder` at the end of some variable names, in which yell at me
+:) 

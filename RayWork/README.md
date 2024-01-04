@@ -23,6 +23,7 @@ new RayApplication(new Program(), new Vector2(1280, 720), "Test Window")
 
 public partial class Program : Scene
 {
+    public override string Label => "main";
 }
 ```
 
