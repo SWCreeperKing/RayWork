@@ -5,6 +5,9 @@ public class ComponentObject
     private readonly ListRegister<IComponent> ComponentRegister = new();
     private DebugComponent[] DebugComponents = [];
 
+    public int ComponentCount => ComponentRegister.Count;
+    public int DebugComponentCount => DebugComponents.Length;
+    
     public ComponentObject()
     {
         ComponentRegister.OnRegisterCacheUpdated += (_, _) =>

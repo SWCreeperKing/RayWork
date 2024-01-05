@@ -1,11 +1,17 @@
+using ImGuiNET;
 using RayWork.ECS;
 
 namespace RayWork.Objects;
 
 public abstract class Scene
 {
+    private static int IncrementedId;
+    public readonly int Id;
+
     private readonly ListRegister<GameObject> ChildRegister = new();
     public abstract string Label { get; }
+
+    public Scene() => Id = IncrementedId++;
 
     public void Update()
     {
@@ -36,7 +42,14 @@ public abstract class Scene
     {
     }
 
-    public virtual void DisposeLoop()
+    public virtual void DebugLoop()
+        => ImGui.Text($"""
+                       Scene ID: [{Id}]
+                       Scene Label: [{Label}]
+                       Children ComponentCount: [{ChildRegister.Count}]
+                       """);
+
+    public virtual void Dispose()
     {
     }
 

@@ -1,5 +1,7 @@
 ﻿using System.Numerics;
+using ImGuiNET;
 using Raylib_cs;
+using RayWork.Commands;
 using RayWork.EventArguments;
 using RayWork.Objects;
 using RayWork.RLImgui;
@@ -8,36 +10,41 @@ namespace RayWork;
 
 public class RayApplication
 {
-    public static Color BackgroundColor { get; set; } = new(177, 177, 177, 255);
-    public static float DeltaTime { get; private set; }
+    public static CompatibleColor BackgroundColor { get; set; } = new(177);
     public static Vector2 WindowSize { get; private set; }
+    public static KeyboardKey? ToggleDebuggerKey { get; set; } = KeyboardKey.KEY_F3;
+    public static KeyboardKey? ToggleConsoleKey { get; set; } = KeyboardKey.KEY_GRAVE;
+    public static float DeltaTime { get; private set; }
+    public static string WindowTitle;
+    public static bool PrintLogToWindowsConsole;
 
     public static event EventHandler<WindowSizeChangedEventArgs>? OnWindowSizeChanged;
 
     private static long LastUpdate;
 
     public RayApplication(Scene mainScene, Vector2 windowSize, string title = "Untitled",
-        int fps = 60, ConfigFlags configFlags = 0)
+        int fps = 60, ConfigFlags configFlags = 0, bool enableImguiDocking = false)
     {
         if (mainScene.Label is not "main")
             throw new ArgumentException($"mainScene, {mainScene.GetType()}'s label is not 'main'");
 
+        Logger.Initialize();
         Raylib.SetConfigFlags(configFlags);
         Raylib.SetTargetFPS(fps);
         WindowSize = windowSize;
 
-        Logger.Initialize();
         Debugger.Initialize();
-        Raylib.InitWindow((int) windowSize.X, (int) windowSize.Y, title);
+        CommandRegister.RegisterCommandFile(typeof(DefaultCommands));
+        Raylib.InitWindow((int) windowSize.X, (int) windowSize.Y, WindowTitle = title);
         SceneManager.AddScene(mainScene);
-        RlImgui.Setup(() => WindowSize);
+        RlImgui.Setup(enableDocking: enableImguiDocking);
 
         Start();
     }
 
     public RayApplication(Scene mainScene, int windowWidth, int windowHeight, string title = "Untitled",
-        int fps = 60, ConfigFlags configFlags = 0)
-        : this(mainScene, new Vector2(windowWidth, windowHeight), title, fps, configFlags)
+        int fps = 60, ConfigFlags configFlags = 0, bool enableImguiDocking = false)
+        : this(mainScene, new Vector2(windowWidth, windowHeight), title, fps, configFlags, enableImguiDocking)
     {
     }
 
@@ -83,6 +90,17 @@ public class RayApplication
         }
 
         Input.UpdateInput(DeltaTime);
+
+        if (ToggleDebuggerKey is not null && Input.IsKeyPressed(ToggleDebuggerKey.Value))
+        {
+            Debugger.ToggleDebugger();
+        }
+
+        if (ToggleConsoleKey is not null && Input.IsKeyPressed(ToggleConsoleKey.Value))
+        {
+            GameConsole.ToggleConsole();
+        }
+
         SceneManager.Scene.Update();
 
         LastUpdate = currentTimeMs;
@@ -95,11 +113,30 @@ public class RayApplication
         Raylib.ClearBackground(BackgroundColor);
 
         SceneManager.Scene.Render();
-        Debugger.Render();
+        Debugger.Render(this);
+        GameConsole.Render();
 
         RlImgui.End();
         Raylib.EndDrawing();
     }
+
+    public void ManagerLoop()
+    {
+        BackgroundColor.ImGuiColorEdit("Background Color");
+
+        ImGui.Checkbox("Log to Windows Console? ", ref PrintLogToWindowsConsole);
+
+        if (!ImGui.InputText("Window Title", ref WindowTitle, 512)) return;
+        Raylib.SetWindowTitle(WindowTitle);
+    }
+
+    public void DebugLoop()
+        => ImGui.Text($"""
+                       Delta Time: {DeltaTime}
+                       Window Size: {WindowSize}
+                       Toggle Debugger: {ToggleDebuggerKey}
+                       Toggle Console: {ToggleConsoleKey}
+                       """);
 
     private void Dispose()
     {

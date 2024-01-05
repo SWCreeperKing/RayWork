@@ -14,6 +14,8 @@ public static class Input
     public static float KeyboardRepeatsPerSecond { get; set; } = 30;
 
     private static List<KeyboardKey> KeysActive = [];
+    private static HashSet<KeyboardKey> KeysReleased = [];
+    private static HashSet<KeyboardKey> KeysPressed = [];
     private static Dictionary<KeyboardKey, float> KeyDelay = new();
     private static Dictionary<KeyboardKey, float> KeyRepeatTimers = new();
     private static Dictionary<KeyboardKey, KeyEvent> KeyEventCache = new();
@@ -46,6 +48,8 @@ public static class Input
         // update keyboard
         if (HandleKeyboardEvents)
         {
+            KeysPressed = [];
+            KeysReleased = [];
             HandleKeyboardEvent(deltaTime);
         }
 
@@ -86,11 +90,9 @@ public static class Input
             }
         }
 
-        var keyPressed = Raylib.GetKeyPressed();
-        while (keyPressed > 0)
+        foreach (var key in RLImgui.RlImgui.Keys)
         {
-            AddKey((KeyboardKey) keyPressed);
-            keyPressed = Raylib.GetKeyPressed();
+            AddKey(key);
         }
     }
 
@@ -133,6 +135,7 @@ public static class Input
             KeyRepeatTimers.Remove(key);
         }
 
+        KeysReleased.Add(key);
         OnKeyReleased?.Invoke(null, GetKeyEvent(key));
     }
 
@@ -149,6 +152,7 @@ public static class Input
             KeyRepeatTimers[key] = KeyboardRepeatsPerSecond / 1000f;
         }
 
+        KeysPressed.Add(key);
         OnKeyPressed?.Invoke(null, GetKeyEvent(key));
     }
 
@@ -158,5 +162,7 @@ public static class Input
         return keyEvent;
     }
 
+    public static bool IsKeyPressed(KeyboardKey key) => KeysPressed.Contains(key); 
+    public static bool IsKeyReleased(KeyboardKey key) => KeysReleased.Contains(key); 
     public static void SetMouseCursor(MouseCursor mouseCursor) => MouseCursorQueue.Add(mouseCursor);
 }

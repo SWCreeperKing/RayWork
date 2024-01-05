@@ -24,7 +24,7 @@ Raylib</a>, <a href="https://github.com/NotNotTech/Raylib-CsLo">Raylib-CsLo</a>
   - A standalone self updater
 - <a href="https://github.com/SWCreeperKing/RayWork/tree/master/RayWorkTester">RayWorkTester</a>
     - A testing project for RayWork
-- <a href="https://github.com/SWCreeperKing/RayWork/tree/master/UpdaterTester">UpdaterTester</a>
+- <a href="https://github.com/SWCreeperKing/RayWork/tree/master/UpdateTester">UpdateTester</a>
     - A testing project for the self updater
 
 ## About this project

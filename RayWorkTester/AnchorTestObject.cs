@@ -1,6 +1,6 @@
 using System.Numerics;
+using ImGuiNET;
 using Raylib_cs;
-using RayWork;
 using RayWork.ComponentObjects;
 using RayWork.CoreComponents;
 using RayWork.CoreComponents.BaseComponents;
@@ -25,4 +25,11 @@ public class AnchorTestObject : GameObject
     }
 
     public override void RenderLoop() => Raylib.DrawRectangleV(Pos.Position, Size.Size, Color.Color);
+
+    public override void DebugLoop()
+    {
+        ImGui.Text("using `base.DebugLoop` you get the following:\n");
+        
+        base.DebugLoop();
+    }
 }

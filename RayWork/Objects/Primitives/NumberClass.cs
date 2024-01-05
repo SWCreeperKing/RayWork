@@ -13,10 +13,7 @@ public record NumberClass
     public double Mantissa;
     public double Exponent;
 
-    public NumberClass(double mantissa = 0, double exponent = 0)
-    {
-        Update(mantissa, exponent);
-    }
+    public NumberClass(double mantissa = 0, double exponent = 0) => Update(mantissa, exponent);
 
     public NumberClass(string number)
     {
@@ -24,7 +21,7 @@ public record NumberClass
             .ToLower()
             .Split('e')
             .Select(betweenNumber =>
-                betweenNumber.Any() ? double.Parse(betweenNumber) : 1)
+                betweenNumber.Length != 0 ? double.Parse(betweenNumber) : 1)
             .ToArray();
 
         switch (splitByE.Length)
@@ -47,8 +44,7 @@ public record NumberClass
     {
         if (mantissa == 0)
         {
-            Mantissa = 0;
-            Exponent = 0;
+            Mantissa = Exponent = 0;
             return;
         }
 

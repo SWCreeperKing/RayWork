@@ -1,3 +1,4 @@
+using ImGuiNET;
 using Raylib_cs;
 using RayWork.ECS;
 
@@ -36,8 +37,12 @@ public abstract class GameObject : ComponentObject
     }
 
     public virtual void DebugLoop()
-    {
-    }
+        => ImGui.Text($"""
+                       Object ID: [{Id}]
+                       Children ComponentCount: [{ChildRegister.Count}]
+                       Component ComponentCount: [{ComponentCount}]
+                       Debug Component ComponentCount: [{ComponentCount}]
+                       """);
 
     public virtual MouseCursor OccupiedMouseCursor() => MouseCursor.MOUSE_CURSOR_DEFAULT;
 

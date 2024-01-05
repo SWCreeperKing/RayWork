@@ -45,7 +45,7 @@ public static class SceneManager
         {
             foreach (var id in InitializedScenes)
             {
-                Scenes[id].DisposeLoop();
+                Scenes[id].Dispose();
             }
         }
         catch (Exception e)

@@ -10,6 +10,8 @@ public class ListRegister<TRegisterType>
 
     public event EventHandler? OnRegisterCacheUpdated;
 
+    public int Count { get; private set; }
+
     public void ExecuteRegister(Action<TRegisterType> registerAction)
     {
         if (CachedRegister.Length < 1) return;
@@ -28,13 +30,19 @@ public class ListRegister<TRegisterType>
             UpdateRegisterCache();
         }
 
-        if (RegisterRemoveQueue.Count == 0) return;
+        if (RegisterRemoveQueue.Count == 0)
+        {
+            Count = Register.Count;
+            return;
+        }
 
         foreach (var t in RegisterRemoveQueue)
         {
             Register.Remove(t);
             UpdateRegisterCache();
         }
+
+        Count = Register.Count;
     }
 
     public void AddToRegister(TRegisterType objectToRegister) => RegisterAddQueue.Add(objectToRegister);
@@ -50,7 +58,7 @@ public class ListRegister<TRegisterType>
         => Register.OfType<TYpeToGet>().ToArray();
 
     public TRegisterType[] GetRegisterTypes() => CachedRegister;
-    public bool IsRegisterEmpty() => Register.Count != 0;
+    public bool IsRegisterEmpty() => Count != 0;
 
     public void UpdateRegisterCache()
     {

@@ -14,10 +14,18 @@ public static class Debugger
     public static void Initialize()
         => SceneManager.OnSceneListChanged += (_, _) => Scenes = SceneManager.GetAllScenes();
 
-    public static void Render()
+    public static void Render(RayApplication app)
     {
         if (!IsDebugging) return;
+        RenderSceneManager(app);
+        RenderDebugger(app);
+    }
+
+    private static void RenderSceneManager(RayApplication app)
+    {
         if (!ImGui.Begin("SceneManager")) return;
+        app.ManagerLoop();
+        ImGui.Separator();
 
         foreach (var scene in Scenes)
         {
@@ -26,6 +34,30 @@ public static class Debugger
         }
     }
 
+    private static void RenderDebugger(RayApplication app)
+    {
+        if (!ImGui.Begin("Debugger")) return;
+        app.DebugLoop();
+        ImGui.Separator();
+        
+        foreach (var scene in Scenes)
+        {
+            if (scene.HasChildren()) continue;
+            if (!ImGui.CollapsingHeader(scene.Label)) continue;
+            scene.DebugLoop();
+
+            var objects = scene.GetChildren();
+
+            for (var i = 0; i < objects.Length; i++)
+            {
+                var gameObject = objects[i];
+                if (!ImGui.TreeNode(gameObject.Id, $"({i + 1}) {gameObject.GetType().Name}")) continue;
+                gameObject.DebugLoop();
+                ImGui.TreePop();
+            }
+        }
+    }
+    
     private static void RenderScene(Scene scene)
     {
         if (!ImGui.CollapsingHeader(scene.Label)) return;

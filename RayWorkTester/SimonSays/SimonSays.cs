@@ -1,4 +1,5 @@
 using System.Numerics;
+using ImGuiNET;
 using Raylib_cs;
 using RayWork;
 using RayWork.ComponentObjects;
@@ -21,6 +22,7 @@ public class SimonSays : Scene
 
     private int ReadIndex;
     private int ReadInput;
+    private string OrderString = "N/A";
 
     public override string Label => "simon";
 
@@ -32,10 +34,10 @@ public class SimonSays : Scene
 
         Buttons =
         [
-            new(new Vector2(300), new Vector2(75), BLUE.MakeDarker()),
-            new(new Vector2(300, 390), new Vector2(75), GREEN.MakeDarker()),
-            new(new Vector2(390, 300), new Vector2(75), RED.MakeDarker()),
-            new(new Vector2(390), new Vector2(75), YELLOW.MakeDarker())
+            new SimonButton(new Vector2(300), new Vector2(75), BLUE.MakeDarker()),
+            new SimonButton(new Vector2(300, 390), new Vector2(75), GREEN.MakeDarker()),
+            new SimonButton(new Vector2(390, 300), new Vector2(75), RED.MakeDarker()),
+            new SimonButton(new Vector2(390), new Vector2(75), YELLOW.MakeDarker())
         ];
 
         for (var i = 0; i < Buttons.Length; i++)
@@ -95,8 +97,12 @@ public class SimonSays : Scene
         ReadWaitSeconds = 1f;
     }
 
-    public void AddToOrder() => Order.Add(Random.Next(Buttons.Length));
-
+    public void AddToOrder()
+    {
+        Order.Add(Random.Next(Buttons.Length));
+        OrderString = string.Join(", ", Order);
+    }
+    
     public void Pressed(int i)
     {
         if (!ReadIn) return;
@@ -123,7 +129,17 @@ public class SimonSays : Scene
         AddToOrder();
     }
 
-    public override void DisposeLoop() => SaveSystem.SaveItems();
+    public override void DebugLoop()
+    {
+        ImGui.Text(OrderString);
+
+        if (!ImGui.Button("CREATE NEW ORDER")) return;
+        Reset();
+        Order.Clear();
+        AddToOrder();
+    }
+
+    public override void Dispose() => SaveSystem.SaveItems();
 }
 
 public class HighScore
