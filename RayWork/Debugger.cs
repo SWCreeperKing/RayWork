@@ -17,6 +17,9 @@ public static class Debugger
     public static void Render(RayApplication app)
     {
         if (!IsDebugging) return;
+        ImGui.ShowDemoWindow();
+        ImGui.ShowDebugLogWindow();
+        ImGui.ShowMetricsWindow();
         RenderSceneManager(app);
         RenderDebugger(app);
     }

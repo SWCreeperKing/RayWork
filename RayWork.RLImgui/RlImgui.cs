@@ -18,6 +18,8 @@
  ************************************/
 
 using System.Numerics;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using ImGuiNET;
 using Raylib_cs;
@@ -29,8 +31,9 @@ namespace RayWork.RLImgui;
 
 public static class RlImgui
 {
-    public static List<KeyboardKey> Keys = [];
-    
+    public static readonly List<KeyboardKey> Keys = [];
+    public static ImFontPtr CascadiaCode { get; private set; }
+
     private const int StackAllocationSizeLimit = 2048;
     private static IntPtr ImGuiContext = IntPtr.Zero;
     private static ImGuiMouseCursor CurrentMouseCursor = ImGuiMouseCursor.COUNT;
@@ -42,6 +45,7 @@ public static class RlImgui
     private static bool LastShiftPressed;
     private static bool LastAltPressed;
     private static bool LastSuperPressed;
+    private static bool AwesomeFontLoaded;
 
     private static bool RlImGuiIsControlDown()
         => Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT_CONTROL) || Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_CONTROL);
@@ -282,36 +286,62 @@ public static class RlImgui
         SetCurrentContext(ImGuiContext);
         GetIO().Fonts.AddFontDefault();
 
-        unsafe
+        try
         {
-            var iconsConfig = new ImFontConfig
+            unsafe
             {
-                MergeMode = 1, // merge the glyph ranges into the default font
-                PixelSnapH = 1, // don't try to render on partial pixels
-                FontDataOwnedByAtlas = 0, // the font atlas does not own this font data
-                GlyphMaxAdvanceX = float.MaxValue,
-                RasterizerMultiply = 1.0f,
-                OversampleH = 2,
-                OversampleV = 1
-            };
-
-            ushort[] iconRanges = [IconMin, IconMax, 0];
-
-            fixed (ushort* range = &iconRanges[0])
-            {
-                // this unmanaged memory must remain allocated for the entire run of rlImgui
-                IconFontRanges = AllocHGlobal(6);
-                Buffer.MemoryCopy(range, IconFontRanges.ToPointer(), 6, 6);
-                iconsConfig.GlyphRanges = (ushort*) IconFontRanges.ToPointer();
-
-                var fontDataBuffer = Convert.FromBase64String(IconFontData);
-
-                fixed (byte* buffer = fontDataBuffer)
+                var iconsConfig = new ImFontConfig
                 {
-                    GetIO().Fonts
-                        .AddFontFromMemoryTTF(new IntPtr(buffer), fontDataBuffer.Length, 11, &iconsConfig);
+                    MergeMode = 1, // merge the glyph ranges into the default font
+                    PixelSnapH = 1, // don't try to render on partial pixels
+                    FontDataOwnedByAtlas = 0, // the font atlas does not own this font data
+                    GlyphMaxAdvanceX = float.MaxValue,
+                    RasterizerMultiply = 1.0f,
+                    OversampleH = 2,
+                    OversampleV = 1
+                };
+
+                var iconRanges = new ushort[3];
+                iconRanges[0] = IconMin;
+                iconRanges[1] = IconMax;
+                iconRanges[2] = 0;
+
+                fixed (ushort* range = &iconRanges[0])
+                {
+                    IconFontRanges = AllocHGlobal(6);
+                    Buffer.MemoryCopy(range, IconFontRanges.ToPointer(), 6, 6);
+                    iconsConfig.GlyphRanges = (ushort*) IconFontRanges.ToPointer();
+
+                    var fontDataBuffer = Convert.FromBase64String(IconFontData);
+
+                    fixed (byte* buffer = fontDataBuffer)
+                    {
+                        GetIO().Fonts
+                            .AddFontFromMemoryTTF(new IntPtr(buffer), fontDataBuffer.Length, 14, &iconsConfig);
+                    }
                 }
             }
+
+            AwesomeFontLoaded = true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        try
+        {
+            unsafe
+            {
+                fixed (byte* bytes = LoadCascadiaCode(out var byteLength))
+                {
+                    CascadiaCode = GetIO().Fonts.AddFontFromMemoryTTF(new IntPtr(bytes), byteLength, 16);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
         }
 
         var io = GetIO();
@@ -604,6 +634,8 @@ public static class RlImgui
         Raylib.UnloadTexture(FontTexture);
         DestroyContext();
 
+        if (!AwesomeFontLoaded) return;
+
         if (IconFontRanges != IntPtr.Zero)
         {
             FreeHGlobal(IconFontRanges);
@@ -867,4 +899,20 @@ public static class RlImgui
 
     private static unsafe byte* Allocate(int byteCount) => (byte*) AllocHGlobal(byteCount);
     private static unsafe void Free(byte* ptr) => FreeHGlobal((nint) ptr);
+
+    public static byte[] LoadCascadiaCode(out int byteLength)
+    {
+        var asm = Assembly.GetExecutingAssembly();
+        var stream =
+            asm.GetManifestResourceStream("RayWork.RLImgui.Resources.AddedAssets.Font.CascadiaMono.ttf");
+
+        var byteArr = new byte[stream!.Length];
+        byteLength = stream.Read(byteArr, 0, (int) stream.Length);
+        stream.Close();
+
+        return byteArr;
+    }
+
+    public static unsafe Font LoadCascadiaCode(int fontSize = 24, int toCodePoint = 1000)
+        => Raylib.LoadFontFromMemory(".ttf", LoadCascadiaCode(out _), fontSize, null, toCodePoint);
 }

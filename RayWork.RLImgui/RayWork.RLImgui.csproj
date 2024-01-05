@@ -29,8 +29,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="ImGui.NET" Version="1.90.0.1" />
-      <PackageReference Include="Raylib-cs" Version="5.0.0" />
+        <PackageReference Include="ImGui.NET" Version="1.90.0.1"/>
+        <PackageReference Include="Raylib-cs" Version="5.0.0"/>
     </ItemGroup>
-
+    
+    <ItemGroup Label="Resources">
+        <EmbeddedResource Include="Resources/**/*.*"/>
+    </ItemGroup>
 </Project>

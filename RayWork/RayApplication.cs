@@ -2,6 +2,7 @@
 using ImGuiNET;
 using Raylib_cs;
 using RayWork.Commands;
+using RayWork.CoreComponents.BaseComponents;
 using RayWork.EventArguments;
 using RayWork.Objects;
 using RayWork.RLImgui;
@@ -17,6 +18,7 @@ public class RayApplication
     public static float DeltaTime { get; private set; }
     public static string WindowTitle;
     public static bool PrintLogToWindowsConsole;
+    public static bool UseCascadiaAsImguiFont = true;
 
     public static event EventHandler<WindowSizeChangedEventArgs>? OnWindowSizeChanged;
 
@@ -26,7 +28,7 @@ public class RayApplication
         int fps = 60, ConfigFlags configFlags = 0, bool enableImguiDocking = false)
     {
         if (mainScene.Label is not "main")
-            throw new ArgumentException($"mainScene, {mainScene.GetType()}'s label is not 'main'");
+            throw new ArgumentException($"the mainScene: [{mainScene.GetType()}]'s label is not 'main'");
 
         Logger.Initialize();
         Raylib.SetConfigFlags(configFlags);
@@ -51,6 +53,7 @@ public class RayApplication
     private void Start()
     {
         LastUpdate = GetTimeMs();
+        FontComponent.DefaultFont = RlImgui.LoadCascadiaCode();
 
         try
         {
@@ -110,6 +113,12 @@ public class RayApplication
     {
         Raylib.BeginDrawing();
         RlImgui.Begin();
+
+        if (UseCascadiaAsImguiFont)
+        {
+            ImGui.PushFont(RlImgui.CascadiaCode);
+        }
+
         Raylib.ClearBackground(BackgroundColor);
 
         SceneManager.Scene.Render();
@@ -125,6 +134,10 @@ public class RayApplication
         BackgroundColor.ImGuiColorEdit("Background Color");
 
         ImGui.Checkbox("Log to Windows Console? ", ref PrintLogToWindowsConsole);
+        ImGui.Checkbox("Use Cascadia Code as Default Imgui Font? ", ref UseCascadiaAsImguiFont);
+
+        // var fontSize = ImGui.GetFontSize();
+        // ImGui.InputInt("Imgui Font Size", ref ImGui.font)
 
         if (!ImGui.InputText("Window Title", ref WindowTitle, 512)) return;
         Raylib.SetWindowTitle(WindowTitle);

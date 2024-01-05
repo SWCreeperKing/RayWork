@@ -108,9 +108,8 @@ public class Button : GameObject
                 Label.PanelComponent.PanelColor = PanelColor.Color;
             }
 
-            if (!mouseState.IsMouseIn(Label.Rectangle) || !WasHover || !mouseState[MOUSE_BUTTON_LEFT] ||
-                OnButtonPressed is null) return;
-            OnButtonPressed(null, null!);
+            if (!mouseState.IsMouseIn(Label.Rectangle) || !WasHover || !mouseState[MOUSE_BUTTON_LEFT]) return;
+            OnButtonPressed?.Invoke(null, null!);
         };
         Input.MouseEvent += MouseClickEvent;
     }

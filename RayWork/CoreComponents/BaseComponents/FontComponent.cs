@@ -1,6 +1,7 @@
 using System.Numerics;
 using Raylib_cs;
 using RayWork.ECS;
+using RayWork.RLImgui;
 
 namespace RayWork.CoreComponents.BaseComponents;
 

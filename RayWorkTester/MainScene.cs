@@ -3,7 +3,6 @@ using ImGuiNET;
 using Raylib_cs;
 using RayWork;
 using RayWork.ComponentObjects;
-using RayWork.CoreComponents.BaseComponents;
 using RayWork.Objects;
 
 namespace RayWorkTester;
@@ -17,8 +16,6 @@ public class MainScene : Scene
 
     public override void Initialize()
     {
-        FontComponent.DefaultFont = Raylib.LoadFont("Assets/Fonts/CascadiaCode.ttf");
-
         SceneManager.AddScene(new SimonSays.SimonSays());
 
         Button button = new("Test", new Vector2(500));
