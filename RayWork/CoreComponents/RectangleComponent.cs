@@ -7,7 +7,7 @@ using RayRectangle = Raylib_cs.Rectangle;
 
 namespace RayWork.CoreComponents;
 
-public class RectangleComponent : IDebugComponent
+public class RectangleComponent : DebugComponent
 {
     public RayRectangle RayLibRectangle
     {
@@ -87,7 +87,7 @@ public class RectangleComponent : IDebugComponent
     {
     }
 
-    public void Debug()
+    public override void Debug()
     {
         var pos = PositionHolder.Position;
         var size = SizeHolder.Size;

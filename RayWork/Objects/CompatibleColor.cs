@@ -12,8 +12,10 @@ public class CompatibleColor
         get => ColorHolder;
         set
         {
-            ColorHolder = value;
-            ColorV4Holder = ColorHolder.ToV4();
+            R = value.R;
+            G = value.G;
+            B = value.B;
+            A = value.A;
         }
     }
 
@@ -22,30 +24,83 @@ public class CompatibleColor
         get => ColorV4Holder;
         set
         {
-            ColorV4Holder = value;
-            ColorHolder = ColorV4Holder.ToColor();
+            R = (byte) (value.X * 255);
+            G = (byte) (value.Y * 255);
+            B = (byte) (value.Z * 255);
+            A = (byte) (value.W * 255);
+        }
+    }
+
+    public byte R
+    {
+        get => ColorHolder.R;
+        set
+        {
+            ColorHolder.R = value;
+            ColorV4Holder.X = value / 255f;
+        }
+    }
+
+    public byte G
+    {
+        get => ColorHolder.G;
+        set
+        {
+            ColorHolder.G = value;
+            ColorV4Holder.Y = value / 255f;
+        }
+    }
+
+    public byte B
+    {
+        get => ColorHolder.B;
+        set
+        {
+            ColorHolder.B = value;
+            ColorV4Holder.Z = value / 255f;
+        }
+    }
+
+    public byte A
+    {
+        get => ColorHolder.A;
+        set
+        {
+            ColorHolder.A = value;
+            ColorV4Holder.W = value / 255f;
         }
     }
 
     private Color ColorHolder;
     private Vector4 ColorV4Holder;
 
-    public CompatibleColor(int rgb, int a = 255) : this(new Color(rgb, rgb, rgb, a))
+    public CompatibleColor(byte rgb, byte a = 255) : this(rgb, rgb, rgb, a)
     {
     }
-    
-    public CompatibleColor(int r, int g, int b, int a = 255) : this(new Color(r, g, b, a))
+
+    public CompatibleColor(byte r, byte g, byte b, byte a = 255)
+    {
+        R = r;
+        G = g;
+        B = b;
+        A = a;
+    }
+
+    public CompatibleColor(Color color) : this(color.R, color.G, color.B, color.A)
     {
     }
-    
-    public CompatibleColor(Color color) => Color = color;
-    public CompatibleColor(Vector4 colorV4) => ColorV4 = colorV4;
+
+    public CompatibleColor(Vector4 colorV4) : this((byte) (colorV4.X * 255), (byte) (colorV4.Y * 255),
+        (byte) (colorV4.Z * 255), (byte) (colorV4.W * 255))
+    {
+    }
 
     /// <summary>
     /// not recommended
     /// use <see cref="ImGuiColorEdit"/>
     /// </summary>
     /// <param name="label"></param>
+    [Obsolete]
     public void ImGuiColorPicker(string label)
     {
         if (!ImGui.ColorPicker4(label, ref ColorV4Holder)) return;
