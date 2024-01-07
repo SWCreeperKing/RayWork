@@ -109,6 +109,15 @@ public class Rectangle
     {
     }
 
+    public Rectangle GrowThis(float amount)
+    {
+        X -= amount;
+        Y -= amount;
+        Width += amount * 2;
+        Height += amount * 2;
+        return this;
+    }
+
     public bool IsVector2In(Vector2 vector2) => Raylib.CheckCollisionPointRec(vector2, RayLibRectangle);
     public bool IsMouseIn() => IsVector2In(Raylib.GetMousePosition());
     public void Draw(Color? color = null) => Raylib.DrawRectangleRec(RayLibRectangle, color ?? WHITE);

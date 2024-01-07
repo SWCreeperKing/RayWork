@@ -11,14 +11,11 @@ public static class Debugger
 
     public static bool IsDebugging;
 
-    public static void Initialize()
-        => SceneManager.OnSceneListChanged += (_, _) => Scenes = SceneManager.GetAllScenes();
+    public static void Initialize() => SceneManager.OnSceneListChanged += () => Scenes = SceneManager.GetAllScenes();
 
     public static void Render(RayApplication app)
     {
         if (!IsDebugging) return;
-        ImGui.ShowDemoWindow();
-        ImGui.ShowDebugLogWindow();
         ImGui.ShowMetricsWindow();
         RenderSceneManager(app);
         RenderDebugger(app);
@@ -42,7 +39,7 @@ public static class Debugger
         if (!ImGui.Begin("Debugger")) return;
         app.DebugLoop();
         ImGui.Separator();
-        
+
         foreach (var scene in Scenes)
         {
             if (scene.HasChildren()) continue;
@@ -60,7 +57,7 @@ public static class Debugger
             }
         }
     }
-    
+
     private static void RenderScene(Scene scene)
     {
         if (!ImGui.CollapsingHeader(scene.Label)) return;

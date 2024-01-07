@@ -10,16 +10,16 @@ using RayRectangle = Raylib_cs.Rectangle;
 
 namespace RayWork.CoreComponents;
 
-public class PanelComponent : IDebugComponent
+public class PanelComponent : DebugComponent
 {
-    public CompatibleColor PanelColor;
-    public CompatibleColor OutlineColor;
+    public CompatibleColor PanelColor = new(80, 100, 160, 255);
+    public CompatibleColor OutlineColor = BLACK;
     public float OutlineThickness = 2;
     public float Roundness = .2f;
     public int Segments = 10;
     public bool RoundedOutline;
     public bool DrawOutline = true;
-    
+
     private RectangleComponent RectangleComponent;
 
     public RayRectangle RayRectangle
@@ -49,8 +49,6 @@ public class PanelComponent : IDebugComponent
     public PanelComponent(RectangleComponent rectangleComponent)
     {
         RectangleComponent = rectangleComponent;
-        PanelColor = new Color(80, 100, 160, 255);
-        OutlineColor = BLACK;
     }
 
     public PanelComponent(TransformComponent transformComponent, SizeComponent sizeComponent) : this(
@@ -80,7 +78,7 @@ public class PanelComponent : IDebugComponent
         }
     }
 
-    public void Debug()
+    public override void Debug()
     {
         RectangleComponent.Debug();
         PanelColor.ImGuiColorEdit("Panel Color");

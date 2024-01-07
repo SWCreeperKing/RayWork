@@ -1,4 +1,3 @@
-using System.ComponentModel.Design;
 using System.Reflection;
 using static RayWork.Logger;
 using static RayWork.Logger.Level;
@@ -45,7 +44,7 @@ public static class CommandRegister
 
             if (Commands.TryAdd(command, method))
             {
-                Log($"Command [{command}] Was Added To Commands");
+                Log($"Command [{command}] Was Added To Commands", "Command Register");
 
                 var help = method.GetCustomAttribute<HelpAttribute>();
                 if (help is null) continue;

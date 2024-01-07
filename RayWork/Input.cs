@@ -27,6 +27,7 @@ public static class Input
     // mouse
     public static bool HandleMouseEvents = true;
     public static GameObject? MouseOccupier = null;
+    public static MouseState CurrentMouseState { get; private set; }
 
     public static MouseCursor CurrentMouseCursor
     {
@@ -98,15 +99,16 @@ public static class Input
 
     private static void HandleMouseEvent()
     {
-        if (MouseEvent is not null)
-        {
-            var mousePosition = Raylib.GetMousePosition();
-            var mousePressed = MouseButtons.Where(button => Raylib.IsMouseButtonPressed(button));
-            var mouseDown = MouseButtons.Where(button => Raylib.IsMouseButtonDown(button));
-            MouseStateEvent mouseState = new(mousePosition, mousePressed, mouseDown);
+        var mousePosition = Raylib.GetMousePosition();
+        var mousePressed = MouseButtons.Where(button => Raylib.IsMouseButtonPressed(button));
+        var mouseDown = MouseButtons.Where(button => Raylib.IsMouseButtonDown(button));
+        var windowSize = RayApplication.WindowSize;
+        var quad = mousePosition.X > windowSize.X / 2 ? 1 : 2;
+        if (mousePosition.Y > windowSize.Y / 2) quad += 2;
+        CurrentMouseState =
+            new MouseState(mousePosition, (EventArguments.ScreenQuadrant) quad, mousePressed, mouseDown);
 
-            MouseEvent(null, mouseState);
-        }
+        MouseEvent?.Invoke(null, new MouseStateEvent(CurrentMouseState));
 
         if (MouseOccupier is not null)
         {
@@ -162,7 +164,7 @@ public static class Input
         return keyEvent;
     }
 
-    public static bool IsKeyPressed(KeyboardKey key) => KeysPressed.Contains(key); 
-    public static bool IsKeyReleased(KeyboardKey key) => KeysReleased.Contains(key); 
+    public static bool IsKeyPressed(KeyboardKey key) => KeysPressed.Contains(key);
+    public static bool IsKeyReleased(KeyboardKey key) => KeysReleased.Contains(key);
     public static void SetMouseCursor(MouseCursor mouseCursor) => MouseCursorQueue.Add(mouseCursor);
 }

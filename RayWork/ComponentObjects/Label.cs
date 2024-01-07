@@ -68,6 +68,6 @@ public class Label : GameObject
         if (TextPadding) textPosition += PaddingHolder;
 
         PanelComponent.DrawPanel();
-        TextComponent.DrawText(textPosition, Vector2.Zero);
+        TextComponent.DrawText(textPosition);
     }
 }

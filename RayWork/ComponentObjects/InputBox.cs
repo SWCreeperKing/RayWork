@@ -55,7 +55,7 @@ public class InputBox : GameObject
     private bool CursorBlink;
     private float CursorTimer;
     private bool MouseIn;
-    private EventHandler<KeyEvent>? KeyActionEvent;
+    private event EventHandler<KeyEvent>? KeyActionEvent;
 
     public InputBox(TransformComponent transformComponent, SizeComponent sizeComponent)
     {
@@ -137,7 +137,7 @@ public class InputBox : GameObject
 
         PanelComponent.DrawPanel();
         (rectanglePosition + PaddingHolder).MaskDraw(rectangleSize - Padding2Holder, () =>
-            TextComponent.DrawText(textPosition + PaddingHolder, Vector2.Zero));
+            TextComponent.DrawText(textPosition + PaddingHolder));
     }
 
     private void SetupInputEvent()

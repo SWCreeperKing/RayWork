@@ -4,6 +4,7 @@ using Raylib_cs;
 using RayWork.CoreComponents;
 using RayWork.EventArguments;
 using RayWork.Objects;
+using RayWork.Objects.Primitives;
 using static Raylib_cs.MouseButton;
 using static Raylib_cs.MouseCursor;
 
@@ -20,10 +21,11 @@ public class Button : GameObject
     private bool WasDisabled;
     private bool WasHover;
 
-    public EventHandler? OnButtonHover;
-    public EventHandler? OnButtonPressed;
+    public event EventHandler<bool>? OnButtonHoveringChanged;
+    public event NoArgEventHandler? WhileButtonHovering;
+    public event NoArgEventHandler? OnButtonPressed;
 
-    private EventHandler<MouseStateEvent>? MouseClickEvent;
+    private event EventHandler<MouseStateEvent>? MouseClickEvent;
 
     public Button(Label label, Color? panelColor = null, Color? hoverColor = null, Color? disabledColor = null)
     {
@@ -55,12 +57,40 @@ public class Button : GameObject
 
     public override void UpdateLoop()
     {
-        if (!Disabled || WasDisabled || Input.MouseOccupier is not null) return;
-        if (WasHover)
+        if (Input.CurrentMouseState.IsMouseIn(Label.Rectangle))
         {
-            WasHover = false;
+            if (!WasHover)
+            {
+                if (WasDisabled)
+                {
+                    WasDisabled = false;
+                }
+
+                WasHover = true;
+
+                OnButtonHoveringChanged?.Invoke(this, true);
+                Label.PanelComponent.PanelColor = HoverColor.Color;
+            }
+
+            Input.SetMouseCursor(MOUSE_CURSOR_POINTING_HAND);
+        }
+        else if (WasDisabled || WasHover)
+        {
+            if (WasHover)
+            {
+                WasHover = false;
+                OnButtonHoveringChanged?.Invoke(this, false);
+            }
+
+            if (WasDisabled)
+            {
+                WasDisabled = false;
+            }
+
+            Label.PanelComponent.PanelColor = PanelColor.Color;
         }
 
+        if (!Disabled || WasDisabled || Input.MouseOccupier is not null) return;
         WasDisabled = true;
         Label.PanelComponent.PanelColor = DisabledColor.Color;
     }
@@ -76,45 +106,18 @@ public class Button : GameObject
                 return;
             }
 
-            if (mouseState.IsMouseIn(Label.Rectangle))
-            {
-                if (!WasHover)
-                {
-                    if (WasDisabled)
-                    {
-                        WasDisabled = false;
-                    }
-
-                    WasHover = true;
-
-                    OnButtonHover?.Invoke(null, null);
-                    Label.PanelComponent.PanelColor = HoverColor.Color;
-                }
-
-                Input.SetMouseCursor(MOUSE_CURSOR_POINTING_HAND);
-            }
-            else if (WasDisabled || WasHover)
-            {
-                if (WasHover)
-                {
-                    WasHover = false;
-                }
-
-                if (WasDisabled)
-                {
-                    WasDisabled = false;
-                }
-
-                Label.PanelComponent.PanelColor = PanelColor.Color;
-            }
-
             if (!mouseState.IsMouseIn(Label.Rectangle) || !WasHover || !mouseState[MOUSE_BUTTON_LEFT]) return;
-            OnButtonPressed?.Invoke(null, null!);
+            OnButtonPressed?.Invoke(this);
         };
         Input.MouseEvent += MouseClickEvent;
     }
 
-    public override void RenderLoop() => Label.Render();
+    public override void RenderLoop()
+    {
+        Label.Render();
+        if (!WasHover) return;
+        WhileButtonHovering?.Invoke(this);
+    }
 
     ~Button() => Input.MouseEvent -= MouseClickEvent;
 }

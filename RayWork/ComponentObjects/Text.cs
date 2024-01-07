@@ -21,5 +21,5 @@ public class Text : GameObject
     {
     }
 
-    public override void RenderLoop() => TextComponent.DrawText(TransformComponent.Position, Vector2.Zero);
+    public override void RenderLoop() => TextComponent.DrawText(TransformComponent.Position);
 }

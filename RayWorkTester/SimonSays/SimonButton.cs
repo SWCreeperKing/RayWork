@@ -4,6 +4,7 @@ using Raylib_cs;
 using RayWork;
 using RayWork.CoreComponents;
 using RayWork.Objects;
+using RayWork.Objects.Primitives;
 
 namespace RayWorkTester.SimonSays;
 
@@ -19,10 +20,10 @@ public class SimonButton : GameObject
     private CompatibleColor HighlightColor;
     private new SimonSays? Parent;
 
-    public EventHandler? OnClicked
+    public event NoArgEventHandler? OnClicked
     {
-        get => ButtonComponent.OnClicked;
-        set => ButtonComponent.OnClicked = value;
+        add => ButtonComponent.OnClicked += value;
+        remove => ButtonComponent.OnClicked -= value;
     }
 
     public SimonButton(Vector2 position, Vector2 size, Color color)

@@ -14,20 +14,48 @@ public class MainScene : Scene
 
     public override string Label => "main";
 
+    public bool UseImguiTooltip;
+
     public override void Initialize()
     {
         SceneManager.AddScene(new SimonSays.SimonSays());
 
         Button button = new("Test", new Vector2(500));
-        button.OnButtonPressed += (_, _) => SceneManager.SwitchScene("simon");
+        button.OnButtonPressed += _ => SceneManager.SwitchScene("simon");
+
+        DefaultTooltip tooltip = new("text");
+        ImguiTooltip imguiTooltip = new(() => ImGui.Text("text"));
+
+        button.OnButtonHoveringChanged += (_, changed) =>
+        {
+            if (!changed)
+            {
+                tooltip.Enabled = imguiTooltip.Enabled = false;
+            }
+            else if (UseImguiTooltip)
+            {
+                imguiTooltip.Enabled = true;
+            }
+            else
+            {
+                tooltip.Enabled = true;
+            }
+        };
 
         AddChild(new TestObject());
         AddChild(new AnchorTestObject());
         AddChild(new TextBlock(LoremIpsum, new Rectangle(200, 300, 300, 60)));
         AddChild(new InputBox(new Vector2(300, 20), new Vector2(300, 30)));
         AddChild(button);
+        
+        AddChild(tooltip); // tooltips must be last to draw
+        AddChild(imguiTooltip);
     }
 
     public override void RenderLoop() => Raylib.DrawFPS(0, 0);
-    public override void DebugLoop() => ImGui.Text("Testing Custom Debug Info!");
+    public override void DebugLoop()
+    {
+        ImGui.Text("Testing Custom Debug Info!");
+        ImGui.Checkbox("Use Imgui Tooltip", ref UseImguiTooltip);
+    }
 }

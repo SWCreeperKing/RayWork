@@ -1,7 +1,6 @@
 using System.Numerics;
 using Raylib_cs;
 using RayWork.ECS;
-using RayWork.RLImgui;
 
 namespace RayWork.CoreComponents.BaseComponents;
 
@@ -29,4 +28,7 @@ public abstract class FontComponent : DebugComponent
 
     public void SetFont(Font font) => FontHolder = font;
     public Vector2 MeasureText(string text) => Raylib.MeasureTextEx(Font, text, FontSize, Spacing);
+
+    public static Vector2 MeasureDefText(string text, float fontSize = 24, float spacing = 1.5f)
+        => Raylib.MeasureTextEx(DefaultFont, text, fontSize, spacing);
 }

@@ -17,7 +17,10 @@ public class TextComponent : FontComponent
         Text = text;
         Color = color ?? BLACK;
     }
-
+    
+    public void DrawText(Vector2 position)
+        => Raylib.DrawTextPro(Font, Text, position, Vector2.Zero, Rotation, FontSize, Spacing, Color);
+    
     public void DrawText(Vector2 position, Vector2 origin)
         => Raylib.DrawTextPro(Font, Text, position, origin, Rotation, FontSize, Spacing, Color);
 

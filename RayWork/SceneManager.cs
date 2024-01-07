@@ -1,4 +1,5 @@
 using RayWork.Objects;
+using RayWork.Objects.Primitives;
 
 namespace RayWork;
 
@@ -8,7 +9,7 @@ public static class SceneManager
     private static readonly List<string> InitializedScenes = [];
     private static string ActiveSceneId = "main";
 
-    public static event EventHandler? OnSceneListChanged;
+    public static event PlainEventHandler? OnSceneListChanged;
 
     public static Scene Scene
     {
@@ -73,5 +74,5 @@ public static class SceneManager
     }
 
     public static Scene[] GetAllScenes() => Scenes.Select(kv => kv.Value).ToArray();
-    private static void SceneListChanged() => OnSceneListChanged?.Invoke(null, null);
+    private static void SceneListChanged() => OnSceneListChanged?.Invoke();
 }

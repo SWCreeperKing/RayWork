@@ -44,12 +44,12 @@ public class SimonSays : Scene
         {
             var button = Buttons[i];
             var i1 = i;
-            button.OnClicked += (_, _) => Pressed(i1);
+            button.OnClicked += _ => Pressed(i1);
             AddChild(button);
         }
 
         Button resetButton = new("Restart", new Vector2(500));
-        resetButton.OnButtonPressed += (_, _) => Reset();
+        resetButton.OnButtonPressed += _ => Reset();
 
         AddChild(resetButton);
         AddToOrder();

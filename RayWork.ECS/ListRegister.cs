@@ -63,6 +63,6 @@ public class ListRegister<TRegisterType>
     public void UpdateRegisterCache()
     {
         CachedRegister = Register.ToArray();
-        OnRegisterCacheUpdated?.Invoke(null, null);
+        OnRegisterCacheUpdated?.Invoke(this, null!);
     }
 }
