@@ -43,10 +43,7 @@ public static class SaveSystem
 
     public static void SaveItems()
     {
-        if (!Directory.Exists(SaveDirectory))
-        {
-            Directory.CreateDirectory(SaveDirectory!);
-        }
+        if (!Directory.Exists(SaveDirectory)) Directory.CreateDirectory(SaveDirectory!);
 
         foreach (var savable in Savables)
         {

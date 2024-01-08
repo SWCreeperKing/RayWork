@@ -23,10 +23,7 @@ public class Encryptor
         Random r = new();
         var charStop = r.Next(100, 151);
 
-        for (var i = 0; i < charStop; i++)
-        {
-            sb.Append((char) r.Next(0, 256));
-        }
+        for (var i = 0; i < charStop; i++) sb.Append((char) r.Next(0, 256));
 
         var str = sb.ToString();
         var enc = EncryptFunc.Invoke(str);
