@@ -9,7 +9,7 @@ public class CompatibleColor
 {
     public Color Color
     {
-        get => ColorHolder;
+        get => _Color;
         set
         {
             R = value.R;
@@ -21,7 +21,7 @@ public class CompatibleColor
 
     public Vector4 ColorV4
     {
-        get => ColorV4Holder;
+        get => _ColorV4;
         set
         {
             R = (byte) (value.X * 255);
@@ -33,46 +33,46 @@ public class CompatibleColor
 
     public byte R
     {
-        get => ColorHolder.R;
+        get => _Color.R;
         set
         {
-            ColorHolder.R = value;
-            ColorV4Holder.X = value / 255f;
+            _Color.R = value;
+            _ColorV4.X = value / 255f;
         }
     }
 
     public byte G
     {
-        get => ColorHolder.G;
+        get => _Color.G;
         set
         {
-            ColorHolder.G = value;
-            ColorV4Holder.Y = value / 255f;
+            _Color.G = value;
+            _ColorV4.Y = value / 255f;
         }
     }
 
     public byte B
     {
-        get => ColorHolder.B;
+        get => _Color.B;
         set
         {
-            ColorHolder.B = value;
-            ColorV4Holder.Z = value / 255f;
+            _Color.B = value;
+            _ColorV4.Z = value / 255f;
         }
     }
 
     public byte A
     {
-        get => ColorHolder.A;
+        get => _Color.A;
         set
         {
-            ColorHolder.A = value;
-            ColorV4Holder.W = value / 255f;
+            _Color.A = value;
+            _ColorV4.W = value / 255f;
         }
     }
 
-    private Color ColorHolder;
-    private Vector4 ColorV4Holder;
+    private Color _Color;
+    private Vector4 _ColorV4;
 
     public CompatibleColor(byte rgb, byte a = 255) : this(rgb, rgb, rgb, a)
     {
@@ -103,20 +103,20 @@ public class CompatibleColor
     [Obsolete]
     public void ImGuiColorPicker(string label)
     {
-        if (!ImGui.ColorPicker4(label, ref ColorV4Holder)) return;
-        ColorHolder = ColorV4Holder.ToColor();
+        if (!ImGui.ColorPicker4(label, ref _ColorV4)) return;
+        _Color = _ColorV4.ToColor();
     }
 
     public void ImGuiColorEdit(string label)
     {
-        if (!ImGui.ColorEdit4(label, ref ColorV4Holder)) return;
-        ColorHolder = ColorV4Holder.ToColor();
+        if (!ImGui.ColorEdit4(label, ref _ColorV4)) return;
+        _Color = _ColorV4.ToColor();
     }
 
-    public CompatibleColor MakeLighter() => new(ColorHolder.MakeLighter());
-    public CompatibleColor MakeDarker() => new(ColorHolder.MakeDarker());
-    public static implicit operator Color(CompatibleColor compatibleColor) => compatibleColor.ColorHolder;
-    public static implicit operator Vector4(CompatibleColor compatibleColor) => compatibleColor.ColorV4Holder;
+    public CompatibleColor MakeLighter() => new(_Color.MakeLighter());
+    public CompatibleColor MakeDarker() => new(_Color.MakeDarker());
+    public static implicit operator Color(CompatibleColor compatibleColor) => compatibleColor._Color;
+    public static implicit operator Vector4(CompatibleColor compatibleColor) => compatibleColor._ColorV4;
     public static implicit operator CompatibleColor(Color color) => new(color);
     public static implicit operator CompatibleColor(Vector4 colorV4) => new(colorV4);
 }

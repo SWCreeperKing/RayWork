@@ -102,7 +102,7 @@ public class SimonSays : Scene
         Order.Add(Random.Next(Buttons.Length));
         OrderString = string.Join(", ", Order);
     }
-    
+
     public void Pressed(int i)
     {
         if (!ReadIn) return;

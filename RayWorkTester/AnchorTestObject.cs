@@ -29,7 +29,7 @@ public class AnchorTestObject : GameObject
     public override void DebugLoop()
     {
         ImGui.Text("using `base.DebugLoop` you get the following:\n");
-        
+
         base.DebugLoop();
     }
 }

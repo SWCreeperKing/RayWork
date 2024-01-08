@@ -8,19 +8,19 @@ public class DynamicPositionComponent(Func<Vector2> positionEquation) : Transfor
 {
     public override Vector2 Position
     {
-        get => PositionHolder = PositionEquation();
+        get => _Position = PositionEquation();
         set => Logger.Log("Can not set Position of DynamicPositionComponent");
     }
 
-    private Vector2 PositionHolder;
+    private Vector2 _Position;
 
     public Func<Vector2> PositionEquation = positionEquation;
 
     public override void Debug()
     {
-        ImGui.Text($"Position: {PositionHolder}");
+        ImGui.Text($"Position: {_Position}");
 
         if (!ImGui.Button("Recalculate")) return;
-        PositionHolder = PositionEquation();
+        _Position = PositionEquation();
     }
 }

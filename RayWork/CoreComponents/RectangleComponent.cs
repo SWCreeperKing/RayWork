@@ -11,25 +11,25 @@ public class RectangleComponent : DebugComponent
 {
     public RayRectangle RayLibRectangle
     {
-        get => RectangleHolder.RayLibRectangle;
-        set => RectangleHolder.RayLibRectangle = value;
+        get => _Rectangle.RayLibRectangle;
+        set => _Rectangle.RayLibRectangle = value;
     }
 
     public Rectangle Rectangle
     {
         get
         {
-            var position = PositionHolder.Position;
-            var size = SizeHolder.Size;
-            if (position != RectangleHolder.Position) RectangleHolder.Position = position;
-            if (size != RectangleHolder.Size) RectangleHolder.Size = size;
-            return RectangleHolder;
+            var position = _Position.Position;
+            var size = _Size.Size;
+            if (position != _Rectangle.Position) _Rectangle.Position = position;
+            if (size != _Rectangle.Size) _Rectangle.Size = size;
+            return _Rectangle;
         }
         set
         {
-            RectangleHolder.RayLibRectangle = value.RayLibRectangle;
-            PositionHolder.Position = value.Position;
-            SizeHolder.Size = value.Size;
+            _Rectangle.RayLibRectangle = value.RayLibRectangle;
+            _Position.Position = value.Position;
+            _Size.Size = value.Size;
         }
     }
 
@@ -37,14 +37,14 @@ public class RectangleComponent : DebugComponent
     {
         get
         {
-            var position = PositionHolder.Position;
-            if (position != RectangleHolder.Position) RectangleHolder.Position = position;
+            var position = _Position.Position;
+            if (position != _Rectangle.Position) _Rectangle.Position = position;
             return position;
         }
         set
         {
-            PositionHolder.Position = value;
-            RectangleHolder.Position = value;
+            _Position.Position = value;
+            _Rectangle.Position = value;
         }
     }
 
@@ -52,26 +52,26 @@ public class RectangleComponent : DebugComponent
     {
         get
         {
-            var size = SizeHolder.Size;
-            if (size != RectangleHolder.Size) RectangleHolder.Size = size;
+            var size = _Size.Size;
+            if (size != _Rectangle.Size) _Rectangle.Size = size;
             return size;
         }
         set
         {
-            SizeHolder.Size = value;
-            RectangleHolder.Size = value;
+            _Size.Size = value;
+            _Rectangle.Size = value;
         }
     }
 
-    private TransformComponent PositionHolder;
-    private SizeComponent SizeHolder;
-    private Rectangle RectangleHolder;
+    private TransformComponent _Position;
+    private SizeComponent _Size;
+    private Rectangle _Rectangle;
 
-    public RectangleComponent(TransformComponent positionHolder, SizeComponent sizeHolder)
+    public RectangleComponent(TransformComponent position, SizeComponent size)
     {
-        PositionHolder = positionHolder;
-        SizeHolder = sizeHolder;
-        RectangleHolder = new Rectangle(PositionHolder.Position, SizeHolder.Size);
+        _Position = position;
+        _Size = size;
+        _Rectangle = new Rectangle(_Position.Position, _Size.Size);
     }
 
     public RectangleComponent(Vector2 position, Vector2 size) : this((PositionComponent) position,
@@ -89,8 +89,8 @@ public class RectangleComponent : DebugComponent
 
     public override void Debug()
     {
-        var pos = PositionHolder.Position;
-        var size = SizeHolder.Size;
+        var pos = _Position.Position;
+        var size = _Size.Size;
         if (ImGui.DragFloat("X", ref pos.X))
         {
             Position = pos;

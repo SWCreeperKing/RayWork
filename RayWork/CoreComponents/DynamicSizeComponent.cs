@@ -8,11 +8,11 @@ public class DynamicSizeComponent : SizeComponent
 {
     public override Vector2 Size
     {
-        get => SizeHolder = SizeEquation();
+        get => _Size = SizeEquation();
         set => Logger.Log("Can not set Size of DynamicSizeComponent");
     }
 
-    private Vector2 SizeHolder;
+    private Vector2 _Size;
 
     public Func<Vector2> SizeEquation;
 
@@ -20,9 +20,9 @@ public class DynamicSizeComponent : SizeComponent
 
     public override void Debug()
     {
-        ImGui.Text($"Size: {SizeHolder}");
+        ImGui.Text($"Size: {_Size}");
 
         if (!ImGui.Button("Recalculate")) return;
-        SizeHolder = SizeEquation();
+        _Size = SizeEquation();
     }
 }

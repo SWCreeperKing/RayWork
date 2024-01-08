@@ -47,12 +47,13 @@ public class MainScene : Scene
         AddChild(new TextBlock(LoremIpsum, new Rectangle(200, 300, 300, 60)));
         AddChild(new InputBox(new Vector2(300, 20), new Vector2(300, 30)));
         AddChild(button);
-        
+
         AddChild(tooltip); // tooltips must be last to draw
         AddChild(imguiTooltip);
     }
 
     public override void RenderLoop() => Raylib.DrawFPS(0, 0);
+
     public override void DebugLoop()
     {
         ImGui.Text("Testing Custom Debug Info!");

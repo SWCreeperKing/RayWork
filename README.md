@@ -38,7 +38,14 @@ framework <a href="https://github.com/SWCreeperKing/RayWrapper">RayWrapper</a>
 
 ---
 
-the C# coding is not normal, if you have complaints, direct them towards <a href="https://github.com/AdmiralSnyder">
-AdmSnyder</a>
-unless it's about having `Holder` at the end of some variable names, in which yell at me
-:) 
+- ALL Class Scoped Variables
+  - UpperCamelCase
+  - only exception: variables hidden via setter/getters
+- Class Scoped Variables hidden via setter/getters
+  - _UpperCamelCase
+- Statement 1 liners
+  - brackets can be removed ONLY IF it is a return or throw
+  - otherwise brackets should remain
+- Method Body Expressions
+  - no restriction but,
+  - if spans to multiple lines than the => must be the the start of the line under the expression

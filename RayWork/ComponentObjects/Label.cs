@@ -11,15 +11,15 @@ public class Label : GameObject
 {
     public float Padding
     {
-        get => PaddingHolder.X;
+        get => _Padding.X;
         set
         {
-            PaddingHolder = new Vector2(value);
-            SizePadding = PaddingHolder * 2;
+            _Padding = new Vector2(value);
+            SizePadding = _Padding * 2;
         }
     }
 
-    private Vector2 PaddingHolder;
+    private Vector2 _Padding;
 
     public Rectangle Rectangle => PanelComponent.Rectangle;
 
@@ -65,7 +65,7 @@ public class Label : GameObject
     public override void RenderLoop()
     {
         var textPosition = PanelComponent.Position;
-        if (TextPadding) textPosition += PaddingHolder;
+        if (TextPadding) textPosition += _Padding;
 
         PanelComponent.DrawPanel();
         TextComponent.DrawText(textPosition);

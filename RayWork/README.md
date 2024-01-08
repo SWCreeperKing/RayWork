@@ -54,7 +54,7 @@ otherwise `ReInitialize()` method will be called
 
 All of the Logging is handled by the `Logger` static class.
 When there is a crash the logger will automatically generate a crash log file
-that contains the entire program log. 
+that contains the entire program log.
 
 # Input
 
@@ -63,25 +63,25 @@ that contains the entire program log.
 RayWork also has an `Input` static class. It has 2 public methods:
 
 - `IsKeyDown`
-  - returns true if a key is down, false if a key up
+    - returns true if a key is down, false if a key up
 - `IsKeyUp`
-  - returns the opposite of `IsKeyDown`
+    - returns the opposite of `IsKeyDown`
 
 With has 3 events:
 
 - `OnKeyPressed`
-  - when a key is pressed
+    - when a key is pressed
 - `OnKeyReleased`
-  - when a key is released
+    - when a key is released
 - `OnKeyRepeat`
-  - when a key is repeating
+    - when a key is repeating
 
 The 2 public properties of the `Input` class are:
 
 - `KeyboardDelaySeconds`
-  - how long it takes when holding a key to repeat the key input
+    - how long it takes when holding a key to repeat the key input
 - `KeyboardRepeatsPerSecond`
-  - how many times the key should repeat per second
+    - how many times the key should repeat per second
 
 So what is this about key repeating? When you are in a text field,
 and you hold down a key, that key repeats, this is what the repeating refers to

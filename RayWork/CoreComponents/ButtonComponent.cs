@@ -10,7 +10,13 @@ namespace RayWork.CoreComponents;
 
 public class ButtonComponent : DebugComponent
 {
-    public RectangleComponent RectangleComponent;
+    public Rectangle Rectangle
+    {
+        get => RectangleComponent.Rectangle;
+        set => RectangleComponent.Rectangle = value;
+    }
+
+    private RectangleComponent RectangleComponent;
     public event NoArgEventHandler? OnClicked;
 
     private event EventHandler<MouseStateEvent>? MouseClickEvent;
@@ -25,6 +31,10 @@ public class ButtonComponent : DebugComponent
             OnClicked?.Invoke(this);
         };
         Input.MouseEvent += MouseClickEvent;
+    }
+
+    public ButtonComponent(Rectangle rectangle) : this(new RectangleComponent(rectangle))
+    {
     }
 
     public ButtonComponent(TransformComponent transformComponent, SizeComponent sizeComponent) : this(

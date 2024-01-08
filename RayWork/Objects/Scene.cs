@@ -3,7 +3,7 @@ using RayWork.ECS;
 
 namespace RayWork.Objects;
 
-public abstract class Scene
+public abstract class Scene : IScene
 {
     private static int IncrementedId;
     public readonly int Id;

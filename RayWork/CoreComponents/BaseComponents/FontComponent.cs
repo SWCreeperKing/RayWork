@@ -8,8 +8,8 @@ public abstract class FontComponent : DebugComponent
 {
     public static Font DefaultFont = Raylib.GetFontDefault();
 
-    public Font Font => FontHolder ?? DefaultFont;
-    private Font? FontHolder;
+    public Font Font => _Font ?? DefaultFont;
+    private Font? _Font;
 
     public string Text = "";
     public float FontSize = 24;
@@ -26,7 +26,7 @@ public abstract class FontComponent : DebugComponent
         return Cache.Item4;
     }
 
-    public void SetFont(Font font) => FontHolder = font;
+    public void SetFont(Font font) => _Font = font;
     public Vector2 MeasureText(string text) => Raylib.MeasureTextEx(Font, text, FontSize, Spacing);
 
     public static Vector2 MeasureDefText(string text, float fontSize = 24, float spacing = 1.5f)

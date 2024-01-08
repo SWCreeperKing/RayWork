@@ -31,15 +31,15 @@ public static class Input
 
     public static MouseCursor CurrentMouseCursor
     {
-        get => CurrentMouseCursorHolder;
+        get => _CurrentMouseCursor;
         private set
         {
-            CurrentMouseCursorHolder = value;
+            _CurrentMouseCursor = value;
             Raylib.SetMouseCursor(value);
         }
     }
 
-    private static MouseCursor CurrentMouseCursorHolder;
+    private static MouseCursor _CurrentMouseCursor;
     private static List<MouseCursor> MouseCursorQueue = [];
 
     public static event EventHandler<MouseStateEvent>? MouseEvent;
@@ -118,7 +118,7 @@ public static class Input
         {
             CurrentMouseCursor = MouseCursorQueue[^1];
         }
-        else if (CurrentMouseCursorHolder is not MouseCursor.MOUSE_CURSOR_DEFAULT)
+        else if (_CurrentMouseCursor is not MouseCursor.MOUSE_CURSOR_DEFAULT)
         {
             CurrentMouseCursor = MouseCursor.MOUSE_CURSOR_DEFAULT;
         }

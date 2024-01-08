@@ -7,7 +7,7 @@ public class ComponentObject
 
     public int ComponentCount => ComponentRegister.Count;
     public int DebugComponentCount => DebugComponents.Length;
-    
+
     public ComponentObject()
     {
         ComponentRegister.OnRegisterCacheUpdated += (_, _) =>

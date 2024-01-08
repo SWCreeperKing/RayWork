@@ -33,16 +33,16 @@ public class InputBox : GameObject
 
     public Vector2 Padding
     {
-        get => PaddingHolder;
+        get => _Padding;
         set
         {
-            PaddingHolder = value;
-            Padding2Holder = value * 2;
+            _Padding = value;
+            _Padding2 = value * 2;
         }
     }
 
-    private Vector2 PaddingHolder = new(3);
-    private Vector2 Padding2Holder = new(6);
+    private Vector2 _Padding = new(3);
+    private Vector2 _Padding2 = new(6);
 
     public string Text = "";
     public string CursorChar = "_";
@@ -136,8 +136,8 @@ public class InputBox : GameObject
         }
 
         PanelComponent.DrawPanel();
-        (rectanglePosition + PaddingHolder).MaskDraw(rectangleSize - Padding2Holder, () =>
-            TextComponent.DrawText(textPosition + PaddingHolder));
+        (rectanglePosition + _Padding).MaskDraw(rectangleSize - _Padding2, () =>
+            TextComponent.DrawText(textPosition + _Padding));
     }
 
     private void SetupInputEvent()

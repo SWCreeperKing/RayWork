@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\RayWork.SelfUpdater\RayWork.SelfUpdater.csproj" />
+        <ProjectReference Include="..\RayWork.SelfUpdater\RayWork.SelfUpdater.csproj"/>
     </ItemGroup>
 
 </Project>

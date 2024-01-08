@@ -8,4 +8,5 @@ this only has Newtonsoft.Json as a dependency
 
 if you want to test the project
 download <a href="https://swcreeperking.github.io/mySite/rayWorksTesting/V1/UpdateTester.exe">this</a>
+
 - BE CAREFUL make sure to put it in a folder because it will delete everything where it is located!

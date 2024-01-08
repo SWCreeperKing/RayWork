@@ -25,7 +25,7 @@ public readonly struct MouseState(
     IEnumerable<MouseButton> buttonsDown)
 {
     public readonly Vector2 Position = position;
-    public readonly ScreenQuadrant ScreenQuadrant = screenQuadrant; 
+    public readonly ScreenQuadrant ScreenQuadrant = screenQuadrant;
     public readonly IReadOnlyCollection<MouseButton> ButtonsPressed = buttonsPressed.ToArray();
     public readonly IReadOnlyCollection<MouseButton> ButtonsDown = buttonsDown.ToArray();
 

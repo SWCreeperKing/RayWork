@@ -13,7 +13,7 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <License>https://github.com/SWCreeperKing/RayWork/LICENSE</License>
         <PackageTags>framework raylib-cslo raylib raywork</PackageTags>
-        
+
         <PackageId>RayWork</PackageId>
         <Description>A Framework for Raylib-cslo</Description>
         <PackageVersion>0.1.1</PackageVersion>
@@ -29,9 +29,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\RayWork.ECS\RayWork.ECS.csproj" />
-      <ProjectReference Include="..\RayWork.RLImgui\RayWork.RLImgui.csproj" />
-      <ProjectReference Include="..\RayWork.SaveSystem\RayWork.SaveSystem.csproj" />
+        <ProjectReference Include="..\RayWork.ECS\RayWork.ECS.csproj"/>
+        <ProjectReference Include="..\RayWork.RLImgui\RayWork.RLImgui.csproj"/>
+        <ProjectReference Include="..\RayWork.SaveSystem\RayWork.SaveSystem.csproj"/>
     </ItemGroup>
 
 </Project>

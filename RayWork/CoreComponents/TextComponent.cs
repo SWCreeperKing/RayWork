@@ -9,6 +9,8 @@ namespace RayWork.CoreComponents;
 
 public class TextComponent : FontComponent
 {
+    public const float DegreeToRadianDivisor = 57.2957795f;
+
     public float Rotation;
     public CompatibleColor Color;
 
@@ -17,10 +19,10 @@ public class TextComponent : FontComponent
         Text = text;
         Color = color ?? BLACK;
     }
-    
+
     public void DrawText(Vector2 position)
         => Raylib.DrawTextPro(Font, Text, position, Vector2.Zero, Rotation, FontSize, Spacing, Color);
-    
+
     public void DrawText(Vector2 position, Vector2 origin)
         => Raylib.DrawTextPro(Font, Text, position, origin, Rotation, FontSize, Spacing, Color);
 
@@ -31,9 +33,9 @@ public class TextComponent : FontComponent
         ImGui.InputFloat("Spacing", ref Spacing);
         Color.ImGuiColorEdit("Color");
 
-        var rad = Rotation / 57.2958f;
+        var rad = Rotation / DegreeToRadianDivisor;
         if (!ImGui.SliderAngle("Rotation", ref rad)) return;
-        Rotation = rad * 57.2958f;
+        Rotation = rad * DegreeToRadianDivisor;
     }
 
     public static implicit operator TextComponent(string text) => new(text);

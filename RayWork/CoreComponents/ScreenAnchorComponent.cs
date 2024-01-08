@@ -8,10 +8,11 @@ public class ScreenAnchorComponent : TransformComponent
 {
     public override Vector2 Position
     {
-        get => PositionHolder;
+        get => _Position;
         set => Logger.Log("Can not set Position of ScreenAnchorComponent");
     }
-    private Vector2 PositionHolder;
+
+    private Vector2 _Position;
 
     public Func<Vector2, Vector2> AnchorEquation;
 
@@ -21,20 +22,20 @@ public class ScreenAnchorComponent : TransformComponent
     {
         WindowSize = RayApplication.WindowSize;
         AnchorEquation = anchorEquation;
-        PositionHolder = AnchorEquation(WindowSize);
+        _Position = AnchorEquation(WindowSize);
 
         RayApplication.OnWindowSizeChanged += (_, windowChangeArgs) =>
         {
-            PositionHolder = AnchorEquation(WindowSize = windowChangeArgs.NewWindowSize);
+            _Position = AnchorEquation(WindowSize = windowChangeArgs.NewWindowSize);
         };
     }
 
     public override void Debug()
     {
-        ImGui.Text($"Position: {PositionHolder}");
+        ImGui.Text($"Position: {_Position}");
         ImGui.Text($"WindowSize: {WindowSize}");
 
         if (!ImGui.Button("Recalculate")) return;
-        PositionHolder = AnchorEquation(WindowSize);
+        _Position = AnchorEquation(WindowSize);
     }
 }

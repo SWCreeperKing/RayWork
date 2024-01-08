@@ -56,6 +56,7 @@ public static class Logger
         };
     }
 
+    // i want to turn this to [typeof(CallConvCdecl)] REALLY BADLY but it causes my ide to hallucinate
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
     private static unsafe void RayLog(int logLevel, sbyte* text, sbyte* args)
     {

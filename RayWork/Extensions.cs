@@ -111,7 +111,11 @@ public static class Extensions
 
             // NOTE: Normally we exit the decoding sequence as soon as a bad byte is found (and return 0x3f)
             // but we need to draw all of the bad bytes using the '?' symbol moving one byte
-            if (codepoint == 0x3f) codepointByteCount = 1;
+            if (codepoint == 0x3f)
+            {
+                codepointByteCount = 1;
+            }
+
             i += codepointByteCount - 1;
 
             float glyphWidth = 0;
@@ -121,41 +125,13 @@ public static class Extensions
                     ? font.Recs[index].Width * scaleFactor
                     : font.Glyphs[index].AdvanceX * scaleFactor;
 
-                if (i + 1 < length) glyphWidth += spacing;
-            }
-
-            if (!state)
-            {
-                if (codepoint is ' ' or '\t' or '\n') endLine = i;
-
-                if (textOffsetX + glyphWidth > rect.Width)
+                if (i + 1 < length)
                 {
-                    endLine = endLine < 1 ? i : endLine;
-                    if (i == endLine) endLine -= codepointByteCount;
-                    if (startLine + codepointByteCount == endLine) endLine = i - codepointByteCount;
-
-                    state = !state;
-                }
-                else if (i + 1 == length)
-                {
-                    endLine = i;
-                    state = !state;
-                }
-                else if (codepoint == '\n') state = !state;
-
-                if (state)
-                {
-                    textOffsetX = 0;
-                    i = startLine;
-                    glyphWidth = 0;
-
-                    // Save character position when we switch states
-                    var tmp = lastk;
-                    lastk = k - 1;
-                    k = tmp;
+                    glyphWidth += spacing;
                 }
             }
-            else
+
+            if (state)
             {
                 if (codepoint == '\n')
                 {
@@ -204,6 +180,50 @@ public static class Extensions
                     selectStart += lastk - k;
                     k = lastk;
                     state = !state;
+                }
+            }
+            else
+            {
+                if (codepoint is ' ' or '\t' or '\n')
+                {
+                    endLine = i;
+                }
+
+                if (textOffsetX + glyphWidth > rect.Width)
+                {
+                    endLine = endLine < 1 ? i : endLine;
+                    if (i == endLine)
+                    {
+                        endLine -= codepointByteCount;
+                    }
+
+                    if (startLine + codepointByteCount == endLine)
+                    {
+                        endLine = i - codepointByteCount;
+                    }
+
+                    state = !state;
+                }
+                else if (i + 1 == length)
+                {
+                    endLine = i;
+                    state = !state;
+                }
+                else if (codepoint == '\n')
+                {
+                    state = !state;
+                }
+
+                if (state)
+                {
+                    textOffsetX = 0;
+                    i = startLine;
+                    glyphWidth = 0;
+
+                    // Save character position when we switch states
+                    var tmp = lastk;
+                    lastk = k - 1;
+                    k = tmp;
                 }
             }
 
