@@ -44,10 +44,7 @@ public static class SceneManager
     {
         try
         {
-            foreach (var id in InitializedScenes)
-            {
-                Scenes[id].Dispose();
-            }
+            foreach (var id in InitializedScenes) Scenes[id].Dispose();
         }
         catch (Exception e)
         {
@@ -62,14 +59,14 @@ public static class SceneManager
             throw new ArgumentException($"The current scene ID [{ActiveSceneId}] does not exist");
 
         ActiveSceneId = id;
-        if (!InitializedScenes.Contains(id))
+        if (InitializedScenes.Contains(id))
         {
-            Scene.Initialize();
-            InitializedScenes.Add(id);
+            Scene.ReInitialize();
         }
         else
         {
-            Scene.ReInitialize();
+            Scene.Initialize();
+            InitializedScenes.Add(id);
         }
     }
 

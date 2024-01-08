@@ -56,7 +56,7 @@ public static class Logger
         };
     }
 
-    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe void RayLog(int logLevel, sbyte* text, sbyte* args)
     {
         Log(logLevel switch

@@ -114,10 +114,7 @@ public class RayApplication
         Raylib.BeginDrawing();
         RlImgui.Begin();
 
-        if (UseCascadiaAsImguiFont)
-        {
-            ImGui.PushFont(RlImgui.CascadiaCode);
-        }
+        if (UseCascadiaAsImguiFont) ImGui.PushFont(RlImgui.CascadiaCode);
 
         Raylib.ClearBackground(BackgroundColor);
 

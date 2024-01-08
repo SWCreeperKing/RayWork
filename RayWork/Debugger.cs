@@ -63,10 +63,7 @@ public static class Debugger
         if (!ImGui.CollapsingHeader(scene.Label)) return;
         var objects = scene.GetChildren();
 
-        for (var i = 0; i < objects.Length; i++)
-        {
-            RenderGameObject(objects[i], i);
-        }
+        for (var i = 0; i < objects.Length; i++) RenderGameObject(objects[i], i);
     }
 
     private static void RenderGameObject(GameObject gameObject, int i)
