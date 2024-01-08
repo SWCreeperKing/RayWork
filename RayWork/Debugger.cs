@@ -7,7 +7,7 @@ namespace RayWork;
 
 public static class Debugger
 {
-    private static Scene[] Scenes = [];
+    private static IScene[] Scenes = [];
 
     public static bool IsDebugging;
 
@@ -58,15 +58,12 @@ public static class Debugger
         }
     }
 
-    private static void RenderScene(Scene scene)
+    private static void RenderScene(IScene scene)
     {
         if (!ImGui.CollapsingHeader(scene.Label)) return;
         var objects = scene.GetChildren();
 
-        for (var i = 0; i < objects.Length; i++)
-        {
-            RenderGameObject(objects[i], i);
-        }
+        for (var i = 0; i < objects.Length; i++) RenderGameObject(objects[i], i);
     }
 
     private static void RenderGameObject(GameObject gameObject, int i)

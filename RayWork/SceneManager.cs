@@ -5,13 +5,13 @@ namespace RayWork;
 
 public static class SceneManager
 {
-    private static readonly Dictionary<string, Scene> Scenes = new();
+    private static readonly Dictionary<string, IScene> Scenes = new();
     private static readonly List<string> InitializedScenes = [];
     private static string ActiveSceneId = "main";
 
     public static event PlainEventHandler? OnSceneListChanged;
 
-    public static Scene Scene
+    public static IScene Scene
     {
         get
         {
@@ -22,14 +22,14 @@ public static class SceneManager
         }
     }
 
-    public static void AddScene(Scene scene)
+    public static void AddScene(IScene scene)
     {
         if (!Scenes.TryAdd(scene.Label, scene))
             throw new ArgumentException($"SceneManager already contains ID: [{scene.Label}]");
         SceneListChanged();
     }
 
-    public static void RemoveScene(string id, out Scene removedScene)
+    public static void RemoveScene(string id, out IScene removedScene)
     {
         if (!Scenes.TryGetValue(id, out var value))
             throw new ArgumentException($"SceneManager can not remove the ID: [{id}] because it doesn't exist");
@@ -44,10 +44,7 @@ public static class SceneManager
     {
         try
         {
-            foreach (var id in InitializedScenes)
-            {
-                Scenes[id].Dispose();
-            }
+            foreach (var id in InitializedScenes) Scenes[id].Dispose();
         }
         catch (Exception e)
         {
@@ -62,17 +59,17 @@ public static class SceneManager
             throw new ArgumentException($"The current scene ID [{ActiveSceneId}] does not exist");
 
         ActiveSceneId = id;
-        if (!InitializedScenes.Contains(id))
+        if (InitializedScenes.Contains(id))
+        {
+            Scene.ReInitialize();
+        }
+        else
         {
             Scene.Initialize();
             InitializedScenes.Add(id);
         }
-        else
-        {
-            Scene.ReInitialize();
-        }
     }
 
-    public static Scene[] GetAllScenes() => Scenes.Select(kv => kv.Value).ToArray();
+    public static IScene[] GetAllScenes() => Scenes.Select(kv => kv.Value).ToArray();
     private static void SceneListChanged() => OnSceneListChanged?.Invoke();
 }

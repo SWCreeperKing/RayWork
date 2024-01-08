@@ -37,10 +37,7 @@ public static class Extensions
         BeginScissorMode((int) pos.X, (int) pos.Y, (int) size.X, (int) size.Y);
         draw();
 
-        if (MaskingLayer == 1)
-        {
-            EndScissorMode();
-        }
+        if (MaskingLayer == 1) EndScissorMode();
 
         MaskingLayer--;
     }
@@ -124,38 +121,7 @@ public static class Extensions
                 if (i + 1 < length) glyphWidth += spacing;
             }
 
-            if (!state)
-            {
-                if (codepoint is ' ' or '\t' or '\n') endLine = i;
-
-                if (textOffsetX + glyphWidth > rect.Width)
-                {
-                    endLine = endLine < 1 ? i : endLine;
-                    if (i == endLine) endLine -= codepointByteCount;
-                    if (startLine + codepointByteCount == endLine) endLine = i - codepointByteCount;
-
-                    state = !state;
-                }
-                else if (i + 1 == length)
-                {
-                    endLine = i;
-                    state = !state;
-                }
-                else if (codepoint == '\n') state = !state;
-
-                if (state)
-                {
-                    textOffsetX = 0;
-                    i = startLine;
-                    glyphWidth = 0;
-
-                    // Save character position when we switch states
-                    var tmp = lastk;
-                    lastk = k - 1;
-                    k = tmp;
-                }
-            }
-            else
+            if (state)
             {
                 if (codepoint == '\n')
                 {
@@ -204,6 +170,37 @@ public static class Extensions
                     selectStart += lastk - k;
                     k = lastk;
                     state = !state;
+                }
+            }
+            else
+            {
+                if (codepoint is ' ' or '\t' or '\n') endLine = i;
+
+                if (textOffsetX + glyphWidth > rect.Width)
+                {
+                    endLine = endLine < 1 ? i : endLine;
+                    if (i == endLine) endLine -= codepointByteCount;
+                    if (startLine + codepointByteCount == endLine) endLine = i - codepointByteCount;
+
+                    state = !state;
+                }
+                else if (i + 1 == length)
+                {
+                    endLine = i;
+                    state = !state;
+                }
+                else if (codepoint == '\n') state = !state;
+
+                if (state)
+                {
+                    textOffsetX = 0;
+                    i = startLine;
+                    glyphWidth = 0;
+
+                    // Save character position when we switch states
+                    var tmp = lastk;
+                    lastk = k - 1;
+                    k = tmp;
                 }
             }
 

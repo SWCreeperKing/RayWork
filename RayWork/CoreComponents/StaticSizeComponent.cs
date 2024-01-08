@@ -17,12 +17,10 @@ public class StaticSizeComponent : SizeComponent
     public override void Debug()
     {
         var size = Size;
-        if (ImGui.DragFloat("Width", ref size.X))
-        {
-            Size = size;
-        }
 
+        if (ImGui.DragFloat("Width", ref size.X)) Size = size;
         if (!ImGui.DragFloat("Height", ref size.Y)) return;
+        
         Size = size;
     }
 

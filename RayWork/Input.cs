@@ -91,10 +91,7 @@ public static class Input
             }
         }
 
-        foreach (var key in RLImgui.RlImgui.Keys)
-        {
-            AddKey(key);
-        }
+        foreach (var key in RLImgui.RlImgui.Keys) AddKey(key);
     }
 
     private static void HandleMouseEvent()
@@ -106,7 +103,7 @@ public static class Input
         var quad = mousePosition.X > windowSize.X / 2 ? 1 : 2;
         if (mousePosition.Y > windowSize.Y / 2) quad += 2;
         CurrentMouseState =
-            new MouseState(mousePosition, (EventArguments.ScreenQuadrant) quad, mousePressed, mouseDown);
+            new MouseState(mousePosition, (ScreenQuadrant) quad, mousePressed, mouseDown);
 
         MouseEvent?.Invoke(null, new MouseStateEvent(CurrentMouseState));
 
@@ -143,15 +140,15 @@ public static class Input
 
     private static void AddKey(KeyboardKey key)
     {
-        if (!KeysActive.Contains(key))
+        if (KeysActive.Contains(key))
+        {
+            KeyRepeatTimers[key] = KeyboardRepeatsPerSecond / 1000f;
+        }
+        else
         {
             KeysActive.Add(key);
             KeyDelay.Add(key, KeyboardDelaySeconds);
             KeyRepeatTimers.Add(key, KeyboardRepeatsPerSecond / 1000f);
-        }
-        else
-        {
-            KeyRepeatTimers[key] = KeyboardRepeatsPerSecond / 1000f;
         }
 
         KeysPressed.Add(key);

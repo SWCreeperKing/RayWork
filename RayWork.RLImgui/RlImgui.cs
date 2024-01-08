@@ -73,7 +73,6 @@ public static class RlImgui
     public static void Setup(bool darkTheme = true, bool enableDocking = false)
     {
         MouseCursorMap = new Dictionary<ImGuiMouseCursor, MouseCursor>();
-        MouseCursorMap = new Dictionary<ImGuiMouseCursor, MouseCursor>();
 
         LastFrameFocused = Raylib.IsWindowFocused();
         LastControlPressed = false;
@@ -94,10 +93,7 @@ public static class RlImgui
             StyleColorsLight();
         }
 
-        if (enableDocking)
-        {
-            GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
-        }
+        if (enableDocking) GetIO().ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
         EndInitImGui();
     }
@@ -257,10 +253,7 @@ public static class RlImgui
             Format = PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
         };
 
-        if (Raylib.IsTextureReady(FontTexture))
-        {
-            Raylib.UnloadTexture(FontTexture);
-        }
+        if (Raylib.IsTextureReady(FontTexture)) Raylib.UnloadTexture(FontTexture);
 
         FontTexture = Raylib.LoadTextureFromImage(image);
 
@@ -434,44 +427,29 @@ public static class RlImgui
         var io = GetIO();
 
         bool focused = Raylib.IsWindowFocused();
-        if (focused != LastFrameFocused)
-        {
-            io.AddFocusEvent(focused);
-        }
+        if (focused != LastFrameFocused) io.AddFocusEvent(focused);
 
         LastFrameFocused = focused;
 
 
-        // handle the modifyer key events so that shortcuts work
+        // handle the modifier key events so that shortcuts work
         var ctrlDown = RlImGuiIsControlDown();
-        if (ctrlDown != LastControlPressed)
-        {
-            io.AddKeyEvent(ImGuiKey.ModCtrl, ctrlDown);
-        }
+        if (ctrlDown != LastControlPressed) io.AddKeyEvent(ImGuiKey.ModCtrl, ctrlDown);
 
         LastControlPressed = ctrlDown;
 
         var shiftDown = RlImGuiIsShiftDown();
-        if (shiftDown != LastShiftPressed)
-        {
-            io.AddKeyEvent(ImGuiKey.ModShift, shiftDown);
-        }
+        if (shiftDown != LastShiftPressed) io.AddKeyEvent(ImGuiKey.ModShift, shiftDown);
 
         LastShiftPressed = shiftDown;
 
         var altDown = RlImGuiIsAltDown();
-        if (altDown != LastAltPressed)
-        {
-            io.AddKeyEvent(ImGuiKey.ModAlt, altDown);
-        }
+        if (altDown != LastAltPressed) io.AddKeyEvent(ImGuiKey.ModAlt, altDown);
 
         LastAltPressed = altDown;
 
         var superDown = RlImGuiIsSuperDown();
-        if (superDown != LastSuperPressed)
-        {
-            io.AddKeyEvent(ImGuiKey.ModSuper, superDown);
-        }
+        if (superDown != LastSuperPressed) io.AddKeyEvent(ImGuiKey.ModSuper, superDown);
 
         LastSuperPressed = superDown;
 
@@ -482,10 +460,7 @@ public static class RlImgui
         {
             var key = (KeyboardKey) keyId;
             Keys.Add(key);
-            if (RaylibKeyMap.TryGetValue(key, out var value))
-            {
-                io.AddKeyEvent(value, true);
-            }
+            if (RaylibKeyMap.TryGetValue(key, out var value)) io.AddKeyEvent(value, true);
 
             keyId = Raylib.GetKeyPressed();
         }
@@ -544,10 +519,7 @@ public static class RlImgui
         if (count < 3) return;
 
         uint textureId = 0;
-        if (texturePtr != IntPtr.Zero)
-        {
-            textureId = (uint) texturePtr.ToInt32();
-        }
+        if (texturePtr != IntPtr.Zero) textureId = (uint) texturePtr.ToInt32();
 
         Rlgl.Begin(DrawMode.TRIANGLES);
         Rlgl.SetTexture(textureId);
@@ -635,10 +607,7 @@ public static class RlImgui
 
         if (!AwesomeFontLoaded) return;
 
-        if (IconFontRanges != IntPtr.Zero)
-        {
-            FreeHGlobal(IconFontRanges);
-        }
+        if (IconFontRanges != IntPtr.Zero) FreeHGlobal(IconFontRanges);
 
         IconFontRanges = IntPtr.Zero;
     }
@@ -731,10 +700,7 @@ public static class RlImgui
         var scale = area.X / image.Texture.Width;
 
         var y = image.Texture.Height * scale;
-        if (y > area.Y)
-        {
-            scale = area.Y / image.Texture.Height;
-        }
+        if (y > area.Y) scale = area.Y / image.Texture.Height;
 
         var sizeX = (int) (image.Texture.Width * scale);
         var sizeY = (int) (image.Texture.Height * scale);

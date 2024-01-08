@@ -91,22 +91,12 @@ public class RectangleComponent : DebugComponent
     {
         var pos = PositionHolder.Position;
         var size = SizeHolder.Size;
-        if (ImGui.DragFloat("X", ref pos.X))
-        {
-            Position = pos;
-        }
 
-        if (ImGui.DragFloat("Y", ref pos.Y))
-        {
-            Position = pos;
-        }
-
-        if (ImGui.DragFloat("W", ref size.X))
-        {
-            Size = size;
-        }
-
+        if (ImGui.DragFloat("X", ref pos.X)) Position = pos;
+        if (ImGui.DragFloat("Y", ref pos.Y)) Position = pos;
+        if (ImGui.DragFloat("W", ref size.X)) Size = size;
         if (!ImGui.DragFloat("H", ref size.Y)) return;
+        
         Size = size;
     }
 

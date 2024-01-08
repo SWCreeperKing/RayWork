@@ -15,10 +15,7 @@ public class ListRegister<TRegisterType>
     public void ExecuteRegister(Action<TRegisterType> registerAction)
     {
         if (CachedRegister.Length < 1) return;
-        foreach (var t in CachedRegister)
-        {
-            registerAction(t);
-        }
+        foreach (var t in CachedRegister) registerAction(t);
     }
 
     public void UpdateRegister()
