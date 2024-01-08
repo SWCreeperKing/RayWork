@@ -24,7 +24,7 @@ public class RayApplication
 
     private static long LastUpdate;
 
-    public RayApplication(Scene mainScene, Vector2 windowSize, string title = "Untitled",
+    public RayApplication(IScene mainScene, Vector2 windowSize, string title = "Untitled",
         int fps = 60, ConfigFlags configFlags = 0, bool enableImguiDocking = false)
     {
         if (mainScene.Label is not "main")
@@ -44,7 +44,7 @@ public class RayApplication
         Start();
     }
 
-    public RayApplication(Scene mainScene, int windowWidth, int windowHeight, string title = "Untitled",
+    public RayApplication(IScene mainScene, int windowWidth, int windowHeight, string title = "Untitled",
         int fps = 60, ConfigFlags configFlags = 0, bool enableImguiDocking = false)
         : this(mainScene, new Vector2(windowWidth, windowHeight), title, fps, configFlags, enableImguiDocking)
     {
