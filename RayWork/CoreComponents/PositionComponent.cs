@@ -17,10 +17,7 @@ public class PositionComponent : TransformComponent
     public override void Debug()
     {
         var pos = Position;
-        if (ImGui.DragFloat("X", ref pos.X))
-        {
-            Position = pos;
-        }
+        if (ImGui.DragFloat("X", ref pos.X)) Position = pos;
 
         if (!ImGui.DragFloat("Y", ref pos.Y)) return;
         Position = pos;

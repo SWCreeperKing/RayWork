@@ -61,10 +61,7 @@ public class Button : GameObject
         {
             if (!WasHover)
             {
-                if (WasDisabled)
-                {
-                    WasDisabled = false;
-                }
+                if (WasDisabled) WasDisabled = false;
 
                 WasHover = true;
 
@@ -82,10 +79,7 @@ public class Button : GameObject
                 OnButtonHoveringChanged?.Invoke(this, false);
             }
 
-            if (WasDisabled)
-            {
-                WasDisabled = false;
-            }
+            if (WasDisabled) WasDisabled = false;
 
             Label.PanelComponent.PanelColor = PanelColor.Color;
         }
